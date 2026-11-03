@@ -303,6 +303,23 @@
     </div>
   </div>
 
+  <!-- LINE In-App Browser Guidance Banner (แสดงเฉพาะเมื่อเปิดผ่าน LINE บนอุปกรณ์ที่ไม่ยอมเด้งอัตโนมัติ) -->
+  <div id="lineAppBanner" class="hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-500 via-gold-400 to-amber-500 text-navy-950 px-4 py-3 shadow-2xl border-b-2 border-navy-950 no-print">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 text-xs sm:text-sm font-bold font-prompt">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full bg-navy-950 text-gold-400 flex items-center justify-center text-sm shrink-0">
+          <i class="fa-brands fa-line text-lg text-emerald-400"></i>
+        </span>
+        <span>
+          ตรวจพบการเปิดจากแอป LINE: เพื่อความสะดวกและแป้นพิมพ์ไม่บังปุ่ม ให้แตะที่ <strong>จุดสามจุด (⋮ หรือ ...)</strong> มุมขวาบน แล้วเลือก <strong>"เปิดด้วยเบราว์เซอร์อื่น" / "Open in Safari"</strong> นะคะ
+        </span>
+      </div>
+      <button onclick="dismissLineBanner()" class="px-2.5 py-1 rounded-lg bg-navy-950 text-gold-300 text-xs shrink-0 hover:bg-navy-900 transition">
+        รับทราบ
+      </button>
+    </div>
+  </div>
+
   <!-- Success Celebration Modal (สำหรับผู้ใช้ที่ไม่ถนัดเทคโนโลยี ให้มั่นใจ 100% ว่าบันทึกสำเร็จ) -->
   <div id="successSaveModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
     <div class="bg-navy-900 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border-2 border-emerald-500/70 text-center space-y-4 animate-bounce-short">
@@ -327,13 +344,15 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 font-prompt">
-        <button type="button" onclick="closeSuccessModalAndContinue()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-navy-800 text-gold-300 border border-gold-500/40 transition flex items-center justify-center gap-1.5 shadow">
-          <i class="fa-solid fa-plus"></i> ลงรายการอื่นต่อ
-        </button>
-        <button type="button" onclick="closeSuccessModalAndViewList()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-list-check"></i> ดูรายการที่ลงแล้ว
-        </button>
-      </div>
+      <button type="button" onclick="closeSuccessModalAndContinue()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-navy-800 text-gold-300 border border-gold-500/40 transition flex items-center justify-center gap-1.5 shadow">
+        <i class="fa-solid fa-plus"></i> กลับหน้าแรก / ลงรายการอื่นต่อ
+      </button>
+      <button type="button" onclick="closeSuccessModalAndViewList()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-list-check"></i> ดูรายการที่ลงแล้ว
+      </button>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 
@@ -628,7 +647,7 @@
         </div>
 
         <!-- FORM ACTION BUTTONS -->
-        <div class="pt-6 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center gap-3 justify-between">
+        <div class="pt-6 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center gap-3 justify-between pb-12 sm:pb-4">
           <button type="button" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 bg-navy-950 hover:bg-navy-800 border border-slate-700 transition flex items-center justify-center gap-1.5">
             <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปขั้นตอนที่ 1
           </button>
@@ -1963,21 +1982,49 @@
 
     async function fetchDataFromGoogleSheet(isSilent = false) {
       if (!googleSheetUrl) return;
+
+      // ป้องกัน Auto-sync รบกวน 100%: 
+      // 1. กำลังอยู่ในขั้นตอนที่ 2 (กำลังพิมพ์ชื่อ นร./ครู)
+      // 2. กำลังอยู่ในโหมดแก้ไข (editingRecordId ไม่ว่าง)
+      // 3. กำลังเปิดหน้าต่างโมดัลใดๆ อยู่ (เช่น กรอกผล, ลบรายการ, เช็กประวัติ, โอนรอบเขต)
+      const isAnyModalOpen = !!document.querySelector('.fixed.inset-0:not(.hidden)');
+      const isEditingNow = !!(document.getElementById("editingRecordId") && document.getElementById("editingRecordId").value);
+      
+      if (isSilent && (currentStep === 2 || isEditingNow || isAnyModalOpen)) {
+        return; // พักการซิงค์แบบเงียบไว้ทันที ไม่รบกวนหน้าจอเด็ดขาด
+      }
+
       try {
         if (!isSilent) showToast("กำลังดึงข้อมูลล่าสุดจาก Google Sheets...", "slate");
         const res = await fetch(googleSheetUrl + "?action=get");
         const json = await res.json();
         if (json && json.records && Array.isArray(json.records)) {
           if (json.records.length > 0) {
-            registrations = json.records;
-            saveAllData();
-            renderEntriesTable();
+            // ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงจริงหรือไม่ก่อนสั่งรีเฟรชหน้าจอ
+            const isDataChanged = JSON.stringify(registrations) !== JSON.stringify(json.records);
             
-            // ป้องกันการเด้งรีเซ็ตหน้าจอขณะที่ครูกำลังแก้ไขหรือกำลังกรอกข้อมูลในขั้นตอนที่ 2
-            const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
-            if (!editingId && currentStep !== 2) {
-              checkSelectedEventLiveStatus();
-              onGroupChange();
+            if (isDataChanged) {
+              const prevSelectedCompId = currentComp ? currentComp.id : null;
+              const wasTargetTakenBefore = prevSelectedCompId ? registrations.some(r => r.competitionId === prevSelectedCompId) : false;
+
+              registrations = json.records;
+              saveAllData();
+
+              // หากหน้าต่างตารางเปิดอยู่ และผู้ใช้ไม่ได้กำลังพิมพ์ค้นหา ให้รีเรนเดอร์ตาราง
+              const searchInput = document.getElementById("modalSearchInput");
+              const isSearching = searchInput && document.activeElement === searchInput;
+              if (!isSearching) {
+                renderEntriesTable();
+              }
+
+              // ตรวจสอบสถานะของรายการที่เลือกอยู่ในขั้นตอนที่ 1
+              if (currentStep === 1) {
+                checkSelectedEventLiveStatus();
+                // แจ้งเตือนหากรายการที่กำลังเลือกอยู่เพิ่งถูกลงทะเบียนไปสดๆ ร้อนๆ
+                if (prevSelectedCompId && !wasTargetTakenBefore && registrations.some(r => r.competitionId === prevSelectedCompId)) {
+                  showToast("⚠️ รายการที่คุณเลือกอยู่ เพิ่งมีผู้ลงทะเบียนไปเมื่อสักครู่", "amber");
+                }
+              }
             }
           }
           const timeStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' น.';
@@ -3000,6 +3047,9 @@
       const submitBtn = document.getElementById("submitFormBtn");
       const submitText = document.getElementById("submitFormText");
 
+      // ล็อกข้อมูลกิจกรรมที่กำลังบันทึกไว้ให้แน่นอน ป้องกันการเด้งสลับรายการแข่งขัน
+      const targetCompSnapshot = { ...currentComp };
+
       // ป้องกันการกดย้ำๆ หลายรอบ
       if (submitBtn) submitBtn.disabled = true;
       if (submitText) submitText.textContent = "กำลังตรวจสอบและบันทึกข้อมูล...";
@@ -3010,14 +3060,13 @@
           const checkRes = await fetch(googleSheetUrl + "?action=get");
           const checkJson = await checkRes.json();
           if (checkJson && checkJson.records) {
-            const alreadyTaken = checkJson.records.find(r => r.competitionId === currentComp.id || r.competitionName === currentComp.name);
+            const alreadyTaken = checkJson.records.find(r => r.competitionId === targetCompSnapshot.id || r.competitionName === targetCompSnapshot.name);
             if (alreadyTaken) {
               showToast(`⚠️ ขออภัย: รายการนี้เพิ่งมีเพื่อนครูลงทะเบียนไปเมื่อครู่ กรุณาเลือกรายการอื่น`, "rose");
               registrations = checkJson.records;
               saveAllData();
               renderEntriesTable();
               checkSelectedEventLiveStatus();
-              onGroupChange();
               goToStep(1);
               if (submitBtn) submitBtn.disabled = false;
               if (submitText) submitText.textContent = "บันทึกข้อมูลการลงทะเบียน";
@@ -3032,12 +3081,14 @@
       const mainCatRadio = document.querySelector('input[name="formCatType"]:checked');
       const mainCatType = mainCatRadio ? mainCatRadio.value : 'academic';
       const grpKey = document.getElementById("groupSelect").value;
-      const grpName = COMPETITIONS_DATA[mainCatType][grpKey].name;
+      const grpName = (COMPETITIONS_DATA[mainCatType] && COMPETITIONS_DATA[mainCatType][grpKey]) 
+                      ? COMPETITIONS_DATA[mainCatType][grpKey].name 
+                      : (targetCompSnapshot.groupName || "ทั่วไป");
 
       const filledStudents = [];
       const studentContainer = document.getElementById("studentFieldsContainer");
-      const totalStudentSlots = studentContainer ? studentContainer.children.length : currentComp.students;
-      const quotaRequired = currentComp.students;
+      const totalStudentSlots = studentContainer ? studentContainer.children.length : targetCompSnapshot.students;
+      const quotaRequired = targetCompSnapshot.students;
 
       for (let i = 0; i < totalStudentSlots; i++) {
         const pfx = (document.getElementById(`stPrefix_${i}`)?.value || '').trim();
@@ -3087,7 +3138,7 @@
         return;
       }
 
-      const minTeachersRequired = (currentComp.teachers && currentComp.teachers.length > 0) ? currentComp.teachers[0] : 1;
+      const minTeachersRequired = (targetCompSnapshot.teachers && targetCompSnapshot.teachers.length > 0) ? targetCompSnapshot.teachers[0] : 1;
       const isStudentsComplete = filledStudents.length >= quotaRequired;
       const isTeachersComplete = teachers.length >= minTeachersRequired;
       const isComplete = isStudentsComplete && isTeachersComplete;
@@ -3106,10 +3157,10 @@
             ...prevEntry,
             categoryType: mainCatType === 'academic' ? 'วิชาการ' : 'Soft Power',
             groupName: grpName,
-            competitionId: currentComp.id,
-            competitionName: currentComp.name,
-            competitionLevel: currentComp.level,
-            competitionType: currentComp.type,
+            competitionId: targetCompSnapshot.id,
+            competitionName: targetCompSnapshot.name,
+            competitionLevel: targetCompSnapshot.level,
+            competitionType: targetCompSnapshot.type,
             studentsQuota: quotaRequired,
             students: filledStudents,
             teachers: teachers,
@@ -3124,16 +3175,16 @@
             ? `เติมข้อมูลสมบูรณ์ครบตามเกณฑ์ (นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)` 
             : `บันทึกข้อมูลแล้ว (ยังไม่สมบูรณ์ ขาดนักเรียนอีก ${missingStudentCount} คน)`;
           
-          addAuditLog(currentComp.name, actionLabel, detail);
+          addAuditLog(targetCompSnapshot.name, actionLabel, detail);
           incrementUnreadChanges();
           showToast(isComplete ? "บันทึกเรียบร้อย: อยู่ในหมวด 'คนครบสมบูรณ์'" : `บันทึกแล้ว: ย้ายเข้าสู่หมวด 'ข้อมูลไม่สมบูรณ์' (รอเติมนักเรียนอีก ${missingStudentCount} คน)`, isComplete ? 'emerald' : 'amber');
           syncToGoogleSheet(registrations[index], "save");
           saveAllData();
           renderEntriesTable();
           checkSelectedEventLiveStatus();
-          onGroupChange();
-          showSuccessSaveModal(currentComp.name, isComplete, totalMissing, nowStr);
+          showSuccessSaveModal(targetCompSnapshot.name, isComplete, totalMissing, nowStr);
           resetFormToDefault();
+          goToStep(1); // กลับสู่หน้าแรก ขั้นตอนที่ 1 ทันที
         }
       } else {
         const newEntry = {
@@ -3141,10 +3192,10 @@
           school: "โรงเรียนอนุบาลนาคสมุทรเดชอุดม",
           categoryType: mainCatType === 'academic' ? 'วิชาการ' : 'Soft Power',
           groupName: grpName,
-          competitionId: currentComp.id,
-          competitionName: currentComp.name,
-          competitionLevel: currentComp.level,
-          competitionType: currentComp.type,
+          competitionId: targetCompSnapshot.id,
+          competitionName: targetCompSnapshot.name,
+          competitionLevel: targetCompSnapshot.level,
+          competitionType: targetCompSnapshot.type,
           studentsQuota: quotaRequired,
           students: filledStudents,
           teachers: teachers,
@@ -3158,18 +3209,18 @@
         registrations.unshift(newEntry);
         const actionLabel = isComplete ? "ลงทะเบียนใหม่ (คนครบ)" : "ลงทะเบียนใหม่ (ข้อมูลไม่สมบูรณ์)";
         const detail = isComplete 
-          ? `ลงทะเบียน ${currentComp.name} สมบูรณ์ (นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)` 
-          : `ลงทะเบียน ${currentComp.name} (ยังไม่สมบูรณ์ ขาดอีก ${totalMissing} คน)`;
+          ? `ลงทะเบียน ${targetCompSnapshot.name} สมบูรณ์ (นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)` 
+          : `ลงทะเบียน ${targetCompSnapshot.name} (ยังไม่สมบูรณ์ ขาดอีก ${totalMissing} คน)`;
 
-        addAuditLog(currentComp.name, actionLabel, detail);
+        addAuditLog(targetCompSnapshot.name, actionLabel, detail);
         incrementUnreadChanges();
         saveAllData();
         renderEntriesTable();
         checkSelectedEventLiveStatus();
-        onGroupChange();
         syncToGoogleSheet(newEntry, "save");
-        showSuccessSaveModal(currentComp.name, isComplete, totalMissing, nowStr);
+        showSuccessSaveModal(targetCompSnapshot.name, isComplete, totalMissing, nowStr);
         resetFormToDefault();
+        goToStep(1); // กลับสู่หน้าแรก ขั้นตอนที่ 1 ทันที
       }
 
       if (submitBtn) submitBtn.disabled = false;
@@ -3180,6 +3231,11 @@
       if (!inputEl) return;
       let val = inputEl.value;
       const selectEl = document.getElementById(prefixSelectId);
+
+      // ตรวจจับกรณีคุณครูพิมพ์ชื่อ 2 คนรวมกันในช่องเดียว เช่น "สมชาย และ สมหญิง"
+      if (/(\s+และ\s+|\s*,\s*|\s+กับ\s+)/.test(val)) {
+        showToast("💡 แนะนำ: กรุณาแยกพิมพ์ชื่อนักเรียนทีละคนในช่องคนที่ 1 และ 2 นะคะ", "amber");
+      }
 
       const patterns = [
         { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, target: "นางสาว" },
@@ -3211,9 +3267,13 @@
       const selectEl = document.getElementById(`tcPrefix_${index}`);
       const customInput = document.getElementById(`tcCustomPrefix_${index}`);
 
+      if (/(\s+และ\s+|\s*,\s*|\s+กับ\s+)/.test(val)) {
+        showToast("💡 แนะนำ: กรุณาแยกพิมพ์ชื่อครูผู้ฝึกสอนในช่องคนที่ 1 และ 2 นะคะ", "amber");
+      }
+
       const patterns = [
         { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, target: "นางสาว" },
-        { regex: /^สาว\s+/i, target: "นางสาว" },
+        { regex: /^สาว\s*/i, target: "นางสาว" },
         { regex: /^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)\s*/i, target: "ว่าที่ ร.ต." },
         { regex: /^(ดร\.|ดร\s)\s*/i, target: "ดร." },
         { regex: /^นาย\s*/i, target: "นาย" },
@@ -3369,11 +3429,14 @@
 
     function closeSuccessModalAndContinue() {
       closeModal('successSaveModal');
+      resetFormToDefault();
       goToStep(1);
     }
 
     function closeSuccessModalAndViewList() {
       closeModal('successSaveModal');
+      resetFormToDefault();
+      goToStep(1);
       openModal('entriesModal');
     }
 
@@ -4163,7 +4226,35 @@
     /* ========================================================
        APPLICATION INITIALIZATION ONLOAD
        ======================================================== */
+    function checkAndHandleLineBrowser() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera || "";
+      const isLine = /Line\//i.test(ua);
+
+      if (isLine) {
+        // หากเปิดผ่าน Android ให้สั่งเด้งเปิด Chrome ทันทีอย่างปลอดภัย (ไม่สั่ง replace วนลูป)
+        const isAndroid = /Android/i.test(ua);
+        if (isAndroid) {
+          const currentUrl = window.location.href;
+          const cleanUrl = currentUrl.replace(/^https?:\/\//i, '');
+          const intentUrl = `intent://${cleanUrl}#Intent;scheme=https;package=com.android.chrome;end`;
+          window.location.href = intentUrl;
+        } else {
+          // สำหรับ iOS / iPhone ให้แสดงแบนเนอร์แนะนำให้แตะ 3 จุดเปิดใน Safari
+          const banner = document.getElementById("lineAppBanner");
+          if (banner) banner.classList.remove("hidden");
+        }
+      }
+    }
+
+    function dismissLineBanner() {
+      const banner = document.getElementById("lineAppBanner");
+      if (banner) banner.classList.add("hidden");
+    }
+
     window.onload = function() {
+      // ตรวจจับและนำทางออกจาก LINE เบราว์เซอร์ทันที
+      checkAndHandleLineBrowser();
+
       try {
         const savedFontSize = localStorage.getItem(FONT_KEY) || 'lg';
         setFontSize(savedFontSize);
