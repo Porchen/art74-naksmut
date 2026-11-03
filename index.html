@@ -303,11 +303,63 @@
     </div>
   </div>
 
+  <!-- Success Celebration Modal (สำหรับผู้ใช้ที่ไม่ถนัดเทคโนโลยี ให้มั่นใจ 100% ว่าบันทึกสำเร็จ) -->
+  <div id="successSaveModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border-2 border-emerald-500/70 text-center space-y-4 animate-bounce-short">
+      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-3xl font-black shadow-[0_0_20px_rgba(16,185,129,0.5)]">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div class="space-y-1">
+        <h3 class="font-prompt font-extrabold text-emerald-300 text-xl sm:text-2xl">บันทึกข้อมูลสำเร็จแล้ว!</h3>
+        <p id="successSaveCompTitle" class="text-xs sm:text-sm text-gold-300 font-bold truncate">รายการแข่งขัน</p>
+        <p id="successSaveSubText" class="text-xs text-slate-300 pt-1">ข้อมูลถูกส่งเข้าสู่ระบบและ Google Sheets เรียบร้อยแล้วค่ะ</p>
+      </div>
+
+      <div class="bg-navy-950 p-3 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-1">
+        <div class="flex items-center justify-between">
+          <span>สถานะรายการ:</span>
+          <strong id="successSaveStatusBadge" class="text-emerald-400 font-bold">คนครบตามเกณฑ์</strong>
+        </div>
+        <div class="flex items-center justify-between">
+          <span>เวลาที่บันทึก:</span>
+          <span id="successSaveTimeText" class="text-slate-400 font-mono">เพิ่งบันทึก</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 font-prompt">
+        <button type="button" onclick="closeSuccessModalAndContinue()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-navy-800 text-gold-300 border border-gold-500/40 transition flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-solid fa-plus"></i> ลงรายการอื่นต่อ
+        </button>
+        <button type="button" onclick="closeSuccessModalAndViewList()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-list-check"></i> ดูรายการที่ลงแล้ว
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==========================================
        MAIN REGISTRATION & DASHBOARD WORKSPACE
        ========================================== -->
   <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6">
     
+    <!-- Visual Step Wizard (สำหรับคุณครูทุกคนให้เข้าใจง่ายว่าอยู่ขั้นตอนไหน) -->
+    <div class="bg-navy-900/90 rounded-2xl p-3 border border-gold-500/30 flex items-center justify-between gap-2 text-xs sm:text-sm font-prompt no-print shadow-md">
+      <div id="topWizardStep1" class="flex items-center gap-2 font-bold text-gold-300 flex-1">
+        <span class="w-7 h-7 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-xs font-black shadow">1</span>
+        <span class="truncate">เลือกรายการแข่งขัน</span>
+      </div>
+      <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+      <div id="topWizardStep2" class="flex items-center gap-2 font-medium text-slate-400 flex-1 justify-center">
+        <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700">2</span>
+        <span class="truncate">พิมพ์ชื่อ นร. & ครู</span>
+      </div>
+      <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+      <div id="topWizardStep3" class="flex items-center gap-2 font-medium text-slate-400 flex-1 justify-end">
+        <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700">3</span>
+        <span class="truncate">บันทึกสำเร็จ</span>
+      </div>
+    </div>
+
     <!-- Real-time Dashboard Summary Cards -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-3 no-print">
       <!-- Total Available -->
@@ -577,13 +629,13 @@
 
         <!-- FORM ACTION BUTTONS -->
         <div class="pt-6 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center gap-3 justify-between">
-          <button type="button" onclick="goToStep(1)" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 bg-navy-950 hover:bg-navy-800 border border-slate-700 transition flex items-center justify-center gap-1.5">
+          <button type="button" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 bg-navy-950 hover:bg-navy-800 border border-slate-700 transition flex items-center justify-center gap-1.5">
             <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปขั้นตอนที่ 1
           </button>
 
           <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button type="button" onclick="handleClearFormData()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-rose-300 bg-rose-950/60 hover:bg-rose-900 border border-rose-500/50 transition flex items-center justify-center gap-1.5 shadow">
-              <i class="fa-solid fa-arrow-rotate-left"></i> ล้างข้อมูล
+            <button type="button" id="btnFormResetClear" onclick="handleSmartFormReset()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-amber-300 bg-amber-950/60 hover:bg-amber-900 border border-amber-500/50 transition flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-solid fa-arrow-rotate-left"></i> <span id="textFormResetClear">ล้างข้อมูล</span>
             </button>
             
             <button type="submit" id="submitFormBtn" class="w-full sm:w-auto min-h-[52px] px-8 py-3 rounded-xl text-base font-extrabold font-prompt text-navy-950 bg-gradient-to-r from-gold-400 via-gold-500 to-amber-500 hover:from-gold-300 hover:to-gold-400 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition flex items-center justify-center gap-2.5">
@@ -1139,47 +1191,47 @@
 
   <!-- 8. Duplicate Names Modal -->
   <div id="duplicateModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+    <!-- ... duplicate modal contents ... -->
+  </div>
+
+  <!-- 9. Unregistered Events Modal (รายการที่ยังไม่ลงทะเบียน) -->
+  <div id="unregisteredModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-rose-500/60 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b-2 border-rose-500/30 bg-navy-950 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
-            <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <div class="w-11 h-11 rounded-2xl bg-rose-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
+            <i class="fa-solid fa-hourglass-start"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-gold-300 text-lg sm:text-xl">รายงานตรวจสอบรายชื่อซ้ำซ้อน</h3>
-            <p class="text-xs text-slate-300">ตรวจจับนักเรียนหรือครูผู้ฝึกสอนที่มีชื่อลงทะเบียนเกินกว่า 1 รายการแข่งขัน</p>
+            <h3 class="font-prompt font-bold text-rose-300 text-lg sm:text-xl">
+              รายการที่ยังไม่ลงทะเบียน (<span id="unregCountTitle">0</span> รายการ)
+            </h3>
+            <p class="text-xs text-slate-300">คลิกปุ่มเพื่อเลือกลงทะเบียนในรายการที่ยังว่างได้ทันที</p>
           </div>
         </div>
-        <button onclick="closeModal('duplicateModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('unregisteredModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-3 sm:p-4 border-b border-slate-800 bg-navy-950/50 flex items-center gap-2">
-        <button id="dupTabBtnStudents" onclick="switchDupTab('students')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5">
-          <i class="fa-solid fa-children"></i> นักเรียนที่มีชื่อซ้ำ (<span id="dupStudentBadgeCount">0</span>)
-        </button>
-        <button id="dupTabBtnTeachers" onclick="switchDupTab('teachers')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5">
-          <i class="fa-solid fa-chalkboard-user"></i> ครูผู้ฝึกสอนที่มีชื่อซ้ำ (<span id="dupTeacherBadgeCount">0</span>)
-        </button>
+      <div class="p-3.5 sm:p-4 bg-navy-950/60 border-b border-slate-800 flex items-center justify-between gap-3">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+          <input type="text" id="unregSearchInput" oninput="renderUnregisteredList()" placeholder="ค้นหารายการที่ยังว่าง, กลุ่มสาระ, ระดับชั้น..." class="w-full min-h-[44px] pl-10 pr-3 rounded-xl border border-slate-700 bg-navy-900 text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 text-xs sm:text-sm">
+        </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-        <div id="duplicateContentArea" class="space-y-3"></div>
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
+        <div id="unregisteredListContainer" class="space-y-3"></div>
       </div>
 
       <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-        <span>* ตามระเบียบ นักเรียน 1 คนไม่ควรลงแข่งขันกิจกรรมที่เวลาแข่งทับซ้อนกัน</span>
-        <button onclick="closeModal('duplicateModal')" class="px-5 py-2 bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold rounded-xl transition shadow">
+        <span>* ข้อมูลจะอัปเดตแบบ Real-time ตามรายการที่ลงทะเบียนแล้ว</span>
+        <button onclick="closeModal('unregisteredModal')" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition shadow">
           ปิดหน้าต่าง
         </button>
       </div>
     </div>
-  </div>
-
-  <!-- 9. Unregistered Events Modal -->
-  <div id="unregisteredModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <!-- ... unreg modal contents ... -->
   </div>
 
   <!-- 10. Admin Passcode Modal (PIN: 3979) -->
@@ -1449,6 +1501,7 @@
     const FONT_KEY = "art74_naksmut_font_size";
     const SHEET_URL_KEY = "art74_naksmut_sheet_url_v3";
     const UNREAD_CHANGES_KEY = "art74_naksmut_unread_changes_count";
+    const ADMIN_SESSION_KEY = "art74_naksmut_admin_unlocked";
     
     // Web App URL ของโรงเรียนอนุบาลนาคสมุทรเดชอุดม (ฝังถาวร)
     const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbw_xVtwQ7JB6PPADxsMQxg2vnPQf1Cs7POrmMTyhV8szMWG-pzH8eGlYe1n4nN7p725SQ/exec";
@@ -1466,6 +1519,13 @@
     let unreadChangesCount = 0;
     let pendingAdminAction = null;
     let isAdminUnlocked = false;
+    let originalEditingSnapshot = null;
+
+    try {
+      isAdminUnlocked = (sessionStorage.getItem("art74_naksmut_admin_unlocked") === "true");
+    } catch (e) {
+      isAdminUnlocked = false;
+    }
 
     /* ========================================================
        ACCESSIBILITY & MODAL CONTROLLERS (DEFINED BEFORE ONLOAD)
@@ -1538,6 +1598,10 @@
       const side1 = document.getElementById("sideStep1Indicator");
       const side2 = document.getElementById("sideStep2Indicator");
 
+      // Wizard Elements Top Bar
+      const wiz1 = document.getElementById("topWizardStep1");
+      const wiz2 = document.getElementById("topWizardStep2");
+
       if (step === 1) {
         if (s1) s1.classList.remove("hidden");
         if (s2) s2.classList.add("hidden");
@@ -1547,6 +1611,16 @@
         if (side2) {
           side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium";
         }
+        if (wiz1) {
+          wiz1.className = "flex items-center gap-2 font-bold text-gold-300 flex-1";
+          const s = wiz1.querySelector("span");
+          if (s) s.className = "w-7 h-7 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
+        }
+        if (wiz2) {
+          wiz2.className = "flex items-center gap-2 font-medium text-slate-400 flex-1 justify-center";
+          const s = wiz2.querySelector("span");
+          if (s) s.className = "w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700";
+        }
       } else {
         if (s1) s1.classList.add("hidden");
         if (s2) s2.classList.remove("hidden");
@@ -1555,6 +1629,239 @@
         }
         if (side2) {
           side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold";
+        }
+        if (wiz1) {
+          wiz1.className = "flex items-center gap-2 font-medium text-slate-400 flex-1";
+          const s = wiz1.querySelector("span");
+          if (s) s.className = "w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold";
+        }
+        if (wiz2) {
+          wiz2.className = "flex items-center gap-2 font-bold text-emerald-300 flex-1 justify-center";
+          const s = wiz2.querySelector("span");
+          if (s) s.className = "w-7 h-7 rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function addAuditLog(compName, action, detail) {
+      const now = new Date().toLocaleString("th-TH");
+      auditLogs.unshift({
+        id: "LOG-" + Date.now(),
+        timestamp: now,
+        competitionName: compName,
+        action: action,
+        detail: detail
+      });
+      if (auditLogs.length > 50) auditLogs.pop();
+    }
+
+    function renderAuditLogs() {
+      const container = document.getElementById("auditLogListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (auditLogs.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400">ยังไม่มีประวัติการบันทึกหรือแก้ไข</div>`;
+        return;
+      }
+
+      auditLogs.forEach(log => {
+        const item = document.createElement("div");
+        item.className = "p-3 rounded-xl bg-navy-950 border border-slate-800 flex items-start justify-between gap-3 text-xs";
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-gold-300 font-prompt text-sm">${log.competitionName}</div>
+            <div class="text-slate-300 mt-0.5">${log.detail}</div>
+            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-navy-900 border border-slate-700 text-[10px] text-slate-400 font-mono">${log.timestamp}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">${log.action}</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function updateBadges() {
+      const totalRegistered = registrations.length;
+      const incompleteCount = registrations.filter(r => !r.isComplete).length;
+      const completeCount = registrations.filter(r => r.isComplete).length;
+      const totalPossible = 78;
+      const remainingCount = Math.max(0, totalPossible - totalRegistered);
+      const percent = Math.min(100, Math.round((totalRegistered / totalPossible) * 100));
+
+      const elReg = document.getElementById("dashRegisteredCount");
+      const elRem = document.getElementById("dashRemainingCount");
+      const elInc = document.getElementById("dashIncompleteCount");
+      const elPct = document.getElementById("dashRegisteredPercent");
+
+      if (elReg) elReg.textContent = totalRegistered;
+      if (elRem) elRem.textContent = remainingCount;
+      if (elInc) elInc.textContent = incompleteCount;
+      if (elPct) elPct.textContent = `${percent}% (คลิกเพื่อตรวจ/แก้ไข)`;
+
+      // Count students & teachers
+      let totalStudents = 0;
+      let totalTeachers = 0;
+      registrations.forEach(r => {
+        totalStudents += (r.students || []).length;
+        totalTeachers += (r.teachers || []).length;
+      });
+
+      const elSt = document.getElementById("dashTotalStudents");
+      const elTc = document.getElementById("dashTotalTeachers");
+      if (elSt) elSt.textContent = totalStudents;
+      if (elTc) elTc.textContent = totalTeachers;
+
+      // Summary Count in notice
+      const summaryBadges = document.querySelectorAll(".entriesSummaryCount");
+      summaryBadges.forEach(el => el.textContent = totalRegistered);
+
+      // District Badge
+      const repCount = registrations.filter(r => !!r.isRepresentative).length;
+      const distBadge = document.getElementById("navDistrictBadge");
+      if (distBadge) distBadge.textContent = repCount;
+
+      // Donut Chart
+      const chartPct = document.getElementById("chartTotalPercent");
+      const chartComp = document.getElementById("chartValComplete");
+      const chartInc = document.getElementById("chartValIncomplete");
+      const chartRem = document.getElementById("chartValRemaining");
+      const segComp = document.getElementById("chartSegmentComplete");
+      const segInc = document.getElementById("chartSegmentIncomplete");
+
+      if (chartPct) chartPct.textContent = `${percent}%`;
+      if (chartComp) chartComp.textContent = completeCount;
+      if (chartInc) chartInc.textContent = incompleteCount;
+      if (chartRem) chartRem.textContent = remainingCount;
+
+      const circumference = 238.7;
+      if (segComp && segInc) {
+        const compFraction = completeCount / totalPossible;
+        const incFraction = incompleteCount / totalPossible;
+        const compDash = compFraction * circumference;
+        const incDash = incFraction * circumference;
+
+        segComp.style.strokeDasharray = `${compDash} ${circumference}`;
+        segInc.style.strokeDasharray = `${incDash} ${circumference}`;
+        segInc.style.strokeDashoffset = `-${compDash}`;
+      }
+
+      updateDuplicateSummary();
+    }
+
+    function switchCriteriaTab(type) {
+      const tabAcad = document.getElementById("criteriaTabAcademic");
+      const tabSoft = document.getElementById("criteriaTabSoftpower");
+      const btnAcad = document.getElementById("tabBtnAcademic");
+      const btnSoft = document.getElementById("tabBtnSoftpower");
+
+      if (type === 'academic') {
+        if (tabAcad) tabAcad.classList.remove("hidden");
+        if (tabSoft) tabSoft.classList.add("hidden");
+        if (btnAcad) btnAcad.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
+        if (btnSoft) btnSoft.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
+      } else {
+        if (tabAcad) tabAcad.classList.add("hidden");
+        if (tabSoft) tabSoft.classList.remove("hidden");
+        if (btnSoft) btnSoft.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
+        if (btnAcad) btnAcad.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
+      }
+    }
+
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+      if (modalId === 'summaryResultsModal') {
+        renderResultsListModal();
+      } else if (modalId === 'entriesModal') {
+        renderEntriesTable();
+      }
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    function loadStorageData() {
+      try {
+        const rawReg = localStorage.getItem(STORAGE_KEY);
+        registrations = rawReg ? JSON.parse(rawReg) : [];
+      } catch (err) {
+        console.warn("Error reading registrations storage", err);
+        registrations = [];
+      }
+
+      try {
+        const rawLogs = localStorage.getItem(LOGS_KEY);
+        auditLogs = rawLogs ? JSON.parse(rawLogs) : [];
+      } catch (err) {
+        console.warn("Error reading logs storage", err);
+        auditLogs = [];
+      }
+    }
+
+    function saveAllData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
+        localStorage.setItem(LOGS_KEY, JSON.stringify(auditLogs));
+        updateBadges();
+      } catch (err) {
+        console.error("Storage save failed", err);
+        showToast("พื้นที่จัดเก็บในเบราว์เซอร์ไม่เพียงพอ", "rose");
+      }
+    }
+
+    function goToStep(step) {
+      currentStep = step;
+      const s1 = document.getElementById("step1Section");
+      const s2 = document.getElementById("mainRegistrationForm");
+      const side1 = document.getElementById("sideStep1Indicator");
+      const side2 = document.getElementById("sideStep2Indicator");
+
+      // Wizard Elements Top Bar
+      const wiz1 = document.getElementById("topWizardStep1");
+      const wiz2 = document.getElementById("topWizardStep2");
+
+      if (step === 1) {
+        if (s1) s1.classList.remove("hidden");
+        if (s2) s2.classList.add("hidden");
+        if (side1) {
+          side1.className = "flex items-center gap-2 p-1.5 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold";
+        }
+        if (side2) {
+          side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium";
+        }
+        if (wiz1) {
+          wiz1.className = "flex items-center gap-2 font-bold text-gold-300 flex-1";
+          wiz1.querySelector("span").className = "w-7 h-7 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
+        }
+        if (wiz2) {
+          wiz2.className = "flex items-center gap-2 font-medium text-slate-400 flex-1 justify-center";
+          wiz2.querySelector("span").className = "w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700";
+        }
+      } else {
+        if (s1) s1.classList.add("hidden");
+        if (s2) s2.classList.remove("hidden");
+        if (side1) {
+          side1.className = "flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium";
+        }
+        if (side2) {
+          side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold";
+        }
+        if (wiz1) {
+          wiz1.className = "flex items-center gap-2 font-medium text-slate-400 flex-1";
+          wiz1.querySelector("span").className = "w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold";
+        }
+        if (wiz2) {
+          wiz2.className = "flex items-center gap-2 font-bold text-emerald-300 flex-1 justify-center";
+          wiz2.querySelector("span").className = "w-7 h-7 rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -1742,6 +2049,15 @@
       currentComp = COMPETITIONS_DATA[type][grpKey].items.find(i => i.id === compId);
       if (!currentComp) return;
 
+      // ป้องกัน Ghost Context: ถ้าเปลี่ยนรายการแข่งขันเองในหน้าแรก ให้ยกเลิกค้างโหมดแก้ไขเดิม
+      const editingId = document.getElementById("editingRecordId").value;
+      if (editingId) {
+        const currentEditRecord = registrations.find(r => r.id === editingId);
+        if (currentEditRecord && currentEditRecord.competitionId !== currentComp.id) {
+          cancelEditing(true);
+        }
+      }
+
       const ruleType = document.getElementById("ruleTypeName");
       const ruleStQuota = document.getElementById("ruleStudentsQuota");
       const ruleTcQuota = document.getElementById("ruleTeachersQuota");
@@ -1756,7 +2072,9 @@
 
       checkSelectedEventLiveStatus();
       buildStudentFields(currentComp.students, currentComp.level);
-      buildTeacherFields(currentComp.teachers[0]);
+      // ปรับให้ตั้งต้นด้วยจำนวนครูที่เยอะที่สุดของรายการนั้นทันที
+      const maxTeachers = (currentComp.teachers && currentComp.teachers.length > 1) ? currentComp.teachers[1] : (currentComp.teachers ? currentComp.teachers[0] : 1);
+      buildTeacherFields(maxTeachers);
     }
 
     function checkSelectedEventLiveStatus() {
@@ -1868,37 +2186,32 @@
               <span class="w-5 h-5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/40 flex items-center justify-center text-xs">${i + 1}</span>
               <span>นักเรียนคนที่ ${i + 1}</span>
             </span>
-            <span class="text-[11px] text-slate-400">รูปภาพ 480x640px ไม่แตก</span>
+            <span class="text-[11px] text-slate-400">กรอกข้อมูลผู้เข้าแข่งขัน</span>
           </div>
 
-          <div class="flex flex-col sm:flex-row items-center gap-3">
-            <div class="relative w-16 h-20 rounded-xl bg-navy-900 border-2 border-dashed border-slate-700 flex items-center justify-center overflow-hidden shrink-0 group hover:border-gold-400 transition cursor-pointer">
-              <img id="stPhotoPreview_${i}" src="" class="w-full h-full object-cover hidden">
-              <i id="stPhotoIcon_${i}" class="fa-solid fa-camera text-slate-500 text-lg group-hover:text-gold-400"></i>
-              <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'st', ${i})" class="absolute inset-0 opacity-0 cursor-pointer">
-              <input type="hidden" id="stPhotoInput_${i}" value="">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 w-full">
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">คำนำหน้า</label>
+              <select id="stPrefix_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm font-semibold focus:border-gold-500">
+                <option value="เด็กชาย">เด็กชาย</option>
+                <option value="เด็กหญิง">เด็กหญิง</option>
+                <option value="นาย">นาย</option>
+                <option value="นางสาว">นางสาว</option>
+              </select>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 flex-1 w-full">
-              <div class="sm:col-span-3">
-                <select id="stPrefix_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm font-semibold focus:border-gold-500">
-                  <option value="เด็กชาย">เด็กชาย</option>
-                  <option value="เด็กหญิง">เด็กหญิง</option>
-                  <option value="นาย">นาย</option>
-                  <option value="นางสาว">นางสาว</option>
-                </select>
-              </div>
-              <div class="sm:col-span-5">
-                <input type="text" id="stName_${i}" placeholder="ชื่อ - นามสกุล" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-3 text-xs sm:text-sm focus:border-gold-500">
-              </div>
-              <div class="sm:col-span-2">
-                <select id="stClass_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2 text-xs sm:text-sm font-semibold focus:border-gold-500">
-                  ${classOptions}
-                </select>
-              </div>
-              <div class="sm:col-span-2">
-                <input type="text" id="stRoom_${i}" placeholder="ห้อง (เช่น 1)" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm text-center focus:border-gold-500">
-              </div>
+            <div class="sm:col-span-5">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ชื่อ - นามสกุล (ไม่ต้องพิมพ์คำนำหน้าซ้ำ)</label>
+              <input type="text" id="stName_${i}" oninput="autoCleanPrefix(this, 'stPrefix_${i}')" placeholder="เช่น สมชาย ใจดี" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-3 text-xs sm:text-sm focus:border-gold-500">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ระดับชั้น</label>
+              <select id="stClass_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2 text-xs sm:text-sm font-semibold focus:border-gold-500">
+                ${classOptions}
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ห้อง</label>
+              <input type="text" id="stRoom_${i}" placeholder="เช่น 1 หรือ 2" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm text-center focus:border-gold-500">
             </div>
           </div>
         `;
@@ -1921,29 +2234,25 @@
               <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center justify-center text-xs">${i + 1}</span>
               <span>ครูผู้ฝึกสอนคนที่ ${i + 1}</span>
             </span>
-            <span class="text-[11px] text-slate-400">รูปภาพ 480x640px ไม่แตก</span>
+            <span class="text-[11px] text-slate-400">กรอกข้อมูลครูผู้ฝึกสอน</span>
           </div>
 
-          <div class="flex flex-col sm:flex-row items-center gap-3">
-            <div class="relative w-16 h-20 rounded-xl bg-navy-900 border-2 border-dashed border-slate-700 flex items-center justify-center overflow-hidden shrink-0 group hover:border-emerald-400 transition cursor-pointer">
-              <img id="tcPhotoPreview_${i}" src="" class="w-full h-full object-cover hidden">
-              <i id="tcPhotoIcon_${i}" class="fa-solid fa-camera text-slate-500 text-lg group-hover:text-emerald-400"></i>
-              <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'tc', ${i})" class="absolute inset-0 opacity-0 cursor-pointer">
-              <input type="hidden" id="tcPhotoInput_${i}" value="">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 w-full">
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">คำนำหน้า</label>
+              <select id="tcPrefix_${i}" onchange="onTeacherPrefixChange(${i})" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm font-semibold focus:border-emerald-400">
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว" selected>นางสาว</option>
+                <option value="ว่าที่ ร.ต.">ว่าที่ ร.ต.</option>
+                <option value="ดร.">ดร.</option>
+                <option value="OTHER">อื่นๆ (ระบุเอง)</option>
+              </select>
+              <input type="text" id="tcCustomPrefix_${i}" placeholder="ระบุคำนำหน้า" class="hidden mt-1.5 w-full min-h-[38px] rounded-lg bg-navy-900 border border-emerald-500 text-white px-2.5 text-xs focus:outline-none">
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 flex-1 w-full">
-              <div class="sm:col-span-3">
-                <select id="tcPrefix_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm font-semibold focus:border-emerald-400">
-                  <option value="นาย">นาย</option>
-                  <option value="นาง">นาง</option>
-                  <option value="นางสาว" selected>นางสาว</option>
-                  <option value="ว่าที่ ร.ต.">ว่าที่ ร.ต.</option>
-                </select>
-              </div>
-              <div class="sm:col-span-9">
-                <input type="text" id="tcName_${i}" placeholder="ชื่อ - นามสกุลครูผู้ฝึกสอน" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-3 text-xs sm:text-sm focus:border-emerald-400">
-              </div>
+            <div class="sm:col-span-9">
+              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ชื่อ - นามสกุลครูผู้ฝึกสอน (ไม่ต้องพิมพ์คำนำหน้าซ้ำ)</label>
+              <input type="text" id="tcName_${i}" oninput="autoCleanTeacherPrefix(this, ${i})" placeholder="เช่น ปิยะพร รักเรียน" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-3 text-xs sm:text-sm focus:border-emerald-400">
             </div>
           </div>
         `;
@@ -1951,87 +2260,712 @@
       }
     }
 
+    function onTeacherPrefixChange(index) {
+      const selectEl = document.getElementById(`tcPrefix_${index}`);
+      const customInput = document.getElementById(`tcCustomPrefix_${index}`);
+      if (!selectEl || !customInput) return;
+
+      if (selectEl.value === 'OTHER') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
+    function autoCleanTeacherPrefix(inputEl, index) {
+      if (!inputEl) return;
+      let val = inputEl.value;
+      const selectEl = document.getElementById(`tcPrefix_${index}`);
+      const customInput = document.getElementById(`tcCustomPrefix_${index}`);
+
+      const patterns = [
+        { regex: /^(นางสาว|น\.ส\.)\s*/i, target: "นางสาว" },
+        { regex: /^นาย\s*/i, target: "นาย" },
+        { regex: /^นาง\s*/i, target: "นาง" },
+        { regex: /^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)\s*/i, target: "ว่าที่ ร.ต." },
+        { regex: /^(ดร\.|ดร\s)\s*/i, target: "ดร." }
+      ];
+
+      for (let p of patterns) {
+        if (p.regex.test(val)) {
+          inputEl.value = val.replace(p.regex, '').trimStart();
+          if (selectEl) {
+            selectEl.value = p.target;
+            if (customInput) {
+              customInput.classList.add('hidden');
+              customInput.value = '';
+            }
+          }
+          return;
+        }
+      }
+    }
+
+    /* ========================================================
+       ENTRIES TABLE & ACTION HANDLERS
+       ======================================================== */
+    function renderEntriesTable() {
+      const tbody = document.getElementById("entriesTableBody");
+      const emptyState = document.getElementById("modalEmptyState");
+      const filterSelect = document.getElementById("modalStatusFilter");
+      const searchInput = document.getElementById("modalSearchInput");
+      const totalCountSpan = document.getElementById("totalRegisteredEvents");
+      const incompleteCountSpan = document.getElementById("totalIncompleteEvents");
+
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const filterVal = filterSelect ? filterSelect.value : "all";
+      const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+      const filtered = registrations.filter(r => {
+        if (filterVal === "incomplete" && r.isComplete) return false;
+        if (filterVal === "complete" && !r.isComplete) return false;
+        if (filterVal === "has_result" && !r.award) return false;
+        if (filterVal === "is_representative" && !r.isRepresentative) return false;
+
+        if (searchVal) {
+          const stNames = (r.students || []).map(s => s.fullName).join(" ");
+          const tcNames = (r.teachers || []).map(t => t.fullName).join(" ");
+          const compInfo = `${r.competitionName} ${r.groupName} ${r.competitionLevel} ${r.award || ''} ${stNames} ${tcNames}`.toLowerCase();
+          return compInfo.includes(searchVal);
+        }
+        return true;
+      });
+
+      if (totalCountSpan) totalCountSpan.textContent = registrations.length;
+      if (incompleteCountSpan) incompleteCountSpan.textContent = registrations.filter(r => !r.isComplete).length;
+
+      if (filtered.length === 0) {
+        if (emptyState) emptyState.classList.remove("hidden");
+        return;
+      } else {
+        if (emptyState) emptyState.classList.add("hidden");
+      }
+
+      filtered.forEach((r, idx) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-navy-950/70 border-b border-slate-800 transition";
+
+        const stHtml = (r.students && r.students.length > 0)
+          ? r.students.map((s, i) => `<div><span class="text-slate-400">${i + 1}.</span> <strong class="text-white">${s.fullName}</strong> <span class="text-[11px] text-gold-400">(${s.classInfo || '-'})</span></div>`).join("")
+          : `<span class="text-rose-400 text-xs italic">ยังไม่มีรายชื่อ</span>`;
+
+        const tcHtml = (r.teachers && r.teachers.length > 0)
+          ? r.teachers.map((t, i) => `<div><span class="text-slate-400">${i + 1}.</span> <span class="text-emerald-300 font-semibold">${t.fullName}</span></div>`).join("")
+          : `<span class="text-rose-400 text-xs italic">ยังไม่มีรายชื่อ</span>`;
+
+        let statusBadge = r.isComplete
+          ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+               <i class="fa-solid fa-circle-check"></i> คนครบแล้ว
+             </span>`
+          : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+               <i class="fa-solid fa-triangle-exclamation"></i> ขาด ${r.missingCount || 1} คน
+             </span>`;
+
+        let awardBadge = r.award
+          ? `<span class="inline-block px-2.5 py-1 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold">
+               ${r.award}
+             </span>
+             ${r.score ? `<div class="text-[11px] text-slate-300 font-mono mt-0.5">${r.score} คะแนน</div>` : ''}
+             ${r.isRepresentative ? `<span class="inline-block mt-1 px-1.5 py-0.2 rounded bg-emerald-600 text-white text-[10px] font-bold">ตัวแทนเขต</span>` : ''}`
+          : `<span class="text-slate-500 text-xs italic">ยังไม่มีผล</span>`;
+
+        tr.innerHTML = `
+          <td class="p-3.5 text-center font-bold text-gold-400 font-mono text-xs sm:text-sm">${idx + 1}</td>
+          <td class="p-3.5">
+            <div class="font-bold text-white text-sm sm:text-base font-prompt">${r.competitionName}</div>
+            <div class="text-xs text-slate-400 mt-0.5">${r.groupName} • ${r.competitionLevel} • ${r.competitionType}</div>
+            <div class="mt-1">${statusBadge}</div>
+          </td>
+          <td class="p-3.5 text-xs sm:text-sm space-y-1">${stHtml}</td>
+          <td class="p-3.5 text-xs sm:text-sm space-y-1">${tcHtml}</td>
+          <td class="p-3.5 text-center">${awardBadge}</td>
+          <td class="p-3.5 text-center">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="editEntry('${r.id}')" title="แก้ไขรายชื่อ / เปลี่ยนตัว" class="w-8 h-8 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-navy-950 border border-amber-500/40 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="openResultModal('${r.id}')" title="บันทึกผลการแข่งขัน" class="w-8 h-8 rounded-lg bg-gold-500/20 hover:bg-gold-500 text-gold-300 hover:text-navy-950 border border-gold-500/40 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-trophy"></i>
+              </button>
+              <button onclick="deleteEntry('${r.id}')" title="ลบรายการนี้" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white border border-rose-500/40 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ฟังก์ชันช่วยแกะคำนำหน้าและชื่อ-สกุลอย่างแม่นยำ ไม่ให้หลุดหรือตกหล่น
+    function parseFullNameToParts(rawFullName) {
+      if (!rawFullName) return { prefix: "เด็กชาย", name: "" };
+      let str = rawFullName.trim().replace(/\s+/g, ' ');
+
+      // จัดลำดับคำยาวขึ้นก่อนเสมอ (นางสาว ก่อน นาง) และครอบคลุมทั้งตัวย่อ
+      const prefixPatterns = [
+        { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, prefix: "นางสาว" },
+        { regex: /^(เด็กชาย|ด\.ช\.|ด\.ช\s)\s*/i, prefix: "เด็กชาย" },
+        { regex: /^(เด็กหญิง|ด\.ญ\.|ด\.ญ\s)\s*/i, prefix: "เด็กหญิง" },
+        { regex: /^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)\s*/i, prefix: "ว่าที่ ร.ต." },
+        { regex: /^(ดร\.|ดร\s)\s*/i, prefix: "ดร." },
+        { regex: /^นาย\s*/i, prefix: "นาย" },
+        { regex: /^นาง\s*/i, prefix: "นาง" }
+      ];
+
+      for (let p of prefixPatterns) {
+        if (p.regex.test(str)) {
+          let clean = str.replace(p.regex, '').trim();
+          // ดักเก็บเศษคำว่า "สาว" หากเคยถูกตัดผิดพลาด
+          clean = clean.replace(/^สาว\s*/, '').trim();
+          return {
+            prefix: p.prefix,
+            name: clean
+          };
+        }
+      }
+
+      // ดักกรณีพิเศษหากมีคำว่า "สาว" หลุดมาหน้าชื่อ
+      if (/^สาว\s+/i.test(str)) {
+        return {
+          prefix: "นางสาว",
+          name: str.replace(/^สาว\s+/i, '').trim()
+        };
+      }
+
+      return { prefix: "เด็กชาย", name: str };
+    }
+
+    function editEntry(id) {
+      const entry = registrations.find(r => r.id === id);
+      if (!entry) return;
+
+      closeModal('entriesModal');
+
+      // บันทึก Snapshot สำรองไว้กู้คืน
+      originalEditingSnapshot = JSON.parse(JSON.stringify(entry));
+
+      // 1. ตรวจหาหมวดหมู่และกิจกรรมแบบแม่นยำสูง (รองรับทั้ง id และชื่อรายการ)
+      let matchedCat = 'academic';
+      let matchedGroupKey = '';
+      let compDef = null;
+
+      const cleanCompName = (entry.competitionName || "").trim().toLowerCase();
+
+      for (const cat of ['academic', 'softpower']) {
+        for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
+          const found = grp.items.find(i => {
+            if (entry.competitionId && i.id === entry.competitionId) return true;
+            if (i.name && i.name.trim().toLowerCase() === cleanCompName) return true;
+            if (cleanCompName.includes(i.name.trim().toLowerCase()) || i.name.trim().toLowerCase().includes(cleanCompName)) return true;
+            return false;
+          });
+          if (found) {
+            matchedCat = cat;
+            matchedGroupKey = gKey;
+            compDef = found;
+            break;
+          }
+        }
+        if (compDef) break;
+      }
+
+      if (compDef) {
+        currentComp = compDef;
+        const catRadio = document.querySelector(`input[name="formCatType"][value="${matchedCat}"]`);
+        if (catRadio) catRadio.checked = true;
+        onCategoryChange();
+        const grpSelect = document.getElementById("groupSelect");
+        if (grpSelect) grpSelect.value = matchedGroupKey;
+        onGroupChange();
+        const compSelect = document.getElementById("competitionSelect");
+        if (compSelect) compSelect.value = compDef.id;
+      }
+
+      // 2. ตั้งค่าโหมดแก้ไขและปรับ UI
+      document.getElementById("editingRecordId").value = entry.id;
+      const banner = document.getElementById("editingBanner");
+      if (banner) banner.classList.remove("hidden");
+
+      const titleEl = document.getElementById("mainFormTitle");
+      if (titleEl) titleEl.textContent = `แก้ไขรายชื่อ / เปลี่ยนตัวผู้แข่งขัน (${entry.competitionName})`;
+
+      const compBadge = document.getElementById("selectedCompBadge");
+      const quotaBadge = document.getElementById("selectedQuotaBadge");
+      if (compBadge) compBadge.textContent = entry.competitionName;
+
+      // 3. กำหนดโควตาที่ถูกต้อง ป้องกันการกลายเป็น 1 คนเด็ดขาด
+      // คำนวณจาก: โควตาของเกณฑ์ หรือ จำนวนนักเรียนเดิมที่มีจริงในระบบ
+      const existingStudentCount = (entry.students && Array.isArray(entry.students)) ? entry.students.length : 0;
+      let quotaRequired = compDef ? compDef.students : (entry.studentsQuota || existingStudentCount || 1);
+      
+      // ถ้าในระบบเดิมมีเด็กมากกว่า ให้ขยายช่องรองรับเด็กทุกคนทันที ไม่ตัดทิ้ง
+      if (existingStudentCount > quotaRequired) {
+        quotaRequired = existingStudentCount;
+      }
+
+      const level = compDef ? compDef.level : (entry.competitionLevel || "ป.4-6");
+
+      // ปรับปรุงป้ายโควตาตัวหนังสือให้ตรงความจริง
+      const quotaStText = document.getElementById("quotaStudentText");
+      if (quotaStText) quotaStText.textContent = quotaRequired;
+      if (quotaBadge) {
+        quotaBadge.textContent = `โควตา: นักเรียน ${quotaRequired} คน • ครู ${compDef ? (compDef.teachers[0] + '-' + compDef.teachers[1]) : '1-2'} คน`;
+      }
+
+      // สั่งสร้างช่องกรอกนักเรียนตามโควตาจริง (เช่น 2 คน หรือ 3 คน ครบถ้วน)
+      buildStudentFields(quotaRequired, level);
+
+      // 4. หยอดข้อมูลนักเรียนเดิมลงในช่องอย่างแม่นยำ
+      (entry.students || []).forEach((st, idx) => {
+        if (idx < quotaRequired) {
+          const pfxEl = document.getElementById(`stPrefix_${idx}`);
+          const nameEl = document.getElementById(`stName_${idx}`);
+          const clsEl = document.getElementById(`stClass_${idx}`);
+          const roomEl = document.getElementById(`stRoom_${idx}`);
+
+          const parsed = parseFullNameToParts(st.fullName || st.name);
+          if (pfxEl) pfxEl.value = st.prefix || parsed.prefix;
+          if (nameEl) {
+            let cleanStName = st.name ? st.name.replace(/^(เด็กชาย|เด็กหญิง|นางสาว|ด\.ช\.|ด\.ญ\.|น\.ส\.|นาย|นาง)\s*/i, '').trim() : parsed.name;
+            cleanStName = cleanStName.replace(/^สาว\s*/, '').trim();
+            nameEl.value = cleanStName;
+          }
+
+          if (st.classInfo) {
+            const parts = st.classInfo.split('/');
+            if (clsEl && parts[0]) clsEl.value = parts[0].trim();
+            if (roomEl && parts[1]) roomEl.value = parts[1].trim();
+          } else {
+            if (clsEl && st.classLevel) clsEl.value = st.classLevel;
+            if (roomEl && st.room) roomEl.value = st.room;
+          }
+        }
+      });
+
+      // 5. หยอดข้อมูลครูผู้ฝึกสอนเดิม และปรับจำนวนช่องให้เป็นจำนวนเยอะที่สุดเสมอ
+      const existingTeacherCount = (entry.teachers && Array.isArray(entry.teachers)) ? entry.teachers.length : 0;
+      const minTeachersFromDef = compDef ? compDef.teachers[0] : 1;
+      const maxTeachersFromDef = compDef ? compDef.teachers[1] : 2;
+
+      // ปรับให้เป็นจำนวนเยอะที่สุด (Max) หรือจำนวนที่มีจริง เพื่อให้มีช่องกรอกสูงสุดที่แน่นอน
+      let teacherCount = Math.max(existingTeacherCount, maxTeachersFromDef, minTeachersFromDef, 1);
+      
+      const quotaTcText = document.getElementById("quotaTeacherText");
+      if (quotaTcText) {
+        quotaTcText.textContent = compDef ? `${compDef.teachers[0]}-${compDef.teachers[1]}` : '1-2';
+      }
+
+      currentTeacherCount = teacherCount;
+      buildTeacherFields(teacherCount);
+
+      (entry.teachers || []).forEach((tc, idx) => {
+        if (idx < teacherCount) {
+          const pfxEl = document.getElementById(`tcPrefix_${idx}`);
+          const customPfxEl = document.getElementById(`tcCustomPrefix_${idx}`);
+          const nameEl = document.getElementById(`tcName_${idx}`);
+
+          const parsed = parseFullNameToParts(tc.fullName || tc.name);
+          const foundPrefix = tc.prefix || (parsed.prefix.includes("เด็ก") ? "นางสาว" : parsed.prefix);
+          
+          if (pfxEl) {
+            const hasOption = Array.from(pfxEl.options).some(opt => opt.value === foundPrefix);
+            if (hasOption) {
+              pfxEl.value = foundPrefix;
+              if (customPfxEl) customPfxEl.classList.add('hidden');
+            } else {
+              pfxEl.value = 'OTHER';
+              if (customPfxEl) {
+                customPfxEl.classList.remove('hidden');
+                customPfxEl.value = foundPrefix;
+              }
+            }
+          }
+          if (nameEl) {
+            // ตัดคำนำหน้าโดยตรวจคำยาว (นางสาว, น.ส.) ก่อนคำว่า นาง และดักตัดคำว่า "สาว" ที่หลุดมาเดี่ยวๆ
+            let rawTcName = tc.name || parsed.name || "";
+            let cleanTcName = rawTcName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|นาย|นาง|ดร\.)\s*/i, '').trim();
+            cleanTcName = cleanTcName.replace(/^สาว\s*/i, '').trim();
+            nameEl.value = cleanTcName;
+          }
+        }
+      });
+
+      const submitBtnText = document.getElementById("submitFormText");
+      if (submitBtnText) submitBtnText.textContent = "บันทึกการแก้ไขข้อมูล";
+
+      const btnReset = document.getElementById("textFormResetClear");
+      if (btnReset) btnReset.textContent = "คืนค่ารายชื่อเดิม";
+
+      goToStep(2);
+      showToast(`เข้าสู่โหมดแก้ไข: ${entry.competitionName} (นร. ${quotaRequired} คน / ครู ${teacherCount} คน)`, "amber");
+    }
+
+    function handleSmartFormReset() {
+      const editingId = document.getElementById("editingRecordId").value;
+      if (editingId && originalEditingSnapshot) {
+        editEntry(originalEditingSnapshot.id);
+        showToast("ดึงรายชื่อเดิมกลับคืนมาเรียบร้อยแล้ว", "emerald");
+      } else {
+        handleClearFormData();
+      }
+    }
+
+    function handleGoBackToStep1Safe() {
+      const editingId = document.getElementById("editingRecordId").value;
+      if (editingId) {
+        showToast("ออกจากโหมดแก้ไขรายการเดิมแล้ว", "slate");
+        cancelEditing(true);
+      }
+      goToStep(1);
+    }
+
+    function cancelEditing(isSilent = false) {
+      resetFormToDefault();
+      originalEditingSnapshot = null;
+      if (!isSilent) {
+        goToStep(1);
+        showToast("ยกเลิกโหมดแก้ไขเรียบร้อย", "slate");
+      }
+    }
+
+    function resetFormToDefault() {
+      document.getElementById("editingRecordId").value = "";
+      const banner = document.getElementById("editingBanner");
+      if (banner) banner.classList.add("hidden");
+
+      const titleEl = document.getElementById("mainFormTitle");
+      if (titleEl) titleEl.textContent = "กรอกข้อมูลผู้เข้าแข่งขันและครูฝึกซ้อม";
+
+      const submitBtnText = document.getElementById("submitFormText");
+      if (submitBtnText) submitBtnText.textContent = "บันทึกข้อมูลการลงทะเบียน";
+
+      const btnReset = document.getElementById("textFormResetClear");
+      if (btnReset) btnReset.textContent = "ล้างข้อมูล";
+
+      if (currentComp) {
+        buildStudentFields(currentComp.students, currentComp.level);
+        buildTeacherFields(currentComp.teachers[0]);
+      }
+    }
+
+    function deleteEntry(id) {
+      const item = registrations.find(r => r.id === id);
+      if (!item) return;
+
+      if (confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบรายการ "${item.competitionName}"?`)) {
+        registrations = registrations.filter(r => r.id !== id);
+        addAuditLog(item.competitionName, "ลบรายการ", `ลบข้อมูลรายการ ${item.competitionName}`);
+        incrementUnreadChanges();
+        saveAllData();
+        renderEntriesTable();
+        checkSelectedEventLiveStatus();
+        onGroupChange();
+        syncToGoogleSheet({ id: id, competitionName: item.competitionName, groupName: item.groupName }, "delete");
+        showToast(`ลบรายการ ${item.competitionName} เรียบร้อยแล้ว`, "rose");
+      }
+    }
+
+    function clearAllRegistrations() {
+      if (registrations.length === 0) {
+        showToast("ไม่มีข้อมูลที่บันทึกไว้", "slate");
+        return;
+      }
+      if (confirm("⚠️ คำเตือน: คุณต้องการล้างข้อมูลที่ลงทะเบียนไว้ทั้งหมดในระบบใช่หรือไม่?")) {
+        registrations = [];
+        addAuditLog("ระบบส่วนกลาง", "ล้างข้อมูลทั้งหมด", "ผู้ดูแลระบบทำการล้างข้อมูลการลงทะเบียนทั้งหมด");
+        incrementUnreadChanges();
+        saveAllData();
+        renderEntriesTable();
+        checkSelectedEventLiveStatus();
+        onGroupChange();
+        closeModal('entriesModal');
+        showToast("ล้างข้อมูลที่ลงทะเบียนทั้งหมดเรียบร้อยแล้ว", "rose");
+      }
+    }
+
     function increaseTeacher() {
       if (!currentComp) return;
-      if (currentTeacherCount < currentComp.teachers[1]) {
+      const maxTeachers = currentComp.teachers ? currentComp.teachers[1] : 2;
+      if (currentTeacherCount < maxTeachers) {
         currentTeacherCount++;
         buildTeacherFields(currentTeacherCount);
+        showToast(`เพิ่มช่องครูคนที่ ${currentTeacherCount} เรียบร้อย`, "emerald");
       } else {
-        showToast(`โควตากิจกรรมนี้กำหนดครูได้สูงสุด ${currentComp.teachers[1]} คน`, "amber");
+        showToast(`เกณฑ์รายการนี้กำหนดครูได้สูงสุดไม่เกิน ${maxTeachers} คน`, "amber");
       }
     }
 
     function decreaseTeacher() {
       if (!currentComp) return;
-      if (currentTeacherCount > currentComp.teachers[0]) {
+      const minTeachers = currentComp.teachers ? currentComp.teachers[0] : 1;
+      if (currentTeacherCount > minTeachers) {
         currentTeacherCount--;
         buildTeacherFields(currentTeacherCount);
+        showToast(`ลดช่องครูเหลือ ${currentTeacherCount} คน`, "amber");
       } else {
-        showToast(`โควตากิจกรรมนี้ต้องมีครูอย่างน้อย ${currentComp.teachers[0]} คน`, "amber");
+        showToast(`เกณฑ์รายการนี้ต้องมีครูอย่างน้อย ${minTeachers} คน`, "rose");
       }
     }
 
-    function handlePhotoUpload(event, prefix, index) {
-      const file = event.target.files[0];
-      if (!file) return;
+    function saveCompetitionResult() {
+      const id = document.getElementById("resultRecordId").value;
+      const award = document.getElementById("resultAwardSelect").value;
+      const score = document.getElementById("resultScoreInput").value.trim();
+      const rank = document.getElementById("resultRankInput").value.trim();
+      const isRep = document.getElementById("resultIsRepresentCheck").checked;
+      const note = document.getElementById("resultNoteInput").value.trim();
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          const targetW = 480;
-          const targetH = 640;
-          canvas.width = targetW;
-          canvas.height = targetH;
-          const ctx = canvas.getContext("2d");
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
+      const item = registrations.find(r => r.id === id);
+      if (!item) return;
 
-          let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
-          const imgAspect = img.width / img.height;
-          const targetAspect = targetW / targetH;
+      item.award = award;
+      item.score = score;
+      item.rank = rank;
+      item.isRepresentative = isRep;
+      item.resultNote = note;
+      item.lastModifiedAt = new Date().toLocaleString("th-TH");
 
-          if (imgAspect > targetAspect) {
-            srcW = Math.round(img.height * targetAspect);
-            srcX = Math.round((img.width - srcW) / 2);
-          } else {
-            srcH = Math.round(img.width / targetAspect);
-            srcY = Math.round((img.height - srcH) / 2);
-          }
+      addAuditLog(item.competitionName, "บันทึกผลรางวัล", `บันทึกผล: ${award || 'ยังไม่มีรางวัล'} ${score ? '(' + score + ' คะแนน)' : ''} ${isRep ? '[ตัวแทนเขต]' : ''}`);
+      incrementUnreadChanges();
+      saveAllData();
+      renderEntriesTable();
+      renderResultsListModal();
+      closeModal('resultModal');
+      syncToGoogleSheet(item, "save");
+      showToast("บันทึกผลการแข่งขันเรียบร้อยแล้ว", "emerald");
+    }
 
-          ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
-          const base64Data = canvas.toDataURL("image/jpeg", 0.78);
+    function renderResultsListModal() {
+      const container = document.getElementById("resultsListContainer");
+      if (!container) return;
+      container.innerHTML = "";
 
-          const input = document.getElementById(`${prefix}PhotoInput_${index}`);
-          const preview = document.getElementById(`${prefix}PhotoPreview_${index}`);
-          const icon = document.getElementById(`${prefix}PhotoIcon_${index}`);
+      let goldWinner = 0;
+      let gold = 0;
+      let silver = 0;
+      let bronze = 0;
+      let repCount = 0;
 
-          if (input) input.value = base64Data;
-          if (preview) {
-            preview.src = base64Data;
-            preview.classList.remove("hidden");
-          }
-          if (icon) icon.classList.add("hidden");
+      const hasResults = registrations.filter(r => !!r.award);
 
-          showToast("อัปโหลดและปรับขนาดคมชัดระดับพิมพ์บัตรสำเร็จ", "emerald");
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      registrations.forEach(r => {
+        if (r.award) {
+          if (r.award.includes("เหรียญทอง ชนะเลิศ")) goldWinner++;
+          else if (r.award.includes("เหรียญทอง")) gold++;
+          else if (r.award.includes("เหรียญเงิน")) silver++;
+          else bronze++;
+        }
+        if (r.isRepresentative) repCount++;
+      });
+
+      const elGw = document.getElementById("statGoldWinner");
+      const elG = document.getElementById("statGold");
+      const elS = document.getElementById("statSilver");
+      const elB = document.getElementById("statBronze");
+      const elRep = document.getElementById("statRepresentCount");
+
+      if (elGw) elGw.textContent = goldWinner;
+      if (elG) elG.textContent = gold;
+      if (elS) elS.textContent = silver;
+      if (elB) elB.textContent = bronze;
+      if (elRep) elRep.textContent = repCount;
+
+      if (hasResults.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400">
+            <i class="fa-solid fa-trophy text-3xl mb-2 text-slate-600"></i>
+            <p class="font-bold text-white">ยังไม่มีรายการที่บันทึกผลการแข่งขัน</p>
+            <p class="text-xs text-slate-400 mt-1">สามารถกดบันทึกผลการแข่งขันได้ที่หน้า "รายการที่ลงไว้"</p>
+          </div>
+        `;
+        return;
+      }
+
+      hasResults.forEach(r => {
+        const item = document.createElement("div");
+        item.className = "p-3.5 rounded-2xl bg-navy-950 border border-slate-800 flex items-center justify-between gap-3";
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-white font-prompt text-sm sm:text-base">${r.competitionName}</div>
+            <div class="text-xs text-slate-400 mt-0.5">${r.groupName} • ${r.competitionLevel}</div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block px-3 py-1 rounded-xl bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs sm:text-sm font-bold">
+              ${r.award}
+            </span>
+            ${r.score ? `<div class="text-xs text-slate-300 font-mono mt-0.5">${r.score} คะแนน (อันดับ ${r.rank || '-'})</div>` : ''}
+            ${r.isRepresentative ? `<span class="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-bold">ตัวแทนเขต</span>` : ''}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openDistrictTransferModal() {
+      const container = document.getElementById("districtTransferListContainer");
+      const countEl = document.getElementById("districtCountSpan");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const reps = registrations.filter(r => !!r.isRepresentative);
+      if (countEl) countEl.textContent = reps.length;
+
+      if (reps.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400">
+            <i class="fa-solid fa-star text-3xl mb-2 text-slate-600"></i>
+            <p class="font-bold text-white">ยังไม่มีรายการที่ได้รับสถานะเป็นตัวแทนระดับเขต</p>
+            <p class="text-xs text-slate-400 mt-1">ระบุสถานะ "เป็นตัวแทนไปแข่งต่อระดับเขต" ได้ในหน้าบันทึกผลการแข่งขัน</p>
+          </div>
+        `;
+      } else {
+        reps.forEach((r, idx) => {
+          const item = document.createElement("div");
+          item.className = "p-4 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2";
+
+          const stNames = (r.students || []).map((s, i) => `${i + 1}. ${s.fullName} (${s.classInfo || '-'})`).join(", ");
+          const tcNames = (r.teachers || []).map((t, i) => `${i + 1}. ${t.fullName}`).join(", ");
+
+          item.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-emerald-300 font-prompt text-sm sm:text-base">${idx + 1}. ${r.competitionName}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-bold">ตัวแทนระดับเขต</span>
+            </div>
+            <div class="text-xs text-slate-300 space-y-1">
+              <div><strong class="text-gold-400">นักเรียน:</strong> ${stNames || 'ยังไม่ระบุ'}</div>
+              <div><strong class="text-emerald-400">ครูฝึกสอน:</strong> ${tcNames || 'ยังไม่ระบุ'}</div>
+              <div><strong class="text-slate-400">ผลการแข่งขันรอบเครือข่าย:</strong> ${r.award || '-'} ${r.score ? '(' + r.score + ' คะแนน)' : ''}</div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      }
+
+      openModal('districtTransferModal');
+    }
+
+    function copyDistrictTextSummary() {
+      const reps = registrations.filter(r => !!r.isRepresentative);
+      if (reps.length === 0) {
+        showToast("ไม่มีข้อมูลตัวแทนระดับเขต", "amber");
+        return;
+      }
+
+      let text = "🏆 สรุปรายชื่อตัวแทนเข้าร่วมการแข่งขันศิลปหัตถกรรมนักเรียน ครั้งที่ 74 ระดับเขตพื้นที่การศึกษา\n";
+      text += "โรงเรียนอนุบาลนาคสมุทรเดชอุดม สพป.อุบลราชธานี เขต 5\n\n";
+
+      reps.forEach((r, idx) => {
+        text += `${idx + 1}. ${r.competitionName} (${r.competitionLevel})\n`;
+        text += `   - นักเรียน: ${(r.students || []).map(s => s.fullName + ' [' + (s.classInfo || '-') + ']').join(', ')}\n`;
+        text += `   - ครูผู้ฝึกสอน: ${(r.teachers || []).map(t => t.fullName).join(', ')}\n`;
+        text += `   - ผลการแข่งขัน: ${r.award || '-'} ${r.score ? '(' + r.score + ' คะแนน)' : ''}\n\n`;
+      });
+
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+
+      showToast("คัดลอกข้อมูลสรุปตัวแทนระดับเขตเรียบร้อยแล้ว", "emerald");
+    }
+
+    function exportDistrictToCSV() {
+      const reps = registrations.filter(r => !!r.isRepresentative);
+      if (reps.length === 0) {
+        showToast("ยังไม่มีข้อมูลตัวแทนระดับเขตให้ส่งออก", "amber");
+        return;
+      }
+
+      let csv = "\uFEFF";
+      csv += "ลำดับ,โรงเรียน,รายการแข่งขัน,ระดับชั้น,หมวดหมู่,รายชื่อนักเรียน,ระดับชั้น/ห้อง,ครูผู้ฝึกสอน,รางวัลรอบเครือข่าย,คะแนน\n";
+
+      reps.forEach((r, i) => {
+        const stNames = (r.students || []).map((s, idx) => `${idx + 1}. ${s.fullName}`).join(" \n ");
+        const stClasses = (r.students || []).map((s, idx) => `${idx + 1}. ${s.classInfo || '-'}`).join(" \n ");
+        const tc = (r.teachers || []).map((t, idx) => `${idx + 1}. ${t.fullName}`).join(" \n ");
+
+        const row = [
+          i + 1,
+          `"${r.school}"`,
+          `"${r.competitionName}"`,
+          `"${r.competitionLevel}"`,
+          `"${r.categoryType}"`,
+          `"${stNames}"`,
+          `"${stClasses}"`,
+          `"${tc}"`,
+          `"${r.award || '-'}"`,
+          `"${r.score || '-'}"`
+        ];
+        csv += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ตัวแทนรอบเขต_ศิลปหัตถกรรม74_รร.อนุบาลนาคสมุทรเดชอุดม.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("ส่งออกข้อมูลตัวแทนรอบเขตเป็นไฟล์ CSV เรียบร้อยแล้ว", "emerald");
     }
 
     /* ========================================================
-       FORM SUBMISSION & CRUD
+       FORM SUBMISSION & CRUD (WITH PRE-SUBMIT CONFLICT GUARD)
        ======================================================== */
-    function handleRegistrationSubmit(e) {
+    async function handleRegistrationSubmit(e) {
       e.preventDefault();
       if (!currentComp) {
         showToast("กรุณาเลือกรายการแข่งขันก่อนบันทึก", "rose");
         return;
       }
 
+      if (!navigator.onLine) {
+        showToast("⚠️ ไม่พบสัญญาณอินเทอร์เน็ต กรุณาตรวจสอบการเชื่อมต่อก่อนบันทึก", "rose");
+        return;
+      }
+
       const editingId = document.getElementById("editingRecordId").value;
+      const submitBtn = document.getElementById("submitFormBtn");
+      const submitText = document.getElementById("submitFormText");
+
+      // ป้องกันการกดย้ำๆ หลายรอบ
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = "กำลังตรวจสอบและบันทึกข้อมูล...";
+
+      // ตรวจสอบ Conflict แบบ Real-time ทันทีในจังหวะกดบันทึก
+      if (!editingId && googleSheetUrl) {
+        try {
+          const checkRes = await fetch(googleSheetUrl + "?action=get");
+          const checkJson = await checkRes.json();
+          if (checkJson && checkJson.records) {
+            const alreadyTaken = checkJson.records.find(r => r.competitionId === currentComp.id || r.competitionName === currentComp.name);
+            if (alreadyTaken) {
+              showToast(`⚠️ ขออภัย: รายการนี้เพิ่งมีเพื่อนครูลงทะเบียนไปเมื่อครู่ กรุณาเลือกรายการอื่น`, "rose");
+              registrations = checkJson.records;
+              saveAllData();
+              renderEntriesTable();
+              checkSelectedEventLiveStatus();
+              onGroupChange();
+              goToStep(1);
+              if (submitBtn) submitBtn.disabled = false;
+              if (submitText) submitText.textContent = "บันทึกข้อมูลการลงทะเบียน";
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Pre-submit check bypassed due to network delay", err);
+        }
+      }
+
       const mainCatRadio = document.querySelector('input[name="formCatType"]:checked');
       const mainCatType = mainCatRadio ? mainCatRadio.value : 'academic';
       const grpKey = document.getElementById("groupSelect").value;
@@ -2045,7 +2979,6 @@
         const rawName = (document.getElementById(`stName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
         const cls = (document.getElementById(`stClass_${i}`)?.value || '').trim();
         const room = (document.getElementById(`stRoom_${i}`)?.value || '').trim();
-        const photo = document.getElementById(`stPhotoInput_${i}`)?.value || '';
 
         if (rawName) {
           const cleanNameOnly = rawName.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง|ด\.ช\.|ด\.ญ\.)\s*/, '').trim();
@@ -2055,36 +2988,44 @@
             fullName: `${pfx}${cleanNameOnly}`,
             classLevel: cls,
             room: room,
-            classInfo: `${cls}${room ? '/' + room : ''}`,
-            photo: photo
+            classInfo: `${cls}${room ? '/' + room : ''}`
           });
         }
       }
 
       const teachers = [];
       for (let i = 0; i < currentTeacherCount; i++) {
-        const pfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
+        const selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
+        const customPfx = (document.getElementById(`tcCustomPrefix_${i}`)?.value || '').trim();
+        const pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
         const rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
-        const photo = document.getElementById(`tcPhotoInput_${i}`)?.value || '';
 
         if (rawName) {
           const cleanNameOnly = rawName.replace(/^(นาย|นาง|นางสาว|ว่าที่ ร\.ต\.|ดร\.)\s*/, '').trim();
           teachers.push({
             prefix: pfx,
             name: cleanNameOnly,
-            fullName: `${pfx} ${cleanNameOnly}`,
-            photo: photo
+            fullName: `${pfx} ${cleanNameOnly}`
           });
         }
       }
 
       if (teachers.length === 0) {
         showToast("กรุณาระบุรายชื่อครูผู้ฝึกสอนอย่างน้อย 1 ท่าน", "amber");
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = editingId ? "บันทึกการแก้ไขข้อมูล" : "บันทึกข้อมูลการลงทะเบียน";
         return;
       }
 
-      const isComplete = filledStudents.length >= quotaRequired;
-      const missingCount = Math.max(0, quotaRequired - filledStudents.length);
+      const minTeachersRequired = (currentComp.teachers && currentComp.teachers.length > 0) ? currentComp.teachers[0] : 1;
+      const isStudentsComplete = filledStudents.length >= quotaRequired;
+      const isTeachersComplete = teachers.length >= minTeachersRequired;
+      const isComplete = isStudentsComplete && isTeachersComplete;
+
+      const missingStudentCount = Math.max(0, quotaRequired - filledStudents.length);
+      const missingTeacherCount = Math.max(0, minTeachersRequired - teachers.length);
+      const totalMissing = missingStudentCount + missingTeacherCount;
+
       const nowStr = new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
 
       if (editingId) {
@@ -2103,16 +3044,19 @@
             students: filledStudents,
             teachers: teachers,
             isComplete: isComplete,
-            missingCount: missingCount,
+            missingCount: totalMissing,
             isModified: true,
             lastModifiedAt: nowStr
           };
 
-          const actionLabel = prevEntry.isComplete ? "แก้ไขรายชื่อ" : "เติมคนเข้าแข่งขัน";
-          const detail = `ปรับปรุงข้อมูล ${currentComp.name} (นักเรียน ${filledStudents.length}/${quotaRequired} คน)`;
+          const actionLabel = isComplete ? "ลงทะเบียนคนครบสมบูรณ์" : "ข้อมูลไม่สมบูรณ์ (รอเติมคน)";
+          const detail = isComplete 
+            ? `เติมข้อมูลสมบูรณ์ครบตามเกณฑ์ (นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)` 
+            : `บันทึกข้อมูลแล้ว (ยังไม่สมบูรณ์ ขาดนักเรียนอีก ${missingStudentCount} คน)`;
+          
           addAuditLog(currentComp.name, actionLabel, detail);
           incrementUnreadChanges();
-          showToast(`บันทึกการปรับปรุงเรียบร้อย (${isComplete ? 'ครบตามเกณฑ์' : 'ยังขาด ' + missingCount + ' คน'})`, isComplete ? 'emerald' : 'amber');
+          showToast(isComplete ? "บันทึกเรียบร้อย: อยู่ในหมวด 'คนครบสมบูรณ์'" : `บันทึกแล้ว: ย้ายเข้าสู่หมวด 'ข้อมูลไม่สมบูรณ์' (รอเติมนักเรียนอีก ${missingStudentCount} คน)`, isComplete ? 'emerald' : 'amber');
           syncToGoogleSheet(registrations[index], "save");
         }
       } else {
@@ -2129,322 +3073,53 @@
           students: filledStudents,
           teachers: teachers,
           isComplete: isComplete,
-          missingCount: missingCount,
+          missingCount: totalMissing,
           isModified: false,
           createdAt: nowStr,
           lastModifiedAt: nowStr
         };
 
         registrations.unshift(newEntry);
-        addAuditLog(currentComp.name, "ลงทะเบียนใหม่", `ลงทะเบียน ${currentComp.name} (นักเรียน ${filledStudents.length}/${quotaRequired} คน)`);
+        const actionLabel = isComplete ? "ลงทะเบียนใหม่ (คนครบ)" : "ลงทะเบียนใหม่ (ข้อมูลไม่สมบูรณ์)";
+        const detail = isComplete
+          ? `ลงทะเบียน ${currentComp.name} (คนครบ นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)`
+          : `ลงทะเบียน ${currentComp.name} (ข้อมูลไม่สมบูรณ์ รอเติมนักเรียนอีก ${missingStudentCount} คน)`;
+
+        addAuditLog(currentComp.name, actionLabel, detail);
         incrementUnreadChanges();
-        showToast(isComplete ? "ลงทะเบียนสำเร็จเรียบร้อย" : `ลงทะเบียนแล้ว (ยังขาดนักเรียนอีก ${missingCount} คน กลับมาเติมทีหลังได้)`, isComplete ? "emerald" : "amber");
         syncToGoogleSheet(newEntry, "save");
+        showToast(isComplete ? "ลงทะเบียนคนครบสมบูรณ์เรียบร้อย" : `บันทึกเรียบร้อย: ย้ายเข้าสู่หมวด 'ข้อมูลไม่สมบูรณ์' (ยังขาดนักเรียนอีก ${missingStudentCount} คน)`, isComplete ? "emerald" : "amber");
+        showSuccessSaveModal(currentComp.name, isComplete, totalMissing, nowStr);
       }
+
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitText) submitText.textContent = "บันทึกข้อมูลการลงทะเบียน";
 
       saveAllData();
       resetFormToDefault();
-    }
-
-    function editEntry(id) {
-      const item = registrations.find(r => r.id === id);
-      if (!item) return;
-
-      closeModal('entriesModal');
-
-      const catType = (item.categoryType === 'วิชาการ') ? 'academic' : 'softpower';
-      const catRadio = document.querySelector(`input[name="formCatType"][value="${catType}"]`);
-      if (catRadio) catRadio.checked = true;
-      onCategoryChange();
-
-      let targetGroupKey = Object.keys(COMPETITIONS_DATA[catType])[0];
-      for (const [gKey, gVal] of Object.entries(COMPETITIONS_DATA[catType])) {
-        if (gVal.items.some(i => i.id === item.competitionId || i.name === item.competitionName)) {
-          targetGroupKey = gKey;
-          break;
-        }
-      }
-
-      document.getElementById("groupSelect").value = targetGroupKey;
-      onGroupChange();
-
-      document.getElementById("competitionSelect").value = item.competitionId;
-      onCompetitionChange();
-
-      document.getElementById("editingRecordId").value = item.id;
-      document.getElementById("editingBanner").classList.remove("hidden");
-      document.getElementById("mainFormTitle").textContent = "แก้ไขรายชื่อ / เติมคนเข้าแข่งขัน";
-      document.getElementById("submitFormText").textContent = "บันทึกการแก้ไขข้อมูล";
-
-      (item.students || []).forEach((st, idx) => {
-        const pfxEl = document.getElementById(`stPrefix_${idx}`);
-        const nameEl = document.getElementById(`stName_${idx}`);
-        const clsEl = document.getElementById(`stClass_${idx}`);
-        const roomEl = document.getElementById(`stRoom_${idx}`);
-        const photoInput = document.getElementById(`stPhotoInput_${idx}`);
-        const photoPreview = document.getElementById(`stPhotoPreview_${idx}`);
-        const photoIcon = document.getElementById(`stPhotoIcon_${idx}`);
-
-        if (pfxEl) pfxEl.value = st.prefix || 'เด็กชาย';
-        if (nameEl) nameEl.value = st.name || '';
-        if (clsEl && st.classLevel) clsEl.value = st.classLevel;
-        if (roomEl && st.room) roomEl.value = st.room;
-        if (st.photo && photoInput && photoPreview && photoIcon) {
-          photoInput.value = st.photo;
-          photoPreview.src = st.photo;
-          photoPreview.classList.remove("hidden");
-          photoIcon.classList.add("hidden");
-        }
-      });
-
-      if (item.teachers && item.teachers.length > 0) {
-        buildTeacherFields(item.teachers.length);
-        item.teachers.forEach((tc, idx) => {
-          const pfxEl = document.getElementById(`tcPrefix_${idx}`);
-          const nameEl = document.getElementById(`tcName_${idx}`);
-          const photoInput = document.getElementById(`tcPhotoInput_${idx}`);
-          const photoPreview = document.getElementById(`tcPhotoPreview_${idx}`);
-          const photoIcon = document.getElementById(`tcPhotoIcon_${idx}`);
-
-          if (pfxEl) pfxEl.value = tc.prefix || 'นางสาว';
-          if (nameEl) nameEl.value = tc.name || '';
-          if (tc.photo && photoInput && photoPreview && photoIcon) {
-            photoInput.value = tc.photo;
-            photoPreview.src = tc.photo;
-            photoPreview.classList.remove("hidden");
-            photoIcon.classList.add("hidden");
-          }
-        });
-      }
-
-      goToStep(2);
-      showToast("โหลดข้อมูลเดิมเข้าสู่แบบฟอร์มเรียบร้อย พร้อมแก้ไข", "amber");
-    }
-
-    function deleteEntry(id) {
-      const idx = registrations.findIndex(r => r.id === id);
-      if (idx === -1) return;
-
-      const item = registrations[idx];
-      if (confirm(`คุณต้องการลบรายการ "${item.competitionName}" ใช่หรือไม่?`)) {
-        registrations.splice(idx, 1);
-        addAuditLog(item.competitionName, "ลบรายการ", `ลบข้อมูลการลงทะเบียน ${item.competitionName}`);
-        saveAllData();
-        renderEntriesTable();
-        checkSelectedEventLiveStatus();
-        onGroupChange();
-        syncToGoogleSheet(item, "delete");
-        showToast("ลบข้อมูลรายการเรียบร้อย", "slate");
-      }
-    }
-
-    function cancelEditing() {
-      resetFormToDefault();
-      goToStep(1);
-      showToast("ยกเลิกโหมดแก้ไขเรียบร้อย", "slate");
-    }
-
-    function resetFormToDefault() {
-      document.getElementById("editingRecordId").value = "";
-      document.getElementById("editingBanner").classList.add("hidden");
-      document.getElementById("mainFormTitle").textContent = "กรอกข้อมูลผู้เข้าแข่งขันและครูฝึกซ้อม";
-      document.getElementById("submitFormText").textContent = "บันทึกข้อมูลการลงทะเบียน";
-      if (currentComp) {
-        buildStudentFields(currentComp.students, currentComp.level);
-        buildTeacherFields(currentComp.teachers[0]);
-      }
-      goToStep(1);
+      renderEntriesTable();
       checkSelectedEventLiveStatus();
       onGroupChange();
     }
 
-    function handleClearFormData() {
-      if (confirm("คุณต้องการล้างข้อมูลในแบบฟอร์มนี้ใช่หรือไม่?")) {
-        resetFormToDefault();
-        showToast("ล้างข้อมูลในฟอร์มเรียบร้อย", "slate");
-      }
-    }
-
-    function clearAllRegistrations() {
-      if (confirm("คำเตือน: คุณต้องการล้างข้อมูลที่ลงทะเบียนไว้ทั้งหมดใช่หรือไม่?")) {
-        registrations = [];
-        saveAllData();
-        renderEntriesTable();
-        checkSelectedEventLiveStatus();
-        onGroupChange();
-        showToast("ล้างข้อมูลการลงทะเบียนทั้งหมดแล้ว", "rose");
-      }
-    }
-
-    /* ========================================================
-       TABLE RENDERING & AUDIT LOGS
-       ======================================================== */
-    function renderEntriesTable() {
-      const tbody = document.getElementById("entriesTableBody");
-      const emptyState = document.getElementById("modalEmptyState");
-      if (!tbody) return;
-      tbody.innerHTML = "";
-
-      const query = (document.getElementById("modalSearchInput")?.value || "").toLowerCase().trim();
-      const filter = document.getElementById("modalStatusFilter")?.value || "all";
-
-      const filtered = registrations.filter(r => {
-        let matchStatus = true;
-        if (filter === "incomplete") matchStatus = !r.isComplete;
-        else if (filter === "complete") matchStatus = r.isComplete;
-        else if (filter === "has_result") matchStatus = !!r.award;
-        else if (filter === "is_representative") matchStatus = !!r.isRepresentative;
-
-        if (!matchStatus) return false;
-        if (!query) return true;
-
-        const stStr = (r.students || []).map(s => s.fullName).join(" ");
-        const tcStr = (r.teachers || []).map(t => t.fullName).join(" ");
-        const searchPool = `${r.competitionName} ${r.groupName} ${r.categoryType} ${stStr} ${tcStr} ${r.award || ''}`.toLowerCase();
-        return searchPool.includes(query);
-      });
-
-      if (filtered.length === 0) {
-        if (emptyState) emptyState.classList.remove("hidden");
-        return;
-      }
-      if (emptyState) emptyState.classList.add("hidden");
-
-      filtered.forEach((r, idx) => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-navy-950/40 transition text-xs sm:text-sm";
-
-        const stHtml = (r.students || []).map((s, i) => `
-          <div class="flex items-center gap-1.5 py-0.5">
-            <span class="w-4 h-4 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/40 flex items-center justify-center text-[10px] shrink-0">${i + 1}</span>
-            <span class="font-bold text-white">${s.fullName}</span>
-            <span class="text-[11px] text-slate-400">(${s.classInfo})</span>
-          </div>
-        `).join("");
-
-        const tcHtml = (r.teachers || []).map((t, i) => `
-          <div class="flex items-center gap-1.5 py-0.5">
-            <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center justify-center text-[10px] shrink-0">${i + 1}</span>
-            <span class="font-bold text-emerald-300">${t.fullName}</span>
-          </div>
-        `).join("");
-
-        const awardBadge = r.award ? `
-          <span class="px-2 py-0.5 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold block text-center">
-            ${r.award} ${r.score ? `(${r.score} น.)` : ''}
-          </span>
-          ${r.isRepresentative ? '<span class="text-[10px] text-emerald-400 font-bold block text-center mt-1">⭐ ตัวแทนเขต</span>' : ''}
-        ` : `
-          <span class="text-slate-500 text-xs block text-center">- รอแข่ง -</span>
-        `;
-
-        tr.innerHTML = `
-          <td class="p-3 text-center font-bold text-slate-400">${idx + 1}</td>
-          <td class="p-3">
-            <div class="font-bold text-white font-prompt">${r.competitionName}</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">${r.groupName} • ${r.competitionType}</div>
-          </td>
-          <td class="p-3">${stHtml || '<span class="text-rose-400 text-xs">ยังไม่ระบุชื่อ</span>'}</td>
-          <td class="p-3">${tcHtml || '<span class="text-slate-500 text-xs">-</span>'}</td>
-          <td class="p-3">${awardBadge}</td>
-          <td class="p-3">
-            <div class="flex items-center justify-center gap-1.5">
-              <button onclick="editEntry('${r.id}')" class="w-8 h-8 rounded-lg bg-gold-500/20 hover:bg-gold-500 text-gold-300 hover:text-navy-950 flex items-center justify-center transition" title="แก้ไขรายชื่อ">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button onclick="openResultModal('${r.id}')" class="w-8 h-8 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-navy-950 flex items-center justify-center transition" title="บันทึกผลรางวัล">
-                <i class="fa-solid fa-trophy"></i>
-              </button>
-              <button onclick="deleteEntry('${r.id}')" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white flex items-center justify-center transition" title="ลบรายการ">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function addAuditLog(compName, action, detail) {
-      const log = {
-        id: "LOG-" + Date.now(),
-        time: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.',
-        compName: compName,
-        action: action,
-        detail: detail
-      };
-      auditLogs.unshift(log);
-      if (auditLogs.length > 50) auditLogs.pop();
-      saveAllData();
-    }
-
-    function renderAuditLogs() {
-      const container = document.getElementById("auditLogListContainer");
-      if (!container) return;
-      container.innerHTML = "";
-
-      if (auditLogs.length === 0) {
-        container.innerHTML = `
-          <div class="py-10 text-center text-slate-400">
-            <i class="fa-solid fa-clock-rotate-left text-3xl mb-2 text-slate-600"></i>
-            <p class="font-bold text-slate-300">ยังไม่มีประวัติการแก้ไขข้อมูล</p>
-          </div>
-        `;
-        return;
-      }
-
-      auditLogs.forEach(log => {
-        const item = document.createElement("div");
-        item.className = "p-3 rounded-xl bg-navy-950 border border-slate-800 flex items-start justify-between gap-3 text-xs";
-        item.innerHTML = `
-          <div class="space-y-0.5">
-            <div class="font-bold text-white font-prompt">${log.compName}</div>
-            <div class="text-slate-300">${log.detail}</div>
-            <div class="text-[10px] text-slate-500 font-mono">${log.time}</div>
-          </div>
-          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">
-            ${log.action}
-          </span>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function switchCriteriaTab(tab) {
-      const tabAcad = document.getElementById("criteriaTabAcademic");
-      const tabSoft = document.getElementById("criteriaTabSoftpower");
-      const btnAcad = document.getElementById("tabBtnAcademic");
-      const btnSoft = document.getElementById("tabBtnSoftpower");
-
-      if (tab === 'academic') {
-        tabAcad.classList.remove("hidden");
-        tabSoft.classList.add("hidden");
-        btnAcad.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
-        btnSoft.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
-      } else {
-        tabAcad.classList.add("hidden");
-        tabSoft.classList.remove("hidden");
-        btnSoft.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
-        btnAcad.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
-      }
-      renderCriteriaLists();
-    }
-
     window.onload = function() {
+      // Restore user font size preference
       const savedFontSize = localStorage.getItem(FONT_KEY) || 'lg';
       setFontSize(savedFontSize);
 
       loadStorageData();
       unreadChangesCount = parseInt(localStorage.getItem(UNREAD_CHANGES_KEY) || "0", 10);
       updateUnreadBadge();
-      
+
       googleSheetUrl = DEFAULT_SHEET_URL;
       localStorage.setItem(SHEET_URL_KEY, DEFAULT_SHEET_URL);
       updateSheetBadge();
 
+      // เรนเดอร์หมวดหมู่และรายการแข่งขันตั้งต้น
       onCategoryChange();
       renderEntriesTable();
       renderAuditLogs();
+      renderCriteriaLists();
       updateBadges();
       goToStep(1);
 
@@ -2481,42 +3156,40 @@
       updateUnreadBadge();
     }
 
-    /* ========================================================
-       ADMIN PASSCODE PROTECTION (PIN: 3979)
-       ======================================================== */
     function protectedAdminAction(actionKey, payload = null) {
       if (isAdminUnlocked) {
         executeAdminAction(actionKey, payload);
         return;
       }
       pendingAdminAction = { actionKey, payload };
-      const pinInput = document.getElementById("adminPinInput");
-      const err = document.getElementById("adminPinError");
-      if (pinInput) pinInput.value = "";
-      if (err) err.classList.add("hidden");
-      openModal("adminAuthModal");
-      setTimeout(() => { if (pinInput) pinInput.focus(); }, 150);
-    }
+    function autoCleanTeacherPrefix(inputEl, index) {
+      if (!inputEl) return;
+      let val = inputEl.value;
+      const selectEl = document.getElementById(`tcPrefix_${index}`);
+      const customInput = document.getElementById(`tcCustomPrefix_${index}`);
 
-    function handleAdminAuthSubmit(e) {
-      e.preventDefault();
-      const pinInput = document.getElementById("adminPinInput");
-      const err = document.getElementById("adminPinError");
-      const enteredPin = (pinInput ? pinInput.value : "").trim();
+      const patterns = [
+        { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, target: "นางสาว" },
+        { regex: /^สาว\s+/i, target: "นางสาว" },
+        { regex: /^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)\s*/i, target: "ว่าที่ ร.ต." },
+        { regex: /^(ดร\.|ดร\s)\s*/i, target: "ดร." },
+        { regex: /^นาย\s*/i, target: "นาย" },
+        { regex: /^นาง\s*/i, target: "นาง" }
+      ];
 
-      if (enteredPin === ADMIN_PASSCODE) {
-        isAdminUnlocked = true;
-        closeModal("adminAuthModal");
-        showToast("ยืนยันสิทธิ์แอดมินสำเร็จ", "emerald");
-        if (pendingAdminAction) {
-          executeAdminAction(pendingAdminAction.actionKey, pendingAdminAction.payload);
-          pendingAdminAction = null;
-        }
-      } else {
-        if (err) err.classList.remove("hidden");
-        if (pinInput) {
-          pinInput.value = "";
-          pinInput.focus();
+      for (let p of patterns) {
+        if (p.regex.test(val)) {
+          let cleanVal = val.replace(p.regex, '').trimStart();
+          cleanVal = cleanVal.replace(/^สาว\s*/i, '').trimStart();
+          inputEl.value = cleanVal;
+          if (selectEl) {
+            selectEl.value = p.target;
+            if (customInput) {
+              customInput.classList.add('hidden');
+              customInput.value = '';
+            }
+          }
+          return;
         }
       }
     }
@@ -2530,6 +3203,8 @@
         openDistrictTransferModal();
       } else if (actionKey === 'sheetConfig') {
         openModal('sheetConfigModal');
+      } else if (actionKey === 'summaryResults') {
+        openModal('summaryResultsModal');
       } else if (actionKey === 'recordResult') {
         openResultModalDirect(payload);
       }
@@ -2554,302 +3229,48 @@
       openModal("resultModal");
     }
 
-    function saveCompetitionResult() {
-      const id = document.getElementById("resultRecordId").value;
-      const index = registrations.findIndex(r => r.id === id);
-      if (index === -1) return;
+    function showSuccessSaveModal(compName, isComplete, missingCount, timeStr) {
+      const modal = document.getElementById("successSaveModal");
+      const title = document.getElementById("successSaveCompTitle");
+      const statusBadge = document.getElementById("successSaveStatusBadge");
+      const teachers = [];
+      for (let i = 0; i < currentTeacherCount; i++) {
+        const selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
+        const customPfx = (document.getElementById(`tcCustomPrefix_${i}`)?.value || '').trim();
+        const pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
+        const rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
 
-      const award = document.getElementById("resultAwardSelect").value;
-      const score = document.getElementById("resultScoreInput").value.trim();
-      const rank = document.getElementById("resultRankInput").value.trim();
-      const isRepresentative = document.getElementById("resultIsRepresentCheck").checked;
-      const resultNote = document.getElementById("resultNoteInput").value.trim();
-
-      registrations[index] = {
-        ...registrations[index],
-        award: award,
-        score: score,
-        rank: rank,
-        isRepresentative: isRepresentative,
-        resultNote: resultNote,
-        lastModifiedAt: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.'
-      };
-
-      addAuditLog(registrations[index].competitionName, "บันทึกผลการแข่งขัน", `บันทึกผล: ${award || 'ยังไม่มีผล'} ${score ? '(' + score + ' คะแนน)' : ''}`);
-      saveAllData();
-      syncToGoogleSheet(registrations[index], "save");
-      closeModal("resultModal");
-      showToast("บันทึกผลการแข่งขันเรียบร้อยแล้ว", "emerald");
-    }
-
-    function updateProgressChart(completeCount, incompleteCount, remainingCount) {
-      const total = 78;
-      const circumference = 2 * Math.PI * 38;
-
-      const completeRatio = completeCount / total;
-      const incompleteRatio = incompleteCount / total;
-
-      const completeDash = completeRatio * circumference;
-      const incompleteDash = incompleteRatio * circumference;
-
-      const segComplete = document.getElementById("chartSegmentComplete");
-      const segIncomplete = document.getElementById("chartSegmentIncomplete");
-      const totalPercentEl = document.getElementById("chartTotalPercent");
-
-      if (segComplete) {
-        segComplete.setAttribute("stroke-dasharray", `${completeDash} ${circumference}`);
-        segComplete.setAttribute("stroke-dashoffset", "0");
-      }
-
-      if (segIncomplete) {
-        segIncomplete.setAttribute("stroke-dasharray", `${incompleteDash} ${circumference}`);
-        segIncomplete.setAttribute("stroke-dashoffset", `-${completeDash}`);
-      }
-
-      const registeredTotal = completeCount + incompleteCount;
-      const totalPct = Math.round((registeredTotal / total) * 100);
-      if (totalPercentEl) totalPercentEl.textContent = `${totalPct}%`;
-
-      const valC = document.getElementById("chartValComplete");
-      if (valC) valC.textContent = completeCount;
-      const valI = document.getElementById("chartValIncomplete");
-      if (valI) valI.textContent = incompleteCount;
-      const valR = document.getElementById("chartValRemaining");
-      if (valR) valR.textContent = remainingCount;
-    }
-
-    function updateBadges() {
-      const count = registrations.length;
-      const completeCount = registrations.filter(r => r.isComplete).length;
-      const incompleteCount = registrations.filter(r => !r.isComplete).length;
-      const totalActivitiesCount = 78;
-      const remainingCount = Math.max(0, totalActivitiesCount - count);
-      const percentage = Math.round((count / totalActivitiesCount) * 100);
-
-      let totalStudents = 0;
-      let totalTeachers = 0;
-      let countGoldWinner = 0;
-      let countGold = 0;
-      let countSilver = 0;
-      let countBronze = 0;
-      let countRepresent = 0;
-
-      registrations.forEach(r => {
-        totalStudents += (r.students ? r.students.length : 0);
-        totalTeachers += (r.teachers ? r.teachers.length : 0);
-
-        if (r.award) {
-          if (r.award.includes("เหรียญทอง ชนะเลิศ")) countGoldWinner++;
-          else if (r.award.includes("เหรียญทอง")) countGold++;
-          else if (r.award.includes("เหรียญเงิน")) countSilver++;
-          else if (r.award.includes("ทองแดง") || r.award.includes("เข้าร่วม")) countBronze++;
+        if (rawName) {
+          let cleanNameOnly = rawName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|ดร\.|นาย|นาง)\s*/i, '').trim();
+          cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
+          teachers.push({
+            prefix: pfx,
+            name: cleanNameOnly,
+            fullName: `${pfx} ${cleanNameOnly}`
+          });
         }
-        if (r.isRepresentative) countRepresent++;
-      });
-
-      document.querySelectorAll(".entriesSummaryCount").forEach(el => el.textContent = count);
-
-      const totalRegEl = document.getElementById("totalRegisteredEvents");
-      if (totalRegEl) totalRegEl.textContent = count;
-
-      const totalIncEl = document.getElementById("totalIncompleteEvents");
-      if (totalIncEl) totalIncEl.textContent = incompleteCount;
-
-      const dashReg = document.getElementById("dashRegisteredCount");
-      if (dashReg) dashReg.textContent = count;
-      const dashPct = document.getElementById("dashRegisteredPercent");
-      if (dashPct) dashPct.textContent = `${percentage}% (คลิกเพื่อตรวจ/แก้ไข)`;
-      const dashRem = document.getElementById("dashRemainingCount");
-      if (dashRem) dashRem.textContent = remainingCount;
-      const dashInc = document.getElementById("dashIncompleteCount");
-      if (dashInc) dashInc.textContent = incompleteCount;
-      const dashSt = document.getElementById("dashTotalStudents");
-      if (dashSt) dashSt.textContent = totalStudents;
-      const dashTc = document.getElementById("dashTotalTeachers");
-      if (dashTc) dashTc.textContent = totalTeachers;
-
-      const statGW = document.getElementById("statGoldWinner");
-      if (statGW) statGW.textContent = countGoldWinner;
-      const statG = document.getElementById("statGold");
-      if (statG) statG.textContent = countGold;
-      const statS = document.getElementById("statSilver");
-      if (statS) statS.textContent = countSilver;
-      const statB = document.getElementById("statBronze");
-      if (statB) statB.textContent = countBronze;
-      const statRep = document.getElementById("statRepresentCount");
-      if (statRep) statRep.textContent = countRepresent;
-
-      const navDist = document.getElementById("navDistrictBadge");
-      if (navDist) navDist.textContent = countRepresent;
-
-      updateProgressChart(completeCount, incompleteCount, remainingCount);
-      updateDuplicateSummary();
-    }
-
-    function renderResultsListModal() {
-      const container = document.getElementById("resultsListContainer");
-      if (!container) return;
-      container.innerHTML = "";
-
-      const awardedList = registrations.filter(r => !!r.award);
-      if (awardedList.length === 0) {
-        container.innerHTML = `
-          <div class="py-10 text-center text-slate-400">
-            <i class="fa-solid fa-award text-3xl mb-2 text-slate-600"></i>
-            <p class="font-bold text-slate-300">ยังไม่มีรายการที่บันทึกผลการแข่งขัน</p>
-            <p class="text-xs text-slate-500 mt-1">สามารถกดปุ่ม "บันทึกผล" ได้จากตารางรายการที่ลงไว้</p>
-          </div>
-        `;
-        return;
       }
 
-      awardedList.forEach((r, idx) => {
-        const item = document.createElement("div");
-        item.className = "p-3 rounded-xl bg-navy-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5";
-        item.innerHTML = `
-          <div class="space-y-0.5">
-            <div class="font-bold text-white text-sm sm:text-base font-prompt">${idx + 1}. ${r.competitionName}</div>
-            <div class="text-xs text-slate-400">${r.groupName} | นักเรียน: ${(r.students || []).map(s => s.fullName).join(", ")}</div>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <span class="px-3 py-1 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 text-xs font-bold font-prompt">
-              ${r.award} ${r.score ? `(${r.score} คะแนน)` : ''}
-            </span>
-            ${r.isRepresentative ? `<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-bold">ตัวแทนเขต</span>` : ''}
-          </div>
-        `;
-        container.appendChild(item);
-      });
+      if (modal) modal.classList.remove("hidden");
     }
 
-    /* ========================================================
-       5.1 DISTRICT TRANSFER HANDLERS
-       ======================================================== */
-    function openDistrictTransferModal() {
-      const container = document.getElementById("districtTransferListContainer");
-      const countSpan = document.getElementById("districtCountSpan");
-      if (!container) return;
-      container.innerHTML = "";
-
-      const districtEntries = registrations.filter(r => !!r.isRepresentative);
-      if (countSpan) countSpan.textContent = districtEntries.length;
-
-      if (districtEntries.length === 0) {
-        container.innerHTML = `
-          <div class="py-12 text-center text-slate-400">
-            <i class="fa-solid fa-flag-checkered text-4xl text-slate-600 mb-2"></i>
-            <p class="font-bold text-white text-base">ยังไม่มีรายการที่เป็นตัวแทนไปแข่งขันต่อระดับเขต</p>
-            <p class="text-xs text-slate-400 mt-1">สามารถเลือกติ๊ก "เป็นตัวแทนไปแข่งต่อระดับเขต" ได้ที่ปุ่มบันทึกผลการแข่งขันค่ะ</p>
-          </div>
-        `;
-      } else {
-        districtEntries.forEach((r, idx) => {
-          const card = document.createElement("div");
-          card.className = "p-4 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2.5 shadow";
-
-          const stNames = (r.students || []).map(s => `${s.fullName} (${s.classInfo})`).join(", ");
-          const tcNames = (r.teachers || []).map(t => t.fullName).join(", ");
-
-          card.innerHTML = `
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-800 pb-2 gap-2">
-              <div>
-                <span class="text-xs text-gold-400 font-bold font-prompt">[${idx+1}] ${r.groupName}</span>
-                <h4 class="text-base font-bold text-white font-prompt">${r.competitionName}</h4>
-              </div>
-              <span class="px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500 text-xs font-bold">
-                ⭐ ตัวแทน สพป.อบ.5
-              </span>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div class="bg-navy-900 p-2.5 rounded-xl border border-slate-800">
-                <span class="text-slate-400 block font-semibold mb-0.5">นักเรียนผู้แข่งขัน:</span>
-                <span class="text-slate-200 font-bold">${stNames || 'ยังไม่ระบุ'}</span>
-              </div>
-              <div class="bg-navy-900 p-2.5 rounded-xl border border-slate-800">
-                <span class="text-slate-400 block font-semibold mb-0.5">ครูผู้ฝึกสอน:</span>
-                <span class="text-emerald-300 font-bold">${tcNames || 'ยังไม่ระบุ'}</span>
-              </div>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      }
-
-      openModal("districtTransferModal");
+    function closeSuccessModalAndContinue() {
+      closeModal('successSaveModal');
+      goToStep(1);
     }
 
-    function copyDistrictTextSummary() {
-      const districtEntries = registrations.filter(r => !!r.isRepresentative);
-      if (districtEntries.length === 0) {
-        showToast("ไม่มีข้อมูลตัวแทนระดับเขตให้คัดลอก", "amber");
-        return;
-      }
-
-      let text = "รายชื่อตัวแทนเข้าร่วมการแข่งขันงานศิลปหัตถกรรมนักเรียน ครั้งที่ 74 ระดับเขตพื้นที่การศึกษา\n";
-      text += "โรงเรียนอนุบาลนาคสมุทรเดชอุดม สพป.อุบลราชธานี เขต 5\n\n";
-
-      districtEntries.forEach((r, idx) => {
-        text += `${idx + 1}. ${r.competitionName} (${r.groupName})\n`;
-        text += `   - นักเรียน: ${(r.students || []).map(s => s.fullName + ' ชั้น ' + s.classInfo).join(", ")}\n`;
-        text += `   - ครูผู้ฝึกสอน: ${(r.teachers || []).map(t => t.fullName).join(", ")}\n`;
-        if (r.award) text += `   - ผลรอบเครือข่าย: ${r.award} (${r.score || '-'} คะแนน)\n`;
-        text += "\n";
-      });
-
-      const tempTextArea = document.createElement("textarea");
-      tempTextArea.value = text;
-      document.body.appendChild(tempTextArea);
-      tempTextArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempTextArea);
-
-      showToast("คัดลอกข้อมูลสรุปตัวแทนระดับเขตเรียบร้อย พร้อมนำไปวางใช้งาน", "emerald");
-    }
-
-    function exportDistrictToCSV() {
-      const districtEntries = registrations.filter(r => !!r.isRepresentative);
-      if (districtEntries.length === 0) {
-        showToast("ยังไม่มีรายการตัวแทนระดับเขต", "amber");
-        return;
-      }
-
-      let csv = "\uFEFF";
-      csv += "ลำดับ,สังกัดโรงเรียน,หมวดหมู่,กลุ่มสาระ/กิจกรรม,รายการแข่งขัน,ระดับชั้น,ประเภท,ผลรอบเครือข่าย,คะแนน,รายชื่อนักเรียน(ชั้น/ห้อง),รายชื่อครูผู้ฝึกสอน\n";
-
-      districtEntries.forEach((r, i) => {
-        const st = (r.students || []).map(s => `${s.fullName}(${s.classInfo})`).join(" / ");
-        const tc = (r.teachers || []).map(t => t.fullName).join(" / ");
-        csv += [
-          i + 1,
-          `"โรงเรียนอนุบาลนาคสมุทรเดชอุดม"`,
-          `"${r.categoryType}"`,
-          `"${r.groupName}"`,
-          `"${r.competitionName}"`,
-          `"${r.competitionLevel}"`,
-          `"${r.competitionType}"`,
-          `"${r.award || 'ตัวแทนกลุ่มเครือข่าย'}"`,
-          `"${r.score || ''}"`,
-          `"${st}"`,
-          `"${tc}"`
-        ].join(",") + "\n";
-      });
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `รายชื่อตัวแทนแข่งระดับเขต74_รร.อนุบาลนาคสมุทรเดชอุดม.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast("ส่งออกข้อมูลตัวแทนระดับเขตเรียบร้อย", "emerald");
-    }
-
-    function openFilteredEntries(filterType = 'all') {
-      const select = document.getElementById("modalStatusFilter");
-      if (select) select.value = filterType;
-      renderEntriesTable();
+    function closeSuccessModalAndViewList() {
+      closeModal('successSaveModal');
       openModal('entriesModal');
+    }
+
+    function openFilteredEntries(filterType) {
+      const filterSelect = document.getElementById("modalStatusFilter");
+      if (filterSelect) {
+        filterSelect.value = filterType;
+      }
+      openModal('entriesModal');
+      renderEntriesTable();
     }
 
     function openAllEventsDirectoryModal() {
