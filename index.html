@@ -1270,7 +1270,7 @@
     <div class="bg-navy-900 rounded-3xl max-w-3xl w-full max-h-[90vh] shadow-2xl border-2 border-amber-500/60 overflow-hidden flex flex-col">
       <div class="p-4 sm:p-5 border-b-2 border-amber-500/30 bg-navy-950 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
             <i class="fa-solid fa-clock-rotate-left"></i>
           </div>
           <div>
@@ -1285,17 +1285,44 @@
 
       <div class="p-3 bg-navy-950/60 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 px-4">
         <span>รายการบันทึกย้อนหลัง (เรียงจากล่าสุดไปหาเก่าสุด)</span>
-        <button onclick="clearAuditLogsHistory()" class="text-rose-400 hover:underline">ล้างประวัติ</button>
+        <button onclick="clearAuditLogsHistory()" class="text-rose-400 hover:text-rose-300 hover:underline">ล้างประวัติ</button>
       </div>
 
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
-        <div id="auditLogListContainer" class="space-y-2.5"></div>
+        <div id="auditLogListContainer" class="space-y-2.5">
+          <!-- Dynamically populated audit logs -->
+        </div>
       </div>
 
       <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
         <span>* ข้อมูลจะถูกบันทึกทุกครั้งที่มีการลงทะเบียนหรือแก้ไข</span>
         <button onclick="closeModal('auditLogsModal')" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-navy-950 font-bold rounded-xl transition shadow">
           ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. Custom Confirm Delete Modal (แก้ปัญหา confirm() โดนบล็อก กดลบไม่ได้) -->
+  <div id="deleteConfirmModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-rose-500/70 text-center space-y-4 animate-bounce-short">
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/50 flex items-center justify-center text-2xl font-black shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <div class="space-y-1">
+        <h3 class="font-prompt font-extrabold text-rose-300 text-lg sm:text-xl">ยืนยันการลบรายการนี้?</h3>
+        <p id="deleteTargetCompName" class="text-xs sm:text-sm text-gold-300 font-bold truncate">ชื่อรายการแข่งขัน</p>
+        <p class="text-xs text-slate-300 pt-1">เมื่อลบแล้ว รายการนี้จะกลับมาว่าง และสามารถเลือกลงทะเบียนใหม่ได้ทันทีค่ะ</p>
+      </div>
+
+      <input type="hidden" id="pendingDeleteRecordId" value="">
+
+      <div class="grid grid-cols-2 gap-2.5 pt-2 font-prompt">
+        <button type="button" onclick="closeModal('deleteConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">
+          ยกเลิก
+        </button>
+        <button type="button" onclick="confirmExecuteDelete()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-trash-can"></i> ยืนยันลบข้อมูล
         </button>
       </div>
     </div>
@@ -1945,8 +1972,13 @@
             registrations = json.records;
             saveAllData();
             renderEntriesTable();
-            checkSelectedEventLiveStatus();
-            onGroupChange();
+            
+            // ป้องกันการเด้งรีเซ็ตหน้าจอขณะที่ครูกำลังแก้ไขหรือกำลังกรอกข้อมูลในขั้นตอนที่ 2
+            const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
+            if (!editingId && currentStep !== 2) {
+              checkSelectedEventLiveStatus();
+              onGroupChange();
+            }
           }
           const timeStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' น.';
           const updateText = document.getElementById("sidebarLastUpdateText");
@@ -2049,9 +2081,9 @@
       currentComp = COMPETITIONS_DATA[type][grpKey].items.find(i => i.id === compId);
       if (!currentComp) return;
 
-      // ป้องกัน Ghost Context: ถ้าเปลี่ยนรายการแข่งขันเองในหน้าแรก ให้ยกเลิกค้างโหมดแก้ไขเดิม
-      const editingId = document.getElementById("editingRecordId").value;
-      if (editingId) {
+      // ป้องกัน Ghost Context: ถ้าเปลี่ยนรายการแข่งขันเองในหน้าแรก (Step 1) ให้ยกเลิกค้างโหมดแก้ไขเดิม
+      const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
+      if (editingId && currentStep === 1) {
         const currentEditRecord = registrations.find(r => r.id === editingId);
         if (currentEditRecord && currentEditRecord.competitionId !== currentComp.id) {
           cancelEditing(true);
@@ -2071,10 +2103,14 @@
       if (quotaTcText) quotaTcText.textContent = `${currentComp.teachers[0]}-${currentComp.teachers[1]}`;
 
       checkSelectedEventLiveStatus();
-      buildStudentFields(currentComp.students, currentComp.level);
-      // ปรับให้ตั้งต้นด้วยจำนวนครูที่เยอะที่สุดของรายการนั้นทันที
-      const maxTeachers = (currentComp.teachers && currentComp.teachers.length > 1) ? currentComp.teachers[1] : (currentComp.teachers ? currentComp.teachers[0] : 1);
-      buildTeacherFields(maxTeachers);
+
+      // สั่งสร้างช่องกรอกเฉพาะเมื่ออยู่ในขั้นตอนที่ 1 หรือไม่ได้อยู่ในโหมดแก้ไขเท่านั้น
+      // เพื่อป้องกันไม่ให้ไปสั่งล้างหรือรีเซ็ตช่องข้อมูลทับขณะกำลังแก้ไข
+      if (!editingId && currentStep === 1) {
+        buildStudentFields(currentComp.students, currentComp.level);
+        const maxTeachers = (currentComp.teachers && currentComp.teachers.length > 1) ? currentComp.teachers[1] : (currentComp.teachers ? currentComp.teachers[0] : 1);
+        buildTeacherFields(maxTeachers);
+      }
     }
 
     function checkSelectedEventLiveStatus() {
@@ -2658,17 +2694,44 @@
       const item = registrations.find(r => r.id === id);
       if (!item) return;
 
-      if (confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบรายการ "${item.competitionName}"?`)) {
-        registrations = registrations.filter(r => r.id !== id);
-        addAuditLog(item.competitionName, "ลบรายการ", `ลบข้อมูลรายการ ${item.competitionName}`);
-        incrementUnreadChanges();
-        saveAllData();
-        renderEntriesTable();
-        checkSelectedEventLiveStatus();
-        onGroupChange();
-        syncToGoogleSheet({ id: id, competitionName: item.competitionName, groupName: item.groupName }, "delete");
-        showToast(`ลบรายการ ${item.competitionName} เรียบร้อยแล้ว`, "rose");
+      // บันทึก ID และชื่อรายการที่ต้องการลบ แล้วเปิดหน้าต่างยืนยัน (ไม่ใช้ confirm() ของเบราว์เซอร์)
+      const inputId = document.getElementById("pendingDeleteRecordId");
+      const nameEl = document.getElementById("deleteTargetCompName");
+      if (inputId) inputId.value = id;
+      if (nameEl) nameEl.textContent = item.competitionName;
+
+      openModal('deleteConfirmModal');
+    }
+
+    function confirmExecuteDelete() {
+      const inputId = document.getElementById("pendingDeleteRecordId");
+      const id = inputId ? inputId.value : "";
+      if (!id) return;
+
+      const item = registrations.find(r => r.id === id);
+      if (!item) {
+        closeModal('deleteConfirmModal');
+        return;
       }
+
+      // ดำเนินการลบออกจากระบบ
+      registrations = registrations.filter(r => r.id !== id);
+      addAuditLog(item.competitionName, "ลบรายการ", `ลบข้อมูลรายการ ${item.competitionName}`);
+      incrementUnreadChanges();
+      saveAllData();
+      renderEntriesTable();
+      checkSelectedEventLiveStatus();
+      onGroupChange();
+
+      // สั่งลบแถวออกจาก Google Sheets
+      syncToGoogleSheet({ 
+        id: id, 
+        competitionName: item.competitionName, 
+        groupName: item.groupName 
+      }, "delete");
+
+      closeModal('deleteConfirmModal');
+      showToast(`ลบรายการ ${item.competitionName} เรียบร้อยแล้ว`, "rose");
     }
 
     function clearAllRegistrations() {
@@ -2972,16 +3035,19 @@
       const grpName = COMPETITIONS_DATA[mainCatType][grpKey].name;
 
       const filledStudents = [];
+      const studentContainer = document.getElementById("studentFieldsContainer");
+      const totalStudentSlots = studentContainer ? studentContainer.children.length : currentComp.students;
       const quotaRequired = currentComp.students;
 
-      for (let i = 0; i < quotaRequired; i++) {
+      for (let i = 0; i < totalStudentSlots; i++) {
         const pfx = (document.getElementById(`stPrefix_${i}`)?.value || '').trim();
         const rawName = (document.getElementById(`stName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
         const cls = (document.getElementById(`stClass_${i}`)?.value || '').trim();
         const room = (document.getElementById(`stRoom_${i}`)?.value || '').trim();
 
         if (rawName) {
-          const cleanNameOnly = rawName.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง|ด\.ช\.|ด\.ญ\.)\s*/, '').trim();
+          let cleanNameOnly = rawName.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง|ด\.ช\.|ด\.ญ\.|น\.ส\.)\s*/i, '').trim();
+          cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
           filledStudents.push({
             prefix: pfx,
             name: cleanNameOnly,
@@ -2994,14 +3060,18 @@
       }
 
       const teachers = [];
-      for (let i = 0; i < currentTeacherCount; i++) {
+      const teacherContainer = document.getElementById("teacherFieldsContainer");
+      const totalTeacherSlots = teacherContainer ? teacherContainer.children.length : currentTeacherCount;
+
+      for (let i = 0; i < totalTeacherSlots; i++) {
         const selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
         const customPfx = (document.getElementById(`tcCustomPrefix_${i}`)?.value || '').trim();
         const pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
         const rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
 
         if (rawName) {
-          const cleanNameOnly = rawName.replace(/^(นาย|นาง|นางสาว|ว่าที่ ร\.ต\.|ดร\.)\s*/, '').trim();
+          let cleanNameOnly = rawName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|นาย|นาง|ดร\.)\s*/i, '').trim();
+          cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
           teachers.push({
             prefix: pfx,
             name: cleanNameOnly,
@@ -3058,6 +3128,12 @@
           incrementUnreadChanges();
           showToast(isComplete ? "บันทึกเรียบร้อย: อยู่ในหมวด 'คนครบสมบูรณ์'" : `บันทึกแล้ว: ย้ายเข้าสู่หมวด 'ข้อมูลไม่สมบูรณ์' (รอเติมนักเรียนอีก ${missingStudentCount} คน)`, isComplete ? 'emerald' : 'amber');
           syncToGoogleSheet(registrations[index], "save");
+          saveAllData();
+          renderEntriesTable();
+          checkSelectedEventLiveStatus();
+          onGroupChange();
+          showSuccessSaveModal(currentComp.name, isComplete, totalMissing, nowStr);
+          resetFormToDefault();
         }
       } else {
         const newEntry = {
@@ -3081,87 +3157,54 @@
 
         registrations.unshift(newEntry);
         const actionLabel = isComplete ? "ลงทะเบียนใหม่ (คนครบ)" : "ลงทะเบียนใหม่ (ข้อมูลไม่สมบูรณ์)";
-        const detail = isComplete
-          ? `ลงทะเบียน ${currentComp.name} (คนครบ นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)`
-          : `ลงทะเบียน ${currentComp.name} (ข้อมูลไม่สมบูรณ์ รอเติมนักเรียนอีก ${missingStudentCount} คน)`;
+        const detail = isComplete 
+          ? `ลงทะเบียน ${currentComp.name} สมบูรณ์ (นร. ${filledStudents.length}/${quotaRequired} คน, ครู ${teachers.length} คน)` 
+          : `ลงทะเบียน ${currentComp.name} (ยังไม่สมบูรณ์ ขาดอีก ${totalMissing} คน)`;
 
         addAuditLog(currentComp.name, actionLabel, detail);
         incrementUnreadChanges();
+        saveAllData();
+        renderEntriesTable();
+        checkSelectedEventLiveStatus();
+        onGroupChange();
         syncToGoogleSheet(newEntry, "save");
-        showToast(isComplete ? "ลงทะเบียนคนครบสมบูรณ์เรียบร้อย" : `บันทึกเรียบร้อย: ย้ายเข้าสู่หมวด 'ข้อมูลไม่สมบูรณ์' (ยังขาดนักเรียนอีก ${missingStudentCount} คน)`, isComplete ? "emerald" : "amber");
         showSuccessSaveModal(currentComp.name, isComplete, totalMissing, nowStr);
+        resetFormToDefault();
       }
 
       if (submitBtn) submitBtn.disabled = false;
       if (submitText) submitText.textContent = "บันทึกข้อมูลการลงทะเบียน";
-
-      saveAllData();
-      resetFormToDefault();
-      renderEntriesTable();
-      checkSelectedEventLiveStatus();
-      onGroupChange();
     }
 
-    window.onload = function() {
-      // Restore user font size preference
-      const savedFontSize = localStorage.getItem(FONT_KEY) || 'lg';
-      setFontSize(savedFontSize);
+    function autoCleanPrefix(inputEl, prefixSelectId) {
+      if (!inputEl) return;
+      let val = inputEl.value;
+      const selectEl = document.getElementById(prefixSelectId);
 
-      loadStorageData();
-      unreadChangesCount = parseInt(localStorage.getItem(UNREAD_CHANGES_KEY) || "0", 10);
-      updateUnreadBadge();
+      const patterns = [
+        { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, target: "นางสาว" },
+        { regex: /^(เด็กชาย|ด\.ช\.|ด\.ช\s)\s*/i, target: "เด็กชาย" },
+        { regex: /^(เด็กหญิง|ด\.ญ\.|ด\.ญ\s)\s*/i, target: "เด็กหญิง" },
+        { regex: /^นาย\s*/i, target: "นาย" },
+        { regex: /^นาง\s*/i, target: "นาง" }
+      ];
 
-      googleSheetUrl = DEFAULT_SHEET_URL;
-      localStorage.setItem(SHEET_URL_KEY, DEFAULT_SHEET_URL);
-      updateSheetBadge();
+      for (let p of patterns) {
+        if (p.regex.test(val)) {
+          let cleanVal = val.replace(p.regex, '').trimStart();
+          cleanVal = cleanVal.replace(/^สาว\s*/i, '').trimStart();
+          inputEl.value = cleanVal;
+          if (selectEl) selectEl.value = p.target;
+          return;
+        }
+      }
 
-      // เรนเดอร์หมวดหมู่และรายการแข่งขันตั้งต้น
-      onCategoryChange();
-      renderEntriesTable();
-      renderAuditLogs();
-      renderCriteriaLists();
-      updateBadges();
-      goToStep(1);
-
-      // Auto-fetch ข้อมูลจาก Google Sheets แบบเรียลไทม์ทันทีที่เปิดหน้าเว็บ
-      fetchDataFromGoogleSheet(true);
-
-      // Auto-Sync เบื้องหลังทุกๆ 30 วินาที
-      if (autoSyncTimer) clearInterval(autoSyncTimer);
-      autoSyncTimer = setInterval(() => {
-        fetchDataFromGoogleSheet(true);
-      }, 30000);
-    };
-
-    function updateUnreadBadge() {
-      const badge = document.getElementById("unreadChangesBadge");
-      if (!badge) return;
-      if (unreadChangesCount > 0) {
-        badge.textContent = unreadChangesCount > 99 ? "99+" : unreadChangesCount;
-        badge.classList.remove("hidden");
-      } else {
-        badge.classList.add("hidden");
+      if (/^สาว\s+/i.test(val)) {
+        inputEl.value = val.replace(/^สาว\s+/i, '').trimStart();
+        if (selectEl) selectEl.value = "นางสาว";
       }
     }
 
-    function incrementUnreadChanges() {
-      unreadChangesCount++;
-      localStorage.setItem(UNREAD_CHANGES_KEY, unreadChangesCount.toString());
-      updateUnreadBadge();
-    }
-
-    function clearUnreadChanges() {
-      unreadChangesCount = 0;
-      localStorage.setItem(UNREAD_CHANGES_KEY, "0");
-      updateUnreadBadge();
-    }
-
-    function protectedAdminAction(actionKey, payload = null) {
-      if (isAdminUnlocked) {
-        executeAdminAction(actionKey, payload);
-        return;
-      }
-      pendingAdminAction = { actionKey, payload };
     function autoCleanTeacherPrefix(inputEl, index) {
       if (!inputEl) return;
       let val = inputEl.value;
@@ -3190,6 +3233,72 @@
             }
           }
           return;
+        }
+      }
+
+      if (/^สาว\s+/i.test(val)) {
+        inputEl.value = val.replace(/^สาว\s+/i, '').trimStart();
+        if (selectEl) selectEl.value = "นางสาว";
+      }
+    }
+
+    function handleClearFormData() {
+      if (!currentComp) return;
+      const quotaRequired = currentComp.students;
+      for (let i = 0; i < quotaRequired; i++) {
+        const nameEl = document.getElementById(`stName_${i}`);
+        const roomEl = document.getElementById(`stRoom_${i}`);
+        if (nameEl) nameEl.value = "";
+        if (roomEl) roomEl.value = "";
+      }
+      for (let i = 0; i < currentTeacherCount; i++) {
+        const nameEl = document.getElementById(`tcName_${i}`);
+        const customEl = document.getElementById(`tcCustomPrefix_${i}`);
+        if (nameEl) nameEl.value = "";
+        if (customEl) {
+          customEl.value = "";
+          customEl.classList.add("hidden");
+        }
+      }
+      showToast("ล้างข้อมูลในแบบฟอร์มเรียบร้อยแล้ว", "slate");
+    }
+
+    function protectedAdminAction(actionKey, payload = null) {
+      if (isAdminUnlocked) {
+        executeAdminAction(actionKey, payload);
+        return;
+      }
+      pendingAdminAction = { actionKey, payload };
+      const pinInput = document.getElementById("adminPinInput");
+      const err = document.getElementById("adminPinError");
+      if (pinInput) pinInput.value = "";
+      if (err) err.classList.add("hidden");
+      openModal("adminAuthModal");
+      setTimeout(() => { if (pinInput) pinInput.focus(); }, 150);
+    }
+
+    function handleAdminAuthSubmit(e) {
+      e.preventDefault();
+      const pinInput = document.getElementById("adminPinInput");
+      const err = document.getElementById("adminPinError");
+      const val = (pinInput ? pinInput.value : "").trim();
+
+      if (val === ADMIN_PASSCODE) {
+        isAdminUnlocked = true;
+        try {
+          sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+        } catch (e) {}
+        closeModal("adminAuthModal");
+        showToast("ยืนยันสิทธิ์ผู้ดูแลระบบสำเร็จ", "emerald");
+        if (pendingAdminAction) {
+          executeAdminAction(pendingAdminAction.actionKey, pendingAdminAction.payload);
+          pendingAdminAction = null;
+        }
+      } else {
+        if (err) err.classList.remove("hidden");
+        if (pinInput) {
+          pinInput.value = "";
+          pinInput.focus();
         }
       }
     }
@@ -3233,22 +3342,26 @@
       const modal = document.getElementById("successSaveModal");
       const title = document.getElementById("successSaveCompTitle");
       const statusBadge = document.getElementById("successSaveStatusBadge");
-      const teachers = [];
-      for (let i = 0; i < currentTeacherCount; i++) {
-        const selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
-        const customPfx = (document.getElementById(`tcCustomPrefix_${i}`)?.value || '').trim();
-        const pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
-        const rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
+      const timeText = document.getElementById("successSaveTimeText");
+      const subText = document.getElementById("successSaveSubText");
 
-        if (rawName) {
-          let cleanNameOnly = rawName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|ดร\.|นาย|นาง)\s*/i, '').trim();
-          cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
-          teachers.push({
-            prefix: pfx,
-            name: cleanNameOnly,
-            fullName: `${pfx} ${cleanNameOnly}`
-          });
+      if (title) title.textContent = compName;
+      if (timeText) timeText.textContent = timeStr;
+
+      if (statusBadge) {
+        if (isComplete) {
+          statusBadge.className = "text-emerald-400 font-bold";
+          statusBadge.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> คนครบตามเกณฑ์สมบูรณ์`;
+        } else {
+          statusBadge.className = "text-amber-400 font-bold";
+          statusBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ยังไม่สมบูรณ์ (ขาด ${missingCount} คน)`;
         }
+      }
+
+      if (subText) {
+        subText.textContent = isComplete 
+          ? "ข้อมูลครบถ้วนและถูกส่งเข้า Google Sheets เรียบร้อยแล้วค่ะ" 
+          : `บันทึกข้อมูลเข้าสู่ระบบเรียบร้อย (สามารถกลับมาแก้ไข/เติมรายชื่อที่ขาดอีก ${missingCount} คนได้ภายหลังค่ะ)`;
       }
 
       if (modal) modal.classList.remove("hidden");
@@ -3581,6 +3694,33 @@
       link.click();
       document.body.removeChild(link);
       showToast("ส่งออกข้อมูลเป็นไฟล์ Excel / CSV เรียบร้อยแล้ว", "emerald");
+    }
+
+    function updateUnreadBadge() {
+      const badge = document.getElementById("unreadChangesBadge");
+      if (!badge) return;
+      if (unreadChangesCount > 0) {
+        badge.textContent = unreadChangesCount > 99 ? '99+' : unreadChangesCount;
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+    }
+
+    function incrementUnreadChanges() {
+      unreadChangesCount++;
+      try {
+        localStorage.setItem(UNREAD_CHANGES_KEY, unreadChangesCount.toString());
+      } catch (e) {}
+      updateUnreadBadge();
+    }
+
+    function clearUnreadChanges() {
+      unreadChangesCount = 0;
+      try {
+        localStorage.setItem(UNREAD_CHANGES_KEY, "0");
+      } catch (e) {}
+      updateUnreadBadge();
     }
 
     function clearAuditLogsHistory() {
@@ -4019,6 +4159,48 @@
         toast.classList.add("-translate-y-24", "opacity-0");
       }, 3500);
     }
+
+    /* ========================================================
+       APPLICATION INITIALIZATION ONLOAD
+       ======================================================== */
+    window.onload = function() {
+      try {
+        const savedFontSize = localStorage.getItem(FONT_KEY) || 'lg';
+        setFontSize(savedFontSize);
+      } catch (e) {}
+
+      loadStorageData();
+
+      try {
+        googleSheetUrl = localStorage.getItem(SHEET_URL_KEY) || DEFAULT_SHEET_URL;
+      } catch (e) {
+        googleSheetUrl = DEFAULT_SHEET_URL;
+      }
+
+      try {
+        unreadChangesCount = parseInt(localStorage.getItem(UNREAD_CHANGES_KEY) || "0", 10);
+      } catch (e) {
+        unreadChangesCount = 0;
+      }
+      updateUnreadBadge();
+      updateSheetBadge();
+
+      onCategoryChange();
+      renderCriteriaLists();
+      renderEntriesTable();
+      renderAuditLogs();
+      updateBadges();
+      goToStep(1);
+
+      // Auto-fetch data from cloud on startup
+      fetchDataFromGoogleSheet(true);
+
+      // Background real-time periodic sync every 30 seconds
+      if (autoSyncTimer) clearInterval(autoSyncTimer);
+      autoSyncTimer = setInterval(() => {
+        fetchDataFromGoogleSheet(true);
+      }, 30000);
+    };
   </script>
 </body>
 </html>
