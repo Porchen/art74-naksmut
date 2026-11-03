@@ -570,6 +570,7 @@
          ======================================================== -->
     <form id="mainRegistrationForm" onsubmit="handleRegistrationSubmit(event)" class="hidden no-print">
       <input type="hidden" id="editingRecordId" value="">
+      <input type="hidden" id="editingCompIdSnapshot" value="">
 
       <div class="bg-navy-900/95 rounded-3xl p-5 sm:p-7 border-2 border-gold-500/40 shadow-2xl space-y-6">
         
@@ -601,6 +602,23 @@
             <span class="text-sm sm:text-base font-bold text-gold-400 font-prompt whitespace-nowrap">
               โรงเรียนอนุบาลนาคสมุทรเดชอุดม
             </span>
+          </div>
+        </div>
+
+        <!-- Edit Mode Guidance Notice Box (เตือนการเปลี่ยนกิจกรรม) -->
+        <div id="editModeNoticeBox" class="hidden p-3.5 rounded-2xl bg-amber-950/80 border-2 border-amber-500/60 text-amber-200 text-xs sm:text-sm space-y-1 shadow-md">
+          <div class="flex items-start gap-2.5 font-bold font-prompt text-amber-300">
+            <i class="fa-solid fa-circle-info text-base mt-0.5 text-gold-400 shrink-0"></i>
+            <div>
+              <span>คำแนะนำในการแก้ไขข้อมูล:</span>
+              <p class="font-normal text-slate-200 text-xs mt-0.5 leading-relaxed">
+                หน้านี้สำหรับ<strong>แก้ไขตัวสะกด เปลี่ยนตัว หรือเพิ่มเติมรายชื่อนักเรียนและครูผู้ฝึกสอนในกิจกรรมนี้</strong>เท่านั้น หากเลือกรายการแข่งขันผิดและต้องการเปลี่ยนไปลงกิจกรรมอื่น ให้กดปุ่ม 
+                <button type="button" onclick="cancelEditing(); openModal('entriesModal');" class="inline font-bold text-amber-300 underline hover:text-white px-1">
+                  "ไปที่ตารางรายการที่ลงไว้"
+                </button> 
+                แล้วกดรูปถังขยะสีแดงเพื่อลบรายการเดิมออกก่อนนะคะ
+              </p>
+            </div>
           </div>
         </div>
 
@@ -1814,105 +1832,6 @@
       }
     }
 
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-      }
-      if (modalId === 'summaryResultsModal') {
-        renderResultsListModal();
-      } else if (modalId === 'entriesModal') {
-        renderEntriesTable();
-      }
-    }
-
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-      }
-    }
-
-    function loadStorageData() {
-      try {
-        const rawReg = localStorage.getItem(STORAGE_KEY);
-        registrations = rawReg ? JSON.parse(rawReg) : [];
-      } catch (err) {
-        console.warn("Error reading registrations storage", err);
-        registrations = [];
-      }
-
-      try {
-        const rawLogs = localStorage.getItem(LOGS_KEY);
-        auditLogs = rawLogs ? JSON.parse(rawLogs) : [];
-      } catch (err) {
-        console.warn("Error reading logs storage", err);
-        auditLogs = [];
-      }
-    }
-
-    function saveAllData() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
-        localStorage.setItem(LOGS_KEY, JSON.stringify(auditLogs));
-        updateBadges();
-      } catch (err) {
-        console.error("Storage save failed", err);
-        showToast("พื้นที่จัดเก็บในเบราว์เซอร์ไม่เพียงพอ", "rose");
-      }
-    }
-
-    function goToStep(step) {
-      currentStep = step;
-      const s1 = document.getElementById("step1Section");
-      const s2 = document.getElementById("mainRegistrationForm");
-      const side1 = document.getElementById("sideStep1Indicator");
-      const side2 = document.getElementById("sideStep2Indicator");
-
-      // Wizard Elements Top Bar
-      const wiz1 = document.getElementById("topWizardStep1");
-      const wiz2 = document.getElementById("topWizardStep2");
-
-      if (step === 1) {
-        if (s1) s1.classList.remove("hidden");
-        if (s2) s2.classList.add("hidden");
-        if (side1) {
-          side1.className = "flex items-center gap-2 p-1.5 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold";
-        }
-        if (side2) {
-          side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium";
-        }
-        if (wiz1) {
-          wiz1.className = "flex items-center gap-2 font-bold text-gold-300 flex-1";
-          wiz1.querySelector("span").className = "w-7 h-7 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
-        }
-        if (wiz2) {
-          wiz2.className = "flex items-center gap-2 font-medium text-slate-400 flex-1 justify-center";
-          wiz2.querySelector("span").className = "w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700";
-        }
-      } else {
-        if (s1) s1.classList.add("hidden");
-        if (s2) s2.classList.remove("hidden");
-        if (side1) {
-          side1.className = "flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium";
-        }
-        if (side2) {
-          side2.className = "flex items-center gap-2 p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold";
-        }
-        if (wiz1) {
-          wiz1.className = "flex items-center gap-2 font-medium text-slate-400 flex-1";
-          wiz1.querySelector("span").className = "w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold";
-        }
-        if (wiz2) {
-          wiz2.className = "flex items-center gap-2 font-bold text-emerald-300 flex-1 justify-center";
-          wiz2.querySelector("span").className = "w-7 h-7 rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-xs font-black shadow";
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
     /* ========================================================
        GOOGLE SHEETS CLOUD SYNC & BADGE CONTROLLERS
        ======================================================== */
@@ -1983,7 +1902,7 @@
     async function fetchDataFromGoogleSheet(isSilent = false) {
       if (!googleSheetUrl) return;
 
-      // ป้องกัน Auto-sync รบกวน 100%: 
+      // ป้องกัน Auto-sync รบกวน 100% ในทุกกลุ่มสาระและทุกกิจกรรม:
       // 1. กำลังอยู่ในขั้นตอนที่ 2 (กำลังพิมพ์ชื่อ นร./ครู)
       // 2. กำลังอยู่ในโหมดแก้ไข (editingRecordId ไม่ว่าง)
       // 3. กำลังเปิดหน้าต่างโมดัลใดๆ อยู่ (เช่น กรอกผล, ลบรายการ, เช็กประวัติ, โอนรอบเขต)
@@ -2004,8 +1923,9 @@
             const isDataChanged = JSON.stringify(registrations) !== JSON.stringify(json.records);
             
             if (isDataChanged) {
-              const prevSelectedCompId = currentComp ? currentComp.id : null;
-              const wasTargetTakenBefore = prevSelectedCompId ? registrations.some(r => r.competitionId === prevSelectedCompId) : false;
+              // ล็อก ID กิจกรรมเดิมที่ผู้ใช้เลือกไว้ในหน้าลงทะเบียนหลัก ไม่ให้ดีดหลุดไปรายการแรกของกลุ่มใดๆ
+              const preservedCompId = currentComp ? currentComp.id : null;
+              const wasTargetTakenBefore = preservedCompId ? registrations.some(r => r.competitionId === preservedCompId) : false;
 
               registrations = json.records;
               saveAllData();
@@ -2017,11 +1937,14 @@
                 renderEntriesTable();
               }
 
-              // ตรวจสอบสถานะของรายการที่เลือกอยู่ในขั้นตอนที่ 1
-              if (currentStep === 1) {
+              // ถ้าอยู่ในหน้าลงทะเบียนหลัก (ขั้นตอนที่ 1) และไม่ได้อยู่ในโหมดแก้ไข
+              // ให้อัปเดตสถานะตัวเลือก [ลงแล้ว] / [ว่าง] โดยรักษารายการที่เลือกเดิมไว้ 100%
+              if (currentStep === 1 && !isEditingNow) {
+                refreshDropdownLabelsPreservingSelection(preservedCompId);
                 checkSelectedEventLiveStatus();
+
                 // แจ้งเตือนหากรายการที่กำลังเลือกอยู่เพิ่งถูกลงทะเบียนไปสดๆ ร้อนๆ
-                if (prevSelectedCompId && !wasTargetTakenBefore && registrations.some(r => r.competitionId === prevSelectedCompId)) {
+                if (preservedCompId && !wasTargetTakenBefore && registrations.some(r => r.competitionId === preservedCompId)) {
                   showToast("⚠️ รายการที่คุณเลือกอยู่ เพิ่งมีผู้ลงทะเบียนไปเมื่อสักครู่", "amber");
                 }
               }
@@ -2035,6 +1958,42 @@
       } catch (err) {
         console.warn("Auto-fetch silent error", err);
         if (!isSilent) showToast("ไม่สามารถดึงข้อมูลจาก Google Sheets ได้ในขณะนี้", "rose");
+      }
+    }
+
+    // ฟังก์ชันพิเศษสำหรับรีเฟรชป้ายกำกับ [ลงแล้ว] / [ว่าง] โดยล็อกรายการที่เลือกเดิมไว้ ไม่ให้ดีดไปรายการแรกของกลุ่ม
+    function refreshDropdownLabelsPreservingSelection(targetCompId) {
+      const catRadio = document.querySelector('input[name="formCatType"]:checked');
+      const type = catRadio ? catRadio.value : 'academic';
+      const grpSelect = document.getElementById("groupSelect");
+      const compSelect = document.getElementById("competitionSelect");
+      if (!grpSelect || !compSelect || !COMPETITIONS_DATA[type]) return;
+
+      const grpKey = grpSelect.value;
+      if (!COMPETITIONS_DATA[type][grpKey]) return;
+
+      const items = COMPETITIONS_DATA[type][grpKey].items;
+      const registeredIds = new Set(registrations.map(r => r.competitionId));
+      const registeredNames = new Set(registrations.map(r => r.competitionName));
+
+      // จดจำค่าที่เลือกอยู่เดิมก่อนอัปเดต
+      const currentSelectedVal = targetCompId || compSelect.value;
+
+      compSelect.innerHTML = "";
+      items.forEach(it => {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        const isRegistered = registeredIds.has(it.id) || registeredNames.has(it.name);
+        opt.textContent = `${isRegistered ? '🔒 [ลงแล้ว] ' : '🟢 [ว่าง] '} [${it.level}] ${it.name} (${it.type})`;
+        if (isRegistered) {
+          opt.className = "text-amber-400 font-bold bg-navy-950";
+        }
+        compSelect.appendChild(opt);
+      });
+
+      // กู้คืนค่าเดิมที่เลือกไว้กลับมาทันที
+      if (currentSelectedVal && Array.from(compSelect.options).some(o => o.value === currentSelectedVal)) {
+        compSelect.value = currentSelectedVal;
       }
     }
 
@@ -2091,20 +2050,29 @@
     }
 
     function onGroupChange() {
+      // หากอยู่ในขั้นตอนที่ 2 หรือกำลังแก้ไข ห้ามไม่ให้ล้างหรือสร้างทับ
+      const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
+      if (editingId || currentStep === 2) {
+        return;
+      }
+
       const catRadio = document.querySelector('input[name="formCatType"]:checked');
       const type = catRadio ? catRadio.value : 'academic';
-      const grpKey = document.getElementById("groupSelect").value;
+      const grpSelect = document.getElementById("groupSelect");
       const compSelect = document.getElementById("competitionSelect");
-      if (!compSelect || !COMPETITIONS_DATA[type] || !COMPETITIONS_DATA[type][grpKey]) return;
+      if (!grpSelect || !compSelect || !COMPETITIONS_DATA[type] || !COMPETITIONS_DATA[type][grpSelect.value]) return;
+
+      const grpKey = grpSelect.value;
       compSelect.innerHTML = "";
 
       const items = COMPETITIONS_DATA[type][grpKey].items;
       const registeredIds = new Set(registrations.map(r => r.competitionId));
+      const registeredNames = new Set(registrations.map(r => r.competitionName));
 
       items.forEach(it => {
         const opt = document.createElement("option");
         opt.value = it.id;
-        const isRegistered = registeredIds.has(it.id);
+        const isRegistered = registeredIds.has(it.id) || registeredNames.has(it.name);
         opt.textContent = `${isRegistered ? '🔒 [ลงแล้ว] ' : '🟢 [ว่าง] '} [${it.level}] ${it.name} (${it.type})`;
         if (isRegistered) {
           opt.className = "text-amber-400 font-bold bg-navy-950";
@@ -2115,6 +2083,14 @@
     }
 
     function onCompetitionChange() {
+      // ป้องกันการเด้งสลับกิจกรรม 100% ทุกกรณี:
+      // ถ้าอยู่ในโหมดแก้ไข หรือกำลังอยู่ในขั้นตอนที่ 2 (กำลังพิมพ์ชื่อ)
+      // ห้ามไม่ให้ฟังก์ชันนี้เปลี่ยนตัวแปร currentComp เป็นอันขาด!
+      const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
+      if (editingId || currentStep === 2) {
+        return;
+      }
+
       const catRadio = document.querySelector('input[name="formCatType"]:checked');
       const type = catRadio ? catRadio.value : 'academic';
       const grpSelect = document.getElementById("groupSelect");
@@ -2127,15 +2103,6 @@
       if (!COMPETITIONS_DATA[type] || !COMPETITIONS_DATA[type][grpKey]) return;
       currentComp = COMPETITIONS_DATA[type][grpKey].items.find(i => i.id === compId);
       if (!currentComp) return;
-
-      // ป้องกัน Ghost Context: ถ้าเปลี่ยนรายการแข่งขันเองในหน้าแรก (Step 1) ให้ยกเลิกค้างโหมดแก้ไขเดิม
-      const editingId = document.getElementById("editingRecordId") ? document.getElementById("editingRecordId").value : "";
-      if (editingId && currentStep === 1) {
-        const currentEditRecord = registrations.find(r => r.id === editingId);
-        if (currentEditRecord && currentEditRecord.competitionId !== currentComp.id) {
-          cancelEditing(true);
-        }
-      }
 
       const ruleType = document.getElementById("ruleTypeName");
       const ruleStQuota = document.getElementById("ruleStudentsQuota");
@@ -2151,9 +2118,8 @@
 
       checkSelectedEventLiveStatus();
 
-      // สั่งสร้างช่องกรอกเฉพาะเมื่ออยู่ในขั้นตอนที่ 1 หรือไม่ได้อยู่ในโหมดแก้ไขเท่านั้น
-      // เพื่อป้องกันไม่ให้ไปสั่งล้างหรือรีเซ็ตช่องข้อมูลทับขณะกำลังแก้ไข
-      if (!editingId && currentStep === 1) {
+      // สั่งสร้างช่องกรอกเฉพาะเมื่ออยู่ในขั้นตอนที่ 1 เท่านั้น
+      if (currentStep === 1) {
         buildStudentFields(currentComp.students, currentComp.level);
         const maxTeachers = (currentComp.teachers && currentComp.teachers.length > 1) ? currentComp.teachers[1] : (currentComp.teachers ? currentComp.teachers[0] : 1);
         buildTeacherFields(maxTeachers);
@@ -2501,7 +2467,7 @@
         { regex: /^นาง\s*/i, prefix: "นาง" }
       ];
 
-      for (let p of prefixPatterns) {
+      for (let p of patterns) {
         if (p.regex.test(str)) {
           let clean = str.replace(p.regex, '').trim();
           // ดักเก็บเศษคำว่า "สาว" หากเคยถูกตัดผิดพลาด
@@ -2524,6 +2490,16 @@
       return { prefix: "เด็กชาย", name: str };
     }
 
+    // ฟังก์ชันทำความสะอาดข้อความสำหรับเปรียบเทียบชื่อกิจกรรมข้ามกลุ่มสาระ
+    function normalizeEventName(str) {
+      if (!str) return "";
+      return str.toString()
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .replace(/[()\-_\.\/]/g, '')
+        .trim();
+    }
+
     function editEntry(id) {
       const entry = registrations.find(r => r.id === id);
       if (!entry) return;
@@ -2533,21 +2509,25 @@
       // บันทึก Snapshot สำรองไว้กู้คืน
       originalEditingSnapshot = JSON.parse(JSON.stringify(entry));
 
-      // 1. ตรวจหาหมวดหมู่และกิจกรรมแบบแม่นยำสูง (รองรับทั้ง id และชื่อรายการ)
+      // 1. ตรวจหาหมวดหมู่และกิจกรรมแบบเจาะลึกทุกกลุ่มสาระ (ครอบคลุมทั้ง 15 กลุ่มสาระ/กิจกรรม)
       let matchedCat = 'academic';
       let matchedGroupKey = '';
       let compDef = null;
 
-      const cleanCompName = (entry.competitionName || "").trim().toLowerCase();
+      const targetCompId = (entry.competitionId || "").trim();
+      const normEntryCompName = normalizeEventName(entry.competitionName);
 
+      // วนลูปค้นหาอย่างละเอียด ทั้ง ID, ชื่อตรงเป๊ะ, และชื่อที่ทำความสะอาดแล้ว
       for (const cat of ['academic', 'softpower']) {
         for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
           const found = grp.items.find(i => {
-            if (entry.competitionId && i.id === entry.competitionId) return true;
-            if (i.name && i.name.trim().toLowerCase() === cleanCompName) return true;
-            if (cleanCompName.includes(i.name.trim().toLowerCase()) || i.name.trim().toLowerCase().includes(cleanCompName)) return true;
+            if (targetCompId && i.id === targetCompId) return true;
+            const normItemName = normalizeEventName(i.name);
+            if (normItemName === normEntryCompName) return true;
+            if (normItemName.length > 5 && (normEntryCompName.includes(normItemName) || normItemName.includes(normEntryCompName))) return true;
             return false;
           });
+
           if (found) {
             matchedCat = cat;
             matchedGroupKey = gKey;
@@ -2558,22 +2538,71 @@
         if (compDef) break;
       }
 
-      if (compDef) {
-        currentComp = compDef;
-        const catRadio = document.querySelector(`input[name="formCatType"][value="${matchedCat}"]`);
-        if (catRadio) catRadio.checked = true;
-        onCategoryChange();
-        const grpSelect = document.getElementById("groupSelect");
-        if (grpSelect) grpSelect.value = matchedGroupKey;
-        onGroupChange();
-        const compSelect = document.getElementById("competitionSelect");
-        if (compSelect) compSelect.value = compDef.id;
+      // กรณีเป็นกิจกรรมพิเศษหรือชื่อที่ไม่มีในนิยาม ให้สร้าง Definition เฉพาะรายการนั้นขึ้นมารองรับทันที
+      // ป้องกันการหลุดไปเลือกกลุ่มอื่นหรือเด้งกลับไปเป็นภาษาอังกฤษ (en-1) โดยเด็ดขาด
+      if (!compDef) {
+        matchedCat = (entry.categoryType && entry.categoryType.includes("Soft")) ? 'softpower' : 'academic';
+        matchedGroupKey = Object.keys(COMPETITIONS_DATA[matchedCat])[0];
+        compDef = {
+          id: entry.competitionId || ('comp-' + Date.now()),
+          name: entry.competitionName,
+          students: entry.studentsQuota || (entry.students ? entry.students.length : 1),
+          teachers: [1, entry.teachers ? Math.max(2, entry.teachers.length) : 2],
+          type: entry.competitionType || "ทีม",
+          level: entry.competitionLevel || "ป.4-6",
+          groupName: entry.groupName || ""
+        };
+      }
+
+      // ล็อกกิจกรรมปัจจุบันไว้เป็นเป้าหมายแก้ไข
+      currentComp = compDef;
+
+      // ล็อกค่า Snapshot ใน Input ซ่อน ป้องกันการสลับกิจกรรม 100%
+      document.getElementById("editingRecordId").value = entry.id;
+      const snapInput = document.getElementById("editingCompIdSnapshot");
+      if (snapInput) snapInput.value = compDef.id;
+
+      // ซิงค์ค่าไปยัง Dropdown ในขั้นตอนที่ 1 โดยตรง (สร้างเฉพาะตัวเลือกที่ตรง เพื่อป้องกัน Dropdown อื่นดีดค่า)
+      const catRadio = document.querySelector(`input[name="formCatType"][value="${matchedCat}"]`);
+      if (catRadio) catRadio.checked = true;
+
+      const grpSelect = document.getElementById("groupSelect");
+      if (grpSelect && COMPETITIONS_DATA[matchedCat]) {
+        grpSelect.innerHTML = "";
+        for (const [key, grp] of Object.entries(COMPETITIONS_DATA[matchedCat])) {
+          const opt = document.createElement("option");
+          opt.value = key;
+          opt.textContent = grp.name;
+          grpSelect.appendChild(opt);
+        }
+        if (matchedGroupKey) grpSelect.value = matchedGroupKey;
+      }
+
+      const compSelect = document.getElementById("competitionSelect");
+      if (compSelect) {
+        compSelect.innerHTML = "";
+        if (COMPETITIONS_DATA[matchedCat] && COMPETITIONS_DATA[matchedCat][matchedGroupKey]) {
+          COMPETITIONS_DATA[matchedCat][matchedGroupKey].items.forEach(it => {
+            const opt = document.createElement("option");
+            opt.value = it.id;
+            opt.textContent = `[${it.level}] ${it.name} (${it.type})`;
+            compSelect.appendChild(opt);
+          });
+        } else {
+          const opt = document.createElement("option");
+          opt.value = compDef.id;
+          opt.textContent = `[${compDef.level}] ${compDef.name} (${compDef.type})`;
+          compSelect.appendChild(opt);
+        }
+        compSelect.value = compDef.id;
       }
 
       // 2. ตั้งค่าโหมดแก้ไขและปรับ UI
-      document.getElementById("editingRecordId").value = entry.id;
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
+
+      const editNotice = document.getElementById("editModeNoticeBox");
+      if (editNotice) editNotice.classList.remove("hidden");
 
       const titleEl = document.getElementById("mainFormTitle");
       if (titleEl) titleEl.textContent = `แก้ไขรายชื่อ / เปลี่ยนตัวผู้แข่งขัน (${entry.competitionName})`;
@@ -2583,28 +2612,24 @@
       if (compBadge) compBadge.textContent = entry.competitionName;
 
       // 3. กำหนดโควตาที่ถูกต้อง ป้องกันการกลายเป็น 1 คนเด็ดขาด
-      // คำนวณจาก: โควตาของเกณฑ์ หรือ จำนวนนักเรียนเดิมที่มีจริงในระบบ
       const existingStudentCount = (entry.students && Array.isArray(entry.students)) ? entry.students.length : 0;
-      let quotaRequired = compDef ? compDef.students : (entry.studentsQuota || existingStudentCount || 1);
-      
-      // ถ้าในระบบเดิมมีเด็กมากกว่า ให้ขยายช่องรองรับเด็กทุกคนทันที ไม่ตัดทิ้ง
+      let quotaRequired = compDef.students || existingStudentCount || 1;
       if (existingStudentCount > quotaRequired) {
         quotaRequired = existingStudentCount;
       }
 
-      const level = compDef ? compDef.level : (entry.competitionLevel || "ป.4-6");
+      const level = compDef.level || (entry.competitionLevel || "ป.4-6");
 
-      // ปรับปรุงป้ายโควตาตัวหนังสือให้ตรงความจริง
       const quotaStText = document.getElementById("quotaStudentText");
       if (quotaStText) quotaStText.textContent = quotaRequired;
       if (quotaBadge) {
-        quotaBadge.textContent = `โควตา: นักเรียน ${quotaRequired} คน • ครู ${compDef ? (compDef.teachers[0] + '-' + compDef.teachers[1]) : '1-2'} คน`;
+        quotaBadge.textContent = `โควตา: นักเรียน ${quotaRequired} คน • ครู ${compDef.teachers[0]}-${compDef.teachers[1]} คน`;
       }
 
-      // สั่งสร้างช่องกรอกนักเรียนตามโควตาจริง (เช่น 2 คน หรือ 3 คน ครบถ้วน)
+      // สั่งสร้างช่องกรอกนักเรียน
       buildStudentFields(quotaRequired, level);
 
-      // 4. หยอดข้อมูลนักเรียนเดิมลงในช่องอย่างแม่นยำ
+      // 4. หยอดข้อมูลนักเรียนเดิมลงในช่อง
       (entry.students || []).forEach((st, idx) => {
         if (idx < quotaRequired) {
           const pfxEl = document.getElementById(`stPrefix_${idx}`);
@@ -2620,28 +2645,46 @@
             nameEl.value = cleanStName;
           }
 
+          let targetClass = "";
+          let targetRoom = "";
+
           if (st.classInfo) {
             const parts = st.classInfo.split('/');
-            if (clsEl && parts[0]) clsEl.value = parts[0].trim();
-            if (roomEl && parts[1]) roomEl.value = parts[1].trim();
+            targetClass = parts[0] ? parts[0].trim() : "";
+            targetRoom = parts[1] ? parts[1].trim() : "";
           } else {
-            if (clsEl && st.classLevel) clsEl.value = st.classLevel;
-            if (roomEl && st.room) roomEl.value = st.room;
+            targetClass = st.classLevel || "";
+            targetRoom = st.room || "";
+          }
+
+          if (clsEl && targetClass) {
+            // ตรวจสอบว่า Dropdown มีระดับชั้นนี้หรือไม่ หากไม่มี ให้เพิ่มเข้าไปอัตโนมัติเพื่อไม่ให้ค่าหลุด
+            const hasClassOpt = Array.from(clsEl.options).some(opt => opt.value === targetClass);
+            if (!hasClassOpt) {
+              const newOpt = document.createElement("option");
+              newOpt.value = targetClass;
+              newOpt.textContent = targetClass;
+              clsEl.appendChild(newOpt);
+            }
+            clsEl.value = targetClass;
+          }
+
+          if (roomEl && targetRoom) {
+            roomEl.value = targetRoom;
           }
         }
       });
 
       // 5. หยอดข้อมูลครูผู้ฝึกสอนเดิม และปรับจำนวนช่องให้เป็นจำนวนเยอะที่สุดเสมอ
       const existingTeacherCount = (entry.teachers && Array.isArray(entry.teachers)) ? entry.teachers.length : 0;
-      const minTeachersFromDef = compDef ? compDef.teachers[0] : 1;
-      const maxTeachersFromDef = compDef ? compDef.teachers[1] : 2;
+      const minTeachersFromDef = compDef.teachers ? compDef.teachers[0] : 1;
+      const maxTeachersFromDef = compDef.teachers ? compDef.teachers[1] : 2;
 
-      // ปรับให้เป็นจำนวนเยอะที่สุด (Max) หรือจำนวนที่มีจริง เพื่อให้มีช่องกรอกสูงสุดที่แน่นอน
       let teacherCount = Math.max(existingTeacherCount, maxTeachersFromDef, minTeachersFromDef, 1);
       
       const quotaTcText = document.getElementById("quotaTeacherText");
       if (quotaTcText) {
-        quotaTcText.textContent = compDef ? `${compDef.teachers[0]}-${compDef.teachers[1]}` : '1-2';
+        quotaTcText.textContent = `${compDef.teachers[0]}-${compDef.teachers[1]}`;
       }
 
       currentTeacherCount = teacherCount;
@@ -2670,7 +2713,6 @@
             }
           }
           if (nameEl) {
-            // ตัดคำนำหน้าโดยตรวจคำยาว (นางสาว, น.ส.) ก่อนคำว่า นาง และดักตัดคำว่า "สาว" ที่หลุดมาเดี่ยวๆ
             let rawTcName = tc.name || parsed.name || "";
             let cleanTcName = rawTcName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|นาย|นาง|ดร\.)\s*/i, '').trim();
             cleanTcName = cleanTcName.replace(/^สาว\s*/i, '').trim();
@@ -2686,7 +2728,7 @@
       if (btnReset) btnReset.textContent = "คืนค่ารายชื่อเดิม";
 
       goToStep(2);
-      showToast(`เข้าสู่โหมดแก้ไข: ${entry.competitionName} (นร. ${quotaRequired} คน / ครู ${teacherCount} คน)`, "amber");
+      showToast(`เข้าสู่โหมดแก้ไข: ${entry.competitionName}`, "amber");
     }
 
     function handleSmartFormReset() {
@@ -2719,8 +2761,14 @@
 
     function resetFormToDefault() {
       document.getElementById("editingRecordId").value = "";
+      const snapInput = document.getElementById("editingCompIdSnapshot");
+      if (snapInput) snapInput.value = "";
+
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.add("hidden");
+
+      const editNotice = document.getElementById("editModeNoticeBox");
+      if (editNotice) editNotice.classList.add("hidden");
 
       const titleEl = document.getElementById("mainFormTitle");
       if (titleEl) titleEl.textContent = "กรอกข้อมูลผู้เข้าแข่งขันและครูฝึกซ้อม";
@@ -2733,7 +2781,8 @@
 
       if (currentComp) {
         buildStudentFields(currentComp.students, currentComp.level);
-        buildTeacherFields(currentComp.teachers[0]);
+        const maxTeachers = (currentComp.teachers && currentComp.teachers.length > 1) ? currentComp.teachers[1] : (currentComp.teachers ? currentComp.teachers[0] : 1);
+        buildTeacherFields(maxTeachers);
       }
     }
 
@@ -3091,14 +3140,24 @@
       const quotaRequired = targetCompSnapshot.students;
 
       for (let i = 0; i < totalStudentSlots; i++) {
-        const pfx = (document.getElementById(`stPrefix_${i}`)?.value || '').trim();
-        const rawName = (document.getElementById(`stName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
+        let pfx = (document.getElementById(`stPrefix_${i}`)?.value || '').trim();
+        let rawName = (document.getElementById(`stName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
         const cls = (document.getElementById(`stClass_${i}`)?.value || '').trim();
         const room = (document.getElementById(`stRoom_${i}`)?.value || '').trim();
 
         if (rawName) {
-          let cleanNameOnly = rawName.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง|ด\.ช\.|ด\.ญ\.|น\.ส\.)\s*/i, '').trim();
+          // ตรวจสอบและตัดคำนำหน้าซ้ำ รวมถึงเศษคำว่า "สาว" อย่างเด็ดขาดทุกกรณี
+          if (/^(นางสาว|น\.ส\.|น\.ส\s|สาว\s+)/i.test(rawName)) {
+            pfx = "นางสาว";
+          } else if (/^(เด็กชาย|ด\.ช\.|ด\.ช\s)/i.test(rawName)) {
+            pfx = "เด็กชาย";
+          } else if (/^(เด็กหญิง|ด\.ญ\.|ด\.ญ\s)/i.test(rawName)) {
+            pfx = "เด็กหญิง";
+          }
+
+          let cleanNameOnly = rawName.replace(/^(นางสาว|น\.ส\.|เด็กชาย|เด็กหญิง|นาย|นาง|ด\.ช\.|ด\.ญ\.)\s*/i, '').trim();
           cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
+
           filledStudents.push({
             prefix: pfx,
             name: cleanNameOnly,
@@ -3115,14 +3174,24 @@
       const totalTeacherSlots = teacherContainer ? teacherContainer.children.length : currentTeacherCount;
 
       for (let i = 0; i < totalTeacherSlots; i++) {
-        const selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
+        let selectPfx = (document.getElementById(`tcPrefix_${i}`)?.value || '').trim();
         const customPfx = (document.getElementById(`tcCustomPrefix_${i}`)?.value || '').trim();
-        const pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
-        const rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
+        let pfx = (selectPfx === 'OTHER') ? (customPfx || 'คุณครู') : selectPfx;
+        let rawName = (document.getElementById(`tcName_${i}`)?.value || '').trim().replace(/\s+/g, ' ');
 
         if (rawName) {
+          // ตรวจสอบและตัดคำนำหน้าครูซ้ำ รวมถึงเศษคำว่า "สาว" อย่างเด็ดขาดทุกกรณี
+          if (/^(นางสาว|น\.ส\.|น\.ส\s|สาว\s+)/i.test(rawName)) {
+            pfx = "นางสาว";
+          } else if (/^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)/i.test(rawName)) {
+            pfx = "ว่าที่ ร.ต.";
+          } else if (/^(ดร\.|ดร\s)/i.test(rawName)) {
+            pfx = "ดร.";
+          }
+
           let cleanNameOnly = rawName.replace(/^(นางสาว|น\.ส\.|ว่าที่\s*ร\.ต\.|นาย|นาง|ดร\.)\s*/i, '').trim();
           cleanNameOnly = cleanNameOnly.replace(/^สาว\s*/i, '').trim();
+
           teachers.push({
             prefix: pfx,
             name: cleanNameOnly,
