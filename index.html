@@ -773,50 +773,135 @@
         </div>
       </div>
 
-      <div class="p-3.5 sm:p-5 border-b border-slate-700 bg-navy-950/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm sm:text-base">
-        <div class="relative w-full sm:w-96">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
-          <input type="text" id="modalSearchInput" oninput="renderEntriesTable()" placeholder="ค้นหารายการ, ชื่อครู, ชื่อนร., ผลรางวัล..." class="w-full min-h-[48px] pl-10 pr-3 rounded-xl border border-slate-700 bg-navy-900 text-white placeholder-slate-400 focus:outline-none focus:border-gold-500 text-sm sm:text-base">
-        </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <span class="text-slate-300 font-bold shrink-0">ตัวกรอง:</span>
-          <select id="modalStatusFilter" onchange="renderEntriesTable()" class="min-h-[48px] p-2 px-3 border border-slate-700 rounded-xl bg-navy-900 text-white font-medium focus:border-gold-500 w-full sm:w-auto text-sm sm:text-base">
-            <option value="all">ทั้งหมดทุกรายการ</option>
-            <option value="incomplete">เฉพาะข้อมูลไม่สมบูรณ์ (รอเติมคน)</option>
-            <option value="complete">เฉพาะที่คนครบแล้ว</option>
-            <option value="has_result">เฉพาะที่มีบันทึกผลรางวัลแล้ว</option>
-            <option value="is_representative">เฉพาะตัวแทนไปแข่งระดับเขต</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="overflow-y-auto overflow-x-auto flex-1 p-3 sm:p-5">
-        <table class="w-full text-left text-sm sm:text-base border-collapse">
+      <!-- ปิดโครงสร้าง entriesModal ให้ถูกต้องเพื่อไม่ให้ modal อื่นโดนกลืนเข้าไป -->
+      <div class="overflow-y-auto flex-1 p-3 sm:p-5">
+        <table class="w-full text-left text-sm border-collapse">
           <thead>
-            <tr class="bg-navy-950 text-gold-400 border-b-2 border-gold-500/30 font-bold font-prompt text-sm sm:text-base">
-              <th class="p-3.5 w-12 text-center">#</th>
-              <th class="p-3.5 min-w-[220px]">รายการแข่งขัน & กลุ่มสาระ</th>
-              <th class="p-3.5 min-w-[240px]">นักเรียนผู้แข่งขัน</th>
-              <th class="p-3.5 min-w-[180px]">ครูผู้ฝึกสอน</th>
-              <th class="p-3.5 min-w-[170px] text-center">ผลการแข่งขัน</th>
-              <th class="p-3.5 min-w-[140px] text-center">จัดการ</th>
+            <tr class="bg-navy-950 text-gold-400 border-b border-gold-500/30 font-bold">
+              <th class="p-3 w-12 text-center">#</th>
+              <th class="p-3">รายการแข่งขัน & กลุ่มสาระ</th>
+              <th class="p-3">นักเรียน</th>
+              <th class="p-3">ครูฝึกสอน</th>
+              <th class="p-3 text-center">ผลการแข่งขัน</th>
+              <th class="p-3 text-center w-24">จัดการ</th>
             </tr>
           </thead>
-          <tbody id="entriesTableBody" class="divide-y divide-slate-800 text-slate-200">
-            <!-- Dynamically populated -->
-          </tbody>
+          <tbody id="entriesTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
         </table>
-        <div id="modalEmptyState" class="py-14 text-center text-slate-400 space-y-2 hidden">
-          <i class="fa-solid fa-folder-open text-4xl text-slate-600"></i>
-          <p class="text-base sm:text-lg font-semibold">ยังไม่มีข้อมูลรายการที่ลงทะเบียน</p>
+        <div id="modalEmptyState" class="py-12 text-center text-slate-400 hidden">
+          <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-600"></i>
+          <p>ยังไม่มีข้อมูลรายการที่ลงทะเบียน</p>
+        </div>
+      </div>
+      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end">
+        <button onclick="closeModal('entriesModal')" class="px-5 py-2 bg-gold-500 text-navy-950 font-bold rounded-xl">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Passcode Modal (PIN: 3979) -->
+  <div id="adminAuthModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border-2 border-gold-500/60 space-y-4">
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-gold-500 text-navy-950 flex items-center justify-center text-2xl font-black shadow-lg">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 class="font-prompt font-bold text-gold-300 text-lg">เข้าสู่ระบบเฉพาะผู้ดูแล (Admin)</h3>
+        <p class="text-xs text-slate-300">กรุณาระบุรหัสผ่าน 4 หลัก เพื่อเข้าใช้งานส่วนนี้</p>
+      </div>
+
+      <form onsubmit="handleAdminAuthSubmit(event)" class="space-y-4">
+        <div>
+          <input type="password" id="adminPinInput" maxlength="6" placeholder="ระบุรหัสผ่าน" class="w-full min-h-[50px] text-center text-xl tracking-widest font-mono bg-navy-950 text-gold-300 border-2 border-slate-700 rounded-xl focus:border-gold-400 focus:outline-none" required autofocus>
+          <p id="adminPinError" class="text-rose-400 text-xs text-center font-bold mt-1.5 hidden">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i> รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-2">
+          <button type="button" onclick="closeModal('adminAuthModal')" class="min-h-[44px] rounded-xl text-xs font-bold text-slate-400 bg-navy-950 hover:bg-slate-800 border border-slate-700">
+            ยกเลิก
+          </button>
+          <button type="submit" class="min-h-[44px] rounded-xl text-xs font-bold bg-gold-500 hover:bg-gold-400 text-navy-950 font-prompt shadow transition">
+            ยืนยันรหัสผ่าน
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Audit Logs Modal (การแก้ไขล่าสุด) -->
+  <div id="auditLogsModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-3xl w-full max-h-[90vh] shadow-2xl border-2 border-amber-500/60 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b-2 border-amber-500/30 bg-navy-950 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <h3 class="font-prompt font-bold text-amber-300 text-lg sm:text-xl">ประวัติการแก้ไขและบันทึกล่าสุด</h3>
+            <p class="text-xs text-slate-300">ติดตามการเปลี่ยนแปลงข้อมูลเพื่อตรวจสอบความถูกต้องในระบบ</p>
+          </div>
+        </div>
+        <button onclick="closeModal('auditLogsModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-navy-950/60 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 px-4">
+        <span>รายการบันทึกย้อนหลัง (เรียงจากล่าสุดไปหาเก่าสุด)</span>
+        <button onclick="clearAuditLogsHistory()" class="text-rose-400 hover:text-rose-300 hover:underline">ล้างประวัติ</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
+        <div id="auditLogListContainer" class="space-y-2.5">
+          <!-- Dynamically populated audit logs -->
         </div>
       </div>
 
-      <div class="p-4 sm:p-5 bg-navy-950 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm sm:text-base text-slate-300">
-        <div>
-          รวมรายการทั้งหมด: <strong id="totalRegisteredEvents" class="text-gold-300 font-bold text-base sm:text-lg">0</strong> รายการ
+      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
+        <button onclick="closeModal('auditLogsModal')" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-navy-950 font-bold rounded-xl transition shadow">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- District Transfer Modal (โอนข้อมูลสู่รอบเขต) -->
+  <div id="districtTransferModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-emerald-500/60 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b-2 border-emerald-500/30 bg-navy-950 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+            <i class="fa-solid fa-share-nodes"></i>
+          </div>
+          <div>
+            <h3 class="font-prompt font-bold text-emerald-300 text-lg sm:text-xl">ข้อมูลตัวแทนแข่งขันระดับเขตพื้นที่การศึกษา</h3>
+            <p class="text-xs text-slate-300">เตรียมและโอนข้อมูลเพื่อนำไปใช้สมัครการแข่งขันรอบ สพป.อบ.5 (11-13 ม.ค. 2570)</p>
+          </div>
         </div>
-        <button onclick="closeModal('entriesModal')" class="w-full sm:w-auto px-6 py-2.5 bg-gold-500 hover:bg-gold-400 text-navy-950 font-black rounded-xl transition shadow text-base">
+        <button onclick="closeModal('districtTransferModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-4 sm:p-5 bg-navy-950/50 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+        <div class="text-slate-300">
+          พบตัวแทนทั้งหมด: <strong id="districtCountSpan" class="text-emerald-400 font-bold text-base">0</strong> รายการ
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyDistrictTextSummary()" class="px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-slate-700 text-gold-300 border border-gold-500/40 font-bold transition flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-copy"></i> คัดลอกข้อมูลสรุป
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
+        <div id="districtTransferListContainer" class="space-y-3"></div>
+      </div>
+
+      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
+        <button onclick="closeModal('districtTransferModal')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1308,6 +1393,8 @@
     const JUDGES_KEY = "art74_naksmut_judges_v2";
     const FONT_KEY = "art74_naksmut_font_size";
     const SHEET_URL_KEY = "art74_naksmut_sheet_url_v3";
+    const ADMIN_SESSION_KEY = "art74_naksmut_admin_unlocked";
+    const ADMIN_PASSCODE = "3979";
 
     const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbze0TfEDTqSPl2xxbYpjcs8Xmt12F_P9MYf8S2790jIgMDsuu5eP0iavwHaeqBPU2nWjw/exec";
 
@@ -1318,6 +1405,14 @@
     let currentComp = null;
     let currentTeacherCount = 1;
     let currentStep = 1;
+    let pendingAdminAction = null;
+    let isAdminUnlocked = false;
+
+    try {
+      isAdminUnlocked = (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true");
+    } catch (e) {
+      isAdminUnlocked = false;
+    }
 
     function setFontSize(size) {
       const htmlEl = document.documentElement;
@@ -2334,9 +2429,165 @@
       openModal('duplicateModal');
     }
 
-    function protectedAdminAction(action) {
-      if (action === 'sheetConfig') openModal('sheetConfigModal');
-      else showToast("ฟังก์ชันนี้สำหรับผู้ดูแลระบบ", "amber");
+    function protectedAdminAction(actionKey, payload = null) {
+      if (isAdminUnlocked) {
+        executeAdminAction(actionKey, payload);
+        return;
+      }
+      pendingAdminAction = { actionKey, payload };
+      const pinInput = document.getElementById("adminPinInput");
+      const err = document.getElementById("adminPinError");
+      if (pinInput) pinInput.value = "";
+      if (err) err.classList.add("hidden");
+      openModal("adminAuthModal");
+      setTimeout(() => { if (pinInput) pinInput.focus(); }, 150);
+    }
+
+    function handleAdminAuthSubmit(e) {
+      e.preventDefault();
+      const pinInput = document.getElementById("adminPinInput");
+      const err = document.getElementById("adminPinError");
+      const val = (pinInput ? pinInput.value : "").trim();
+
+      if (val === ADMIN_PASSCODE) {
+        isAdminUnlocked = true;
+        try {
+          sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+        } catch (e) {}
+        closeModal("adminAuthModal");
+        showToast("ยืนยันสิทธิ์ผู้ดูแลระบบสำเร็จ", "emerald");
+        if (pendingAdminAction) {
+          executeAdminAction(pendingAdminAction.actionKey, pendingAdminAction.payload);
+          pendingAdminAction = null;
+        }
+      } else {
+        if (err) err.classList.remove("hidden");
+        if (pinInput) {
+          pinInput.value = "";
+          pinInput.focus();
+        }
+      }
+    }
+
+    function executeAdminAction(actionKey, payload) {
+      if (actionKey === 'auditLogs') {
+        renderAuditLogs();
+        openModal('auditLogsModal');
+      } else if (actionKey === 'districtTransfer') {
+        openDistrictTransferModal();
+      } else if (actionKey === 'sheetConfig') {
+        openModal('sheetConfigModal');
+      }
+    }
+
+    function addAuditLog(compName, action, detail) {
+      const now = new Date().toLocaleString("th-TH");
+      auditLogs.unshift({
+        id: "LOG-" + Date.now(),
+        timestamp: now,
+        competitionName: compName,
+        action: action,
+        detail: detail
+      });
+      if (auditLogs.length > 50) auditLogs.pop();
+    }
+
+    function renderAuditLogs() {
+      const container = document.getElementById("auditLogListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (auditLogs.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400">ยังไม่มีประวัติการบันทึกหรือแก้ไข</div>`;
+        return;
+      }
+
+      auditLogs.forEach(log => {
+        const item = document.createElement("div");
+        item.className = "p-3 rounded-xl bg-navy-950 border border-slate-800 flex items-start justify-between gap-3 text-xs";
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-gold-300 font-prompt text-sm">${log.competitionName}</div>
+            <div class="text-slate-300 mt-0.5">${log.detail}</div>
+            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-navy-900 border border-slate-700 text-[10px] text-slate-400 font-mono">${log.timestamp}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">${log.action}</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function clearAuditLogsHistory() {
+      auditLogs = [];
+      saveAllData();
+      renderAuditLogs();
+      showToast("ล้างประวัติการแก้ไขเรียบร้อย", "slate");
+    }
+
+    function openDistrictTransferModal() {
+      const container = document.getElementById("districtTransferListContainer");
+      const countEl = document.getElementById("districtCountSpan");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const reps = registrations.filter(r => !!r.isRepresentative);
+      if (countEl) countEl.textContent = reps.length;
+
+      if (reps.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400">
+            <i class="fa-solid fa-star text-3xl mb-2 text-slate-600"></i>
+            <p class="font-bold text-white">ยังไม่มีรายการที่ได้รับสถานะเป็นตัวแทนระดับเขต</p>
+          </div>
+        `;
+      } else {
+        reps.forEach((r, idx) => {
+          const item = document.createElement("div");
+          item.className = "p-4 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2";
+          const stNames = (r.students || []).map((s, i) => `${i + 1}. ${s.fullName} (${s.classInfo || '-'})`).join(", ");
+          const tcNames = (r.teachers || []).map((t, i) => `${i + 1}. ${t.fullName}`).join(", ");
+
+          item.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="font-bold text-emerald-300 font-prompt text-sm">${idx + 1}. ${r.competitionName}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-bold">ตัวแทนระดับเขต</span>
+            </div>
+            <div class="text-xs text-slate-300 space-y-1">
+              <div><strong class="text-gold-400">นักเรียน:</strong> ${stNames}</div>
+              <div><strong class="text-emerald-400">ครู:</strong> ${tcNames}</div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      }
+      openModal('districtTransferModal');
+    }
+
+    function copyDistrictTextSummary() {
+      const reps = registrations.filter(r => !!r.isRepresentative);
+      if (reps.length === 0) {
+        showToast("ไม่มีข้อมูลตัวแทนระดับเขต", "amber");
+        return;
+      }
+      let txt = "🏆 สรุปรายชื่อตัวแทนระดับเขต:\n" + reps.map((r, i) => `${i + 1}. ${r.competitionName}`).join("\n");
+      navigator.clipboard.writeText(txt).then(() => showToast("คัดลอกข้อมูลเรียบร้อยแล้ว", "emerald"));
+    }
+
+    function exportToCSV() {
+      if (registrations.length === 0) {
+        showToast("ยังไม่มีข้อมูลให้ส่งออก", "amber");
+        return;
+      }
+      let csv = "\uFEFFลำดับ,รายการ,กลุ่มสาระ,สถานะ\n";
+      registrations.forEach((r, i) => {
+        csv += `${i + 1},"${r.competitionName}","${r.groupName}","${r.isComplete ? 'คนครบ' : 'ไม่ครบ'}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "registrations.csv";
+      link.click();
+      showToast("ส่งออกไฟล์เรียบร้อยแล้ว", "emerald");
     }
 
     function saveSheetConfig() {
@@ -2344,36 +2595,7 @@
       googleSheetUrl = val;
       localStorage.setItem(SHEET_URL_KEY, val);
       closeModal('sheetConfigModal');
-      showToast("บันทึกการเชื่อมต่อแล้ว", "emerald");
-    }
-
-    function exportToCSV() {
-      showToast("กำลังส่งออกไฟล์ CSV...", "emerald");
-    }
-
-    function previewOfficialPDF(file) {
-      window.open(encodeURI(file), '_blank');
-    }
-
-    function downloadOfficialDoc(file) {
-      const link = document.createElement("a");
-      link.href = encodeURI(file);
-      link.download = file;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    function switchCriteriaTab(type) {
-      const tabA = document.getElementById("criteriaTabAcademic");
-      const tabS = document.getElementById("criteriaTabSoftpower");
-      if (type === 'academic') {
-        tabA.classList.remove('hidden');
-        tabS.classList.add('hidden');
-      } else {
-        tabA.classList.add('hidden');
-        tabS.classList.remove('hidden');
-      }
+      showToast("บันทึกการตั้งค่าแล้ว", "emerald");
     }
 
     function showToast(msg, type = "emerald") {
@@ -2382,27 +2604,29 @@
       const msgEl = document.getElementById("toastMsg");
       const icon = document.getElementById("toastIcon");
 
-      msgEl.textContent = msg;
-      content.className = "p-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm sm:text-base text-white font-bold border-2 ";
-
-      if (type === "emerald") {
-        content.classList.add("bg-emerald-950", "border-emerald-400", "text-emerald-200");
-        icon.className = "fa-solid fa-circle-check text-2xl text-emerald-400";
-      } else if (type === "amber") {
-        content.classList.add("bg-amber-950", "border-gold-400", "text-gold-200");
-        icon.className = "fa-solid fa-triangle-exclamation text-2xl text-gold-400";
-      } else {
-        content.classList.add("bg-rose-950", "border-rose-400", "text-rose-200");
-        icon.className = "fa-solid fa-circle-xmark text-2xl text-rose-400";
+      if (msgEl) msgEl.textContent = msg;
+      if (content) {
+        content.className = "p-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm sm:text-base text-white font-bold border-2 ";
+        if (type === "emerald") {
+          content.classList.add("bg-emerald-950", "border-emerald-400", "text-emerald-200");
+          if (icon) icon.className = "fa-solid fa-circle-check text-2xl text-emerald-400";
+        } else if (type === "amber") {
+          content.classList.add("bg-amber-950", "border-gold-400", "text-gold-200");
+          if (icon) icon.className = "fa-solid fa-triangle-exclamation text-2xl text-gold-400";
+        } else if (type === "rose") {
+          content.classList.add("bg-rose-950", "border-rose-400", "text-rose-200");
+          if (icon) icon.className = "fa-solid fa-circle-xmark text-2xl text-rose-400";
+        }
       }
 
-      toast.classList.remove("-translate-y-24", "opacity-0");
-      toast.classList.add("translate-y-0", "opacity-100");
-
-      setTimeout(() => {
-        toast.classList.remove("translate-y-0", "opacity-100");
-        toast.classList.add("-translate-y-24", "opacity-0");
-      }, 3500);
+      if (toast) {
+        toast.classList.remove("-translate-y-24", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+        setTimeout(() => {
+          toast.classList.remove("translate-y-0", "opacity-100");
+          toast.classList.add("-translate-y-24", "opacity-0");
+        }, 3500);
+      }
     }
 
     window.onload = function() {
@@ -2412,15 +2636,25 @@
       } catch (e) {}
 
       loadStorageData();
-      googleSheetUrl = DEFAULT_SHEET_URL;
+
+      try {
+        googleSheetUrl = localStorage.getItem(SHEET_URL_KEY) || DEFAULT_SHEET_URL;
+      } catch (e) {
+        googleSheetUrl = DEFAULT_SHEET_URL;
+      }
+
+      const input = document.getElementById("sheetApiUrlInput");
+      if (input) input.value = googleSheetUrl;
 
       onCategoryChange();
       renderEntriesTable();
+      renderAuditLogs();
       updateBadges();
       updateJudgeBadge();
       goToStep(1);
 
       fetchDataFromGoogleSheet(true);
+      setInterval(() => { fetchDataFromGoogleSheet(true); }, 30000);
     };
   </script>
 </body>
