@@ -244,7 +244,7 @@
                   <span class="truncate">การแก้ไขล่าสุด</span>
                 </button>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <span id="unreadChangesBadge" class="hidden bg-rose-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold animate-pulse">0</span>
+                  <span id="unreadChangesBadge" class="bg-amber-500 text-navy-950 text-[10px] px-2 py-0.5 rounded-full font-bold font-mono shadow-sm">0</span>
                   <i class="fa-solid fa-lock text-[10px] text-amber-400/80" title="เฉพาะแอดมิน"></i>
                 </div>
               </div>
@@ -783,7 +783,7 @@
               <th class="p-3">นักเรียน</th>
               <th class="p-3">ครูฝึกสอน</th>
               <th class="p-3 text-center">ผลการแข่งขัน</th>
-              <th class="p-3 text-center w-24">จัดการ</th>
+              <th class="p-3 text-center w-28">จัดการ</th>
             </tr>
           </thead>
           <tbody id="entriesTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -795,6 +795,31 @@
       </div>
       <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end">
         <button onclick="closeModal('entriesModal')" class="px-5 py-2 bg-gold-500 text-navy-950 font-bold rounded-xl">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Entry Confirm Modal (หน้าต่างยืนยันลบรายการแข่งขัน) -->
+  <div id="deleteEntryConfirmModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-rose-500/70 text-center space-y-4">
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/50 flex items-center justify-center text-2xl font-black">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <div class="space-y-1">
+        <h3 class="font-prompt font-extrabold text-rose-300 text-lg sm:text-xl">ยืนยันการลบรายการแข่งขัน?</h3>
+        <p id="deleteEntryTargetComp" class="text-xs sm:text-sm text-gold-300 font-bold truncate">ชื่อรายการแข่งขัน</p>
+        <p id="deleteEntryTargetGroup" class="text-xs text-slate-300 truncate">กลุ่มสาระการเรียนรู้</p>
+      </div>
+
+      <input type="hidden" id="pendingDeleteEntryId" value="">
+
+      <div class="grid grid-cols-2 gap-2.5 pt-2 font-prompt">
+        <button type="button" onclick="closeModal('deleteEntryConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">
+          ยกเลิก
+        </button>
+        <button type="button" onclick="confirmExecuteDeleteEntry()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-trash-can"></i> ยืนยันลบ
+        </button>
       </div>
     </div>
   </div>
@@ -1508,6 +1533,7 @@
         localStorage.setItem(JUDGES_KEY, JSON.stringify(judges));
         updateBadges();
         updateJudgeBadge();
+        updateAuditLogBadge();
       } catch (err) {
         console.error("Storage save failed", err);
       }
@@ -1518,6 +1544,18 @@
       const modalCount = document.getElementById("modalJudgeTotalCount");
       if (badge) badge.textContent = judges.length;
       if (modalCount) modalCount.textContent = judges.length;
+    }
+
+    function updateAuditLogBadge() {
+      const badge = document.getElementById("unreadChangesBadge");
+      if (badge) {
+        badge.textContent = auditLogs.length;
+        if (auditLogs.length > 0) {
+          badge.classList.remove("hidden");
+        } else {
+          badge.textContent = "0";
+        }
+      }
     }
 
     function goToStep(step) {
@@ -2434,6 +2472,7 @@
             missingCount: totalMissing,
             lastModifiedAt: nowStr
           };
+          addAuditLog(targetCompSnapshot.name, "แก้ไขข้อมูล", `แก้ไขรายชื่อนักเรียน/ครูผู้ฝึกสอนในกิจกรรม ${targetCompSnapshot.name}`);
           syncToGoogleSheet(registrations[index], "save");
         }
       } else {
@@ -2455,6 +2494,7 @@
           lastModifiedAt: nowStr
         };
         registrations.unshift(newEntry);
+        addAuditLog(targetCompSnapshot.name, "ลงทะเบียนใหม่", `ลงทะเบียนผู้เข้าแข่งขันกิจกรรม ${targetCompSnapshot.name}`);
         syncToGoogleSheet(newEntry, "save");
       }
 
@@ -2502,14 +2542,24 @@
       if (!tbody) return;
       tbody.innerHTML = "";
 
-      if (registrations.length === 0) {
-        if (emptyState) emptyState.classList.remove("hidden");
+      // รองรับการกรองข้อมูลตาม filter ปัจจุบัน (all หรือ incomplete)
+      let listToRender = registrations;
+      if (currentEntryFilter === 'incomplete') {
+        listToRender = registrations.filter(r => !r.isComplete);
+      }
+
+      if (listToRender.length === 0) {
+        if (emptyState) {
+          emptyState.classList.remove("hidden");
+          const msg = emptyState.querySelector("p");
+          if (msg) msg.textContent = currentEntryFilter === 'incomplete' ? "ไม่มีรายการที่มีข้อมูลไม่สมบูรณ์ ทุกรายการครบถ้วนแล้วค่ะ" : "ยังไม่มีข้อมูลรายการที่ลงทะเบียน";
+        }
         return;
       } else {
         if (emptyState) emptyState.classList.add("hidden");
       }
 
-      registrations.forEach((r, idx) => {
+      listToRender.forEach((r, idx) => {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-navy-950/70 border-b border-slate-800 transition";
 
@@ -2531,13 +2581,69 @@
           <td class="p-3.5 text-xs space-y-1">${tcHtml}</td>
           <td class="p-3.5 text-center text-xs">${r.award || '-'}</td>
           <td class="p-3.5 text-center">
-            <button onclick="editEntry('${r.id}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-navy-950 border border-amber-500/40 flex items-center justify-center text-xs transition">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="editEntry('${r.id}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-navy-950 border border-amber-500/40 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteEntryPrompt('${r.id}')" title="ลบรายการนี้" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white border border-rose-500/40 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
           </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function deleteEntryPrompt(id) {
+      const entry = registrations.find(r => r.id === id);
+      if (!entry) return;
+
+      const idInput = document.getElementById("pendingDeleteEntryId");
+      const compEl = document.getElementById("deleteEntryTargetComp");
+      const groupEl = document.getElementById("deleteEntryTargetGroup");
+
+      if (idInput) idInput.value = id;
+      if (compEl) compEl.textContent = entry.competitionName;
+      if (groupEl) groupEl.textContent = `${entry.groupName} (${entry.competitionLevel})`;
+
+      openModal("deleteEntryConfirmModal");
+    }
+
+    async function confirmExecuteDeleteEntry() {
+      const idInput = document.getElementById("pendingDeleteEntryId");
+      const id = idInput ? idInput.value : "";
+      if (!id) return;
+
+      const entry = registrations.find(r => r.id === id);
+      const compName = entry ? entry.competitionName : "";
+      const groupName = entry ? entry.groupName : "";
+
+      registrations = registrations.filter(r => r.id !== id);
+      saveAllData();
+      renderEntriesTable();
+      closeModal("deleteEntryConfirmModal");
+
+      // บันทึก Log และส่งคำสั่งลบไปยัง Google Sheets
+      addAuditLog(compName, "ลบรายการ", `ยกเลิกการลงทะเบียนกิจกรรม ${compName}`);
+
+      if (googleSheetUrl && entry) {
+        try {
+          await fetch(googleSheetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: "delete",
+              id: id,
+              competitionName: compName,
+              groupName: groupName
+            })
+          });
+        } catch (err) { console.warn("Delete entry err", err); }
+      }
+
+      showToast(`ลบรายการ ${compName} เรียบร้อยแล้ว`, "rose");
     }
 
     function renderResultsListModal() {
@@ -2576,22 +2682,203 @@
 
     function closeSuccessModalAndViewList() {
       closeModal('successSaveModal');
-      openModal('entriesModal');
+      openFilteredEntries('all');
     }
 
     function openAllEventsDirectoryModal() {
       openModal('documentsModal');
     }
 
-    function openUnregisteredModal() {
-      openModal('unregisteredModal');
-    }
+    let currentEntryFilter = 'all';
 
-    function openFilteredEntries() {
+    function openFilteredEntries(filter = 'all') {
+      currentEntryFilter = filter;
+      renderEntriesTable();
       openModal('entriesModal');
     }
 
+    function openUnregisteredModal() {
+      const container = document.getElementById("unregisteredListContainer");
+      const countTitle = document.getElementById("unregCountTitle");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const registeredCompNames = new Set(registrations.map(r => (r.competitionName || "").trim().toLowerCase()));
+      const registeredCompIds = new Set(registrations.map(r => (r.competitionId || "").trim()));
+
+      let unregList = [];
+
+      ['academic', 'softpower'].forEach(cat => {
+        const groups = COMPETITIONS_DATA[cat];
+        for (const [gKey, grp] of Object.entries(groups)) {
+          grp.items.forEach(it => {
+            const isReg = registeredCompIds.has(it.id) || registeredCompNames.has((it.name || "").trim().toLowerCase());
+            if (!isReg) {
+              unregList.push({
+                ...it,
+                categoryType: cat === 'academic' ? 'วิชาการ' : 'Soft Power',
+                groupName: grp.name,
+                groupKey: gKey,
+                catKey: cat
+              });
+            }
+          });
+        }
+      });
+
+      if (countTitle) countTitle.textContent = unregList.length;
+
+      if (unregList.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-emerald-400 space-y-2">
+            <i class="fa-solid fa-circle-check text-4xl"></i>
+            <h4 class="font-bold text-lg font-prompt text-white">ยอดเยี่ยมมาก!</h4>
+            <p class="text-xs text-slate-300">โรงเรียนได้ลงทะเบียนครบทั้ง 78 รายการแข่งขันเรียบร้อยแล้วค่ะ</p>
+          </div>
+        `;
+      } else {
+        unregList.forEach((it, idx) => {
+          const item = document.createElement("div");
+          item.className = "p-3.5 sm:p-4 rounded-2xl bg-navy-950 border border-slate-800 hover:border-gold-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow transition";
+          item.innerHTML = `
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-mono font-bold">${idx + 1}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-gold-500/20 text-gold-300 border border-gold-500/30 font-prompt">${it.categoryType}</span>
+                <h4 class="font-bold font-prompt text-white text-sm sm:text-base">[${it.level}] ${it.name}</h4>
+              </div>
+              <div class="text-xs text-slate-400 pl-8 flex flex-wrap items-center gap-3">
+                <span><i class="fa-solid fa-layer-group text-slate-500 mr-1"></i>${it.groupName}</span>
+                <span><i class="fa-solid fa-users text-gold-400 mr-1"></i>เกณฑ์: นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน (${it.type})</span>
+              </div>
+            </div>
+            <button type="button" onclick="quickSelectUnregistered('${it.catKey}', '${it.groupKey}', '${it.id}')" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs font-prompt flex items-center justify-center gap-1.5 shadow transition shrink-0 self-end sm:self-center">
+              <i class="fa-solid fa-plus"></i> เลือกลงทะเบียน
+            </button>
+          `;
+          container.appendChild(item);
+        });
+      }
+
+      openModal('unregisteredModal');
+    }
+
+    function quickSelectUnregistered(catKey, groupKey, compId) {
+      closeModal('unregisteredModal');
+      cancelEditing();
+
+      // สลับไปประเภทวิชาการ หรือ Soft Power
+      const catRadio = document.querySelector(`input[name="formCatType"][value="${catKey}"]`);
+      if (catRadio) {
+        catRadio.checked = true;
+        onCategoryChange();
+      }
+
+      // สลับกลุ่มสาระ
+      const grpSelect = document.getElementById("groupSelect");
+      if (grpSelect) {
+        grpSelect.value = groupKey;
+        onGroupChange();
+      }
+
+      // สลับรายการแข่งขัน
+      const compSelect = document.getElementById("competitionSelect");
+      if (compSelect) {
+        compSelect.value = compId;
+        onCompetitionChange();
+      }
+
+      goToStep(1);
+      showToast("เลือกรายการแข่งขันเรียบร้อยแล้วค่ะ", "emerald");
+    }
+
     function openDuplicateModal() {
+      const container = document.getElementById("duplicateContentArea");
+      const badgeCount = document.getElementById("dashDuplicateCount");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const studentMap = {};
+      const teacherMap = {};
+
+      registrations.forEach(r => {
+        (r.students || []).forEach(st => {
+          let name = (st.name || st.fullName || "").trim();
+          name = name.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|ด\.ช\.|ด\.ญ\.|น\.ส\.)\s*/i, '').trim();
+          if (name && name.indexOf("คนครบ") === -1 && name.indexOf("ขาดอีก") === -1) {
+            if (!studentMap[name]) studentMap[name] = [];
+            studentMap[name].push({ compName: r.competitionName, fullName: st.fullName, classInfo: st.classInfo });
+          }
+        });
+
+        (r.teachers || []).forEach(tc => {
+          let name = (tc.name || tc.fullName || "").trim();
+          name = name.replace(/^(นาย|นาง|นางสาว|ว่าที่\s*ร\.ต\.|ดร\.|น\.ส\.)\s*/i, '').trim();
+          if (name && !name.startsWith("ป.") && !name.startsWith("อ.")) {
+            if (!teacherMap[name]) teacherMap[name] = [];
+            teacherMap[name].push({ compName: r.competitionName, fullName: tc.fullName });
+          }
+        });
+      });
+
+      const duplicateStudents = Object.entries(studentMap).filter(([k, v]) => v.length > 1);
+      const duplicateTeachers = Object.entries(teacherMap).filter(([k, v]) => v.length > 1);
+      const totalDupes = duplicateStudents.length + duplicateTeachers.length;
+
+      if (badgeCount) badgeCount.textContent = totalDupes;
+
+      if (totalDupes === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-emerald-400 space-y-2">
+            <i class="fa-solid fa-user-check text-4xl"></i>
+            <h4 class="font-bold text-lg font-prompt text-white">ไม่พบรายชื่อซ้ำซ้อน</h4>
+            <p class="text-xs text-slate-300">ทั้งนักเรียนและครูผู้ฝึกสอนไม่มีชื่อลงทะเบียนแข่งซ้ำซ้อนในกิจกรรมอื่นค่ะ</p>
+          </div>
+        `;
+      } else {
+        if (duplicateStudents.length > 0) {
+          const stHeader = document.createElement("div");
+          stHeader.className = "text-xs font-bold text-gold-400 uppercase tracking-wider font-prompt mb-2";
+          stHeader.innerHTML = `<i class="fa-solid fa-child mr-1.5"></i> นักเรียนที่มีชื่อซ้ำซ้อน (${duplicateStudents.length} คน)`;
+          container.appendChild(stHeader);
+
+          duplicateStudents.forEach(([name, list]) => {
+            const card = document.createElement("div");
+            card.className = "p-3.5 rounded-2xl bg-navy-950 border border-amber-500/40 space-y-2 mb-3 shadow";
+            const comps = list.map(l => `<span class="inline-block bg-navy-900 border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 mr-1.5 mb-1"><i class="fa-solid fa-trophy text-gold-400 mr-1"></i>${l.compName}</span>`).join("");
+            card.innerHTML = `
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="font-bold font-prompt text-amber-300 text-sm">${list[0].fullName || name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">ลงซ้ำ ${list.length} รายการ</span>
+              </div>
+              <div>${comps}</div>
+            `;
+            container.appendChild(card);
+          });
+        }
+
+        if (duplicateTeachers.length > 0) {
+          const tcHeader = document.createElement("div");
+          tcHeader.className = "text-xs font-bold text-emerald-400 uppercase tracking-wider font-prompt mt-4 mb-2";
+          tcHeader.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1.5"></i> ครูผู้ฝึกสอนที่มีชื่อมากกว่า 1 กิจกรรม (${duplicateTeachers.length} ท่าน)`;
+          container.appendChild(tcHeader);
+
+          duplicateTeachers.forEach(([name, list]) => {
+            const card = document.createElement("div");
+            card.className = "p-3.5 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2 mb-3 shadow";
+            const comps = list.map(l => `<span class="inline-block bg-navy-900 border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 mr-1.5 mb-1"><i class="fa-solid fa-trophy text-emerald-400 mr-1"></i>${l.compName}</span>`).join("");
+            card.innerHTML = `
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="font-bold font-prompt text-emerald-300 text-sm">${list[0].fullName || name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">ฝึกสอน ${list.length} รายการ</span>
+              </div>
+              <div>${comps}</div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      }
+
       openModal('duplicateModal');
     }
 
@@ -2785,6 +3072,7 @@
         detail: detail
       });
       if (auditLogs.length > 50) auditLogs.pop();
+      updateAuditLogBadge();
     }
 
     function renderAuditLogs() {
@@ -2816,6 +3104,7 @@
       auditLogs = [];
       saveAllData();
       renderAuditLogs();
+      updateAuditLogBadge();
       showToast("ล้างประวัติการแก้ไขเรียบร้อย", "slate");
     }
 
@@ -2946,6 +3235,7 @@
       renderAuditLogs();
       updateBadges();
       updateJudgeBadge();
+      updateAuditLogBadge();
       goToStep(1);
 
       fetchDataFromGoogleSheet(true);
