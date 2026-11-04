@@ -2010,36 +2010,32 @@
     }
 
     function deleteJudgePrompt(id) {
-      const item = judges.find(j => j.id === id);
-      if (!item) return;
+      const judge = judges.find(j => j.id === id);
+      if (!judge) return;
 
-      const inputId = document.getElementById("pendingDeleteJudgeId");
+      const idInput = document.getElementById("pendingDeleteJudgeId");
       const nameEl = document.getElementById("deleteJudgeTargetName");
       const compEl = document.getElementById("deleteJudgeTargetComp");
 
-      if (inputId) inputId.value = id;
-      if (nameEl) nameEl.textContent = item.fullName;
-      if (compEl) compEl.textContent = item.competitionName;
+      if (idInput) idInput.value = id;
+      if (nameEl) nameEl.textContent = judge.fullName;
+      if (compEl) compEl.textContent = `กิจกรรม: ${judge.competitionName}`;
 
-      openModal('deleteJudgeConfirmModal');
+      openModal("deleteJudgeConfirmModal");
     }
 
     async function confirmExecuteDeleteJudge() {
-      const inputId = document.getElementById("pendingDeleteJudgeId");
-      const id = inputId ? inputId.value : "";
+      const idInput = document.getElementById("pendingDeleteJudgeId");
+      const id = idInput ? idInput.value : "";
       if (!id) return;
 
-      const item = judges.find(j => j.id === id);
-      if (!item) {
-        closeModal('deleteJudgeConfirmModal');
-        return;
-      }
-
+      const judge = judges.find(j => j.id === id);
       judges = judges.filter(j => j.id !== id);
       saveAllData();
       renderJudgesList();
+      closeModal("deleteJudgeConfirmModal");
 
-      if (googleSheetUrl) {
+      if (googleSheetUrl && judge) {
         try {
           await fetch(googleSheetUrl, {
             method: 'POST',
@@ -2048,14 +2044,52 @@
             body: JSON.stringify({
               action: "deleteJudge",
               id: id,
-              fullName: item.fullName
+              fullName: judge.fullName
             })
           });
-        } catch (err) { console.warn("Judge del err", err); }
+        } catch (err) { console.warn("Delete judge err", err); }
       }
 
-      closeModal('deleteJudgeConfirmModal');
-      showToast(`ลบรายชื่อกรรมการเรียบร้อยแล้ว`, "rose");
+      showToast("ลบรายชื่อกรรมการเรียบร้อยแล้ว", "rose");
+    }
+
+    // ฟังก์ชันช่วยแกะคำนำหน้าและชื่อ-สกุลอย่างแม่นยำ ไม่ให้หลุดหรือตกหล่น
+    function parseFullNameToParts(rawFullName) {
+      if (!rawFullName) return { prefix: "เด็กชาย", name: "" };
+      let str = rawFullName.trim().replace(/\s+/g, ' ');
+
+      // ดักจับข้อความสถานะที่อาจหลุดมาผิดช่อง
+      if (str.includes("คนครบ") || str.includes("ขาดอีก") || str.includes("ยังไม่ครบ")) {
+        return { prefix: "เด็กชาย", name: "" };
+      }
+
+      // ดักจับกรณีระดับชั้นหลุดมา เช่น "ป.6/1" หรือ "ป.5"
+      if (/^[อป]\.\d/i.test(str)) {
+        return { prefix: "นางสาว", name: "" };
+      }
+
+      const prefixPatterns = [
+        { regex: /^(นางสาว|น\.ส\.|น\.ส\s)\s*/i, prefix: "นางสาว" },
+        { regex: /^(เด็กชาย|ด\.ช\.|ด\.ช\s)\s*/i, prefix: "เด็กชาย" },
+        { regex: /^(เด็กหญิง|ด\.ญ\.|ด\.ญ\s)\s*/i, prefix: "เด็กหญิง" },
+        { regex: /^(ว่าที่\s*ร\.ต\.|ว่าที่ร้อยตรี)\s*/i, prefix: "ว่าที่ ร.ต." },
+        { regex: /^(ดร\.|ดร\s)\s*/i, prefix: "ดร." },
+        { regex: /^นาย\s*/i, prefix: "นาย" },
+        { regex: /^นาง\s*/i, prefix: "นาง" }
+      ];
+
+      for (let p of prefixPatterns) {
+        if (p.regex.test(str)) {
+          let clean = str.replace(p.regex, '').trim();
+          clean = clean.replace(/^สาว\s*/, '').trim();
+          return {
+            prefix: p.prefix,
+            name: clean
+          };
+        }
+      }
+
+      return { prefix: "เด็กชาย", name: str };
     }
 
     /* ========================================================
@@ -2065,7 +2099,6 @@
       const entry = registrations.find(r => r.id === id);
       if (!entry) return;
 
-      // 1. ปิดหน้าต่าง Modal รายการที่ลงทะเบียนไว้ทันที
       closeModal('entriesModal');
 
       let matchedCat = 'academic';
@@ -2075,7 +2108,6 @@
       const targetCompId = (entry.competitionId || "").trim();
       const normEntryName = (entry.competitionName || "").replace(/\s+/g, '').toLowerCase();
 
-      // ค้นหารายการแข่งขันจากฐานข้อมูล
       for (const cat of ['academic', 'softpower']) {
         for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
           const found = grp.items.find(i => {
@@ -2093,7 +2125,6 @@
         if (compDef) break;
       }
 
-      // กรณีไม่พบโครงสร้างเดิม ให้สร้าง Fallback เพื่อไม่ให้หน้าจอพังหรือเด้งหลุด
       if (!compDef) {
         compDef = {
           id: entry.competitionId || ('comp-' + Date.now()),
@@ -2107,12 +2138,10 @@
 
       currentComp = compDef;
 
-      // ล็อกรหัสรายการที่กำลังแก้ไข
       document.getElementById("editingRecordId").value = entry.id;
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = compDef.id;
 
-      // แสดงแถบแจ้งเตือนโหมดแก้ไข
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
 
@@ -2134,60 +2163,84 @@
       const quotaStText = document.getElementById("quotaStudentText");
       if (quotaStText) quotaStText.textContent = quotaRequired;
 
-      // สร้างช่องกรอกนักเรียนและเติมข้อมูลเดิม
+      // สร้างช่องกรอกนักเรียน
       buildStudentFields(quotaRequired, compDef.level);
 
-      (entry.students || []).forEach((st, idx) => {
+      // กรองนักเรียนที่ข้อมูลไม่ถูกต้องออก
+      const validStudents = (entry.students || []).filter(st => {
+        const raw = (st.fullName || st.name || "");
+        return raw && !raw.includes("คนครบ") && !raw.includes("ขาดอีก");
+      });
+
+      validStudents.forEach((st, idx) => {
         if (idx < quotaRequired) {
           const pfxEl = document.getElementById(`stPrefix_${idx}`);
           const nameEl = document.getElementById(`stName_${idx}`);
           const clsEl = document.getElementById(`stClass_${idx}`);
           const roomEl = document.getElementById(`stRoom_${idx}`);
 
-          if (pfxEl) pfxEl.value = st.prefix || "เด็กชาย";
-          if (nameEl) nameEl.value = st.name || "";
+          const parsed = parseFullNameToParts(st.fullName || st.name);
+          if (pfxEl) pfxEl.value = st.prefix || parsed.prefix;
+          if (nameEl) nameEl.value = st.name || parsed.name;
           
-          if (clsEl && st.classLevel) {
-            const hasOpt = Array.from(clsEl.options).some(o => o.value === st.classLevel);
+          let targetClass = st.classLevel || "";
+          let targetRoom = st.room || "";
+
+          if (st.classInfo && st.classInfo.includes("/")) {
+            const parts = st.classInfo.split("/");
+            targetClass = parts[0].trim();
+            targetRoom = parts[1].trim();
+          }
+
+          if (clsEl && targetClass) {
+            const hasOpt = Array.from(clsEl.options).some(o => o.value === targetClass);
             if (!hasOpt) {
               const opt = document.createElement("option");
-              opt.value = st.classLevel;
-              opt.textContent = st.classLevel;
+              opt.value = targetClass;
+              opt.textContent = targetClass;
               clsEl.appendChild(opt);
             }
-            clsEl.value = st.classLevel;
+            clsEl.value = targetClass;
           }
-          if (roomEl && st.room) roomEl.value = st.room;
+          if (roomEl && targetRoom) roomEl.value = targetRoom;
         }
       });
 
-      // ปรับจำนวนช่องครูและเติมข้อมูลครูเดิม
-      const teacherCount = Math.max((entry.teachers || []).length, compDef.teachers[1] || 2, 1);
+      // กรองครูผู้ฝึกสอนที่ข้อมูลผิดปกติออก (เช่น เป็นข้อความระดับชั้น ป.6/1)
+      const validTeachers = (entry.teachers || []).filter(tc => {
+        const raw = (tc.fullName || tc.name || "");
+        return raw && !/^[อป]\.\d/i.test(raw);
+      });
+
+      const teacherCount = Math.max(validTeachers.length, compDef.teachers[1] || 2, 1);
       buildTeacherFields(teacherCount);
 
       const quotaTcText = document.getElementById("quotaTeacherText");
       if (quotaTcText) quotaTcText.textContent = `${compDef.teachers[0]}-${compDef.teachers[1]}`;
 
-      (entry.teachers || []).forEach((tc, idx) => {
+      validTeachers.forEach((tc, idx) => {
         if (idx < teacherCount) {
           const pfxEl = document.getElementById(`tcPrefix_${idx}`);
           const customPfxEl = document.getElementById(`tcCustomPrefix_${idx}`);
           const nameEl = document.getElementById(`tcName_${idx}`);
 
+          const parsed = parseFullNameToParts(tc.fullName || tc.name);
+          const currentPrefix = tc.prefix || (parsed.prefix.includes("เด็ก") ? "นางสาว" : parsed.prefix);
+
           if (pfxEl) {
-            const hasOption = Array.from(pfxEl.options).some(opt => opt.value === tc.prefix);
+            const hasOption = Array.from(pfxEl.options).some(opt => opt.value === currentPrefix);
             if (hasOption) {
-              pfxEl.value = tc.prefix;
+              pfxEl.value = currentPrefix;
               if (customPfxEl) customPfxEl.classList.add('hidden');
             } else {
               pfxEl.value = 'OTHER';
               if (customPfxEl) {
                 customPfxEl.classList.remove('hidden');
-                customPfxEl.value = tc.prefix || '';
+                customPfxEl.value = currentPrefix || '';
               }
             }
           }
-          if (nameEl) nameEl.value = tc.name || "";
+          if (nameEl) nameEl.value = tc.name || parsed.name;
         }
       });
 
@@ -2197,7 +2250,6 @@
       const btnReset = document.getElementById("textFormResetClear");
       if (btnReset) btnReset.textContent = "คืนค่ารายชื่อเดิม";
 
-      // บังคับเปลี่ยนหน้าจอพุ่งตรงเข้าขั้นตอนที่ 2 ทันที
       goToStep(2);
       showToast(`เข้าสู่โหมดแก้ไข: ${entry.competitionName}`, "amber");
     }
