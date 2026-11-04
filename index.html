@@ -2065,6 +2065,7 @@
       const entry = registrations.find(r => r.id === id);
       if (!entry) return;
 
+      // 1. ปิดหน้าต่าง Modal รายการที่ลงทะเบียนไว้ทันที
       closeModal('entriesModal');
 
       let matchedCat = 'academic';
@@ -2072,10 +2073,16 @@
       let compDef = null;
 
       const targetCompId = (entry.competitionId || "").trim();
+      const normEntryName = (entry.competitionName || "").replace(/\s+/g, '').toLowerCase();
 
+      // ค้นหารายการแข่งขันจากฐานข้อมูล
       for (const cat of ['academic', 'softpower']) {
         for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
-          const found = grp.items.find(i => (targetCompId && i.id === targetCompId) || (i.name === entry.competitionName));
+          const found = grp.items.find(i => {
+            if (targetCompId && i.id === targetCompId) return true;
+            const normItemName = (i.name || "").replace(/\s+/g, '').toLowerCase();
+            return normItemName === normEntryName;
+          });
           if (found) {
             matchedCat = cat;
             matchedGroupKey = gKey;
@@ -2086,6 +2093,7 @@
         if (compDef) break;
       }
 
+      // กรณีไม่พบโครงสร้างเดิม ให้สร้าง Fallback เพื่อไม่ให้หน้าจอพังหรือเด้งหลุด
       if (!compDef) {
         compDef = {
           id: entry.competitionId || ('comp-' + Date.now()),
@@ -2098,21 +2106,35 @@
       }
 
       currentComp = compDef;
+
+      // ล็อกรหัสรายการที่กำลังแก้ไข
       document.getElementById("editingRecordId").value = entry.id;
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = compDef.id;
 
+      // แสดงแถบแจ้งเตือนโหมดแก้ไข
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
 
       const editNotice = document.getElementById("editModeNoticeBox");
       if (editNotice) editNotice.classList.remove("hidden");
 
+      const formTitle = document.getElementById("mainFormTitle");
+      if (formTitle) formTitle.textContent = `แก้ไขรายชื่อผู้เข้าแข่งขัน (${entry.competitionName})`;
+
       const compBadge = document.getElementById("selectedCompBadge");
       const quotaBadge = document.getElementById("selectedQuotaBadge");
       if (compBadge) compBadge.textContent = entry.competitionName;
 
       const quotaRequired = compDef.students || (entry.students ? entry.students.length : 1);
+      if (quotaBadge) {
+        quotaBadge.textContent = `โควตา: นักเรียน ${quotaRequired} คน • ครู ${compDef.teachers[0]}-${compDef.teachers[1]} คน`;
+      }
+
+      const quotaStText = document.getElementById("quotaStudentText");
+      if (quotaStText) quotaStText.textContent = quotaRequired;
+
+      // สร้างช่องกรอกนักเรียนและเติมข้อมูลเดิม
       buildStudentFields(quotaRequired, compDef.level);
 
       (entry.students || []).forEach((st, idx) => {
@@ -2124,13 +2146,27 @@
 
           if (pfxEl) pfxEl.value = st.prefix || "เด็กชาย";
           if (nameEl) nameEl.value = st.name || "";
-          if (clsEl && st.classLevel) clsEl.value = st.classLevel;
+          
+          if (clsEl && st.classLevel) {
+            const hasOpt = Array.from(clsEl.options).some(o => o.value === st.classLevel);
+            if (!hasOpt) {
+              const opt = document.createElement("option");
+              opt.value = st.classLevel;
+              opt.textContent = st.classLevel;
+              clsEl.appendChild(opt);
+            }
+            clsEl.value = st.classLevel;
+          }
           if (roomEl && st.room) roomEl.value = st.room;
         }
       });
 
+      // ปรับจำนวนช่องครูและเติมข้อมูลครูเดิม
       const teacherCount = Math.max((entry.teachers || []).length, compDef.teachers[1] || 2, 1);
       buildTeacherFields(teacherCount);
+
+      const quotaTcText = document.getElementById("quotaTeacherText");
+      if (quotaTcText) quotaTcText.textContent = `${compDef.teachers[0]}-${compDef.teachers[1]}`;
 
       (entry.teachers || []).forEach((tc, idx) => {
         if (idx < teacherCount) {
@@ -2147,7 +2183,7 @@
               pfxEl.value = 'OTHER';
               if (customPfxEl) {
                 customPfxEl.classList.remove('hidden');
-                customPfxEl.value = tc.prefix;
+                customPfxEl.value = tc.prefix || '';
               }
             }
           }
@@ -2155,16 +2191,37 @@
         }
       });
 
+      const submitBtnText = document.getElementById("submitFormText");
+      if (submitBtnText) submitBtnText.textContent = "บันทึกการแก้ไขข้อมูล";
+
+      const btnReset = document.getElementById("textFormResetClear");
+      if (btnReset) btnReset.textContent = "คืนค่ารายชื่อเดิม";
+
+      // บังคับเปลี่ยนหน้าจอพุ่งตรงเข้าขั้นตอนที่ 2 ทันที
       goToStep(2);
       showToast(`เข้าสู่โหมดแก้ไข: ${entry.competitionName}`, "amber");
     }
 
     function cancelEditing() {
       document.getElementById("editingRecordId").value = "";
+      const snapInput = document.getElementById("editingCompIdSnapshot");
+      if (snapInput) snapInput.value = "";
+
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.add("hidden");
+
       const editNotice = document.getElementById("editModeNoticeBox");
       if (editNotice) editNotice.classList.add("hidden");
+
+      const formTitle = document.getElementById("mainFormTitle");
+      if (formTitle) formTitle.textContent = "กรอกข้อมูลผู้เข้าแข่งขันและครูฝึกซ้อม";
+
+      const submitBtnText = document.getElementById("submitFormText");
+      if (submitBtnText) submitBtnText.textContent = "บันทึกข้อมูลการลงทะเบียน";
+
+      const btnReset = document.getElementById("textFormResetClear");
+      if (btnReset) btnReset.textContent = "ล้างข้อมูล";
+
       goToStep(1);
     }
 
