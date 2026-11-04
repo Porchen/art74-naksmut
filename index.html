@@ -1147,6 +1147,42 @@
     </div>
   </div>
 
+  <!-- PDF Preview Modal -->
+  <div id="pdfPreviewModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 no-print hidden">
+    <div class="bg-navy-900 rounded-3xl w-full max-w-5xl h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
+      <div class="p-3 sm:p-4 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0 pr-2">
+          <div class="w-9 h-9 rounded-xl bg-gold-500 text-navy-950 flex items-center justify-center text-lg font-black shrink-0">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <div class="min-w-0">
+            <h3 id="pdfPreviewTitle" class="font-prompt font-bold text-gold-300 text-sm sm:text-base truncate">เอกสารทางการ</h3>
+            <p id="pdfPreviewFilename" class="text-[11px] text-slate-400 font-mono truncate">document.pdf</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="pdfDownloadBtn" class="px-3 py-1.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs sm:text-sm flex items-center gap-1.5 transition shadow">
+            <i class="fa-solid fa-download"></i> ดาวน์โหลด
+          </button>
+          <button onclick="closeModal('pdfPreviewModal')" class="w-9 h-9 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-lg transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 bg-navy-950 relative">
+        <iframe id="pdfPreviewIframe" class="w-full h-full border-0" src=""></iframe>
+        <div id="pdfFallbackNotice" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-300 space-y-3 hidden bg-navy-950">
+          <i class="fa-solid fa-file-circle-exclamation text-4xl text-amber-400"></i>
+          <p class="font-bold text-sm sm:text-base text-white">อุปกรณ์นี้ไม่รองรับการแสดงตัวอย่าง PDF ในหน้าต่างนี้</p>
+          <p class="text-xs text-slate-400 max-w-sm">สามารถกดดาวน์โหลดไฟล์ด้านล่างนี้เพื่อเปิดอ่านในแอปพลิเคชันของเครื่องได้ทันทีค่ะ</p>
+          <button id="pdfFallbackDownloadBtn" class="px-5 py-2.5 rounded-xl bg-gold-500 text-navy-950 font-bold text-sm shadow">
+            <i class="fa-solid fa-download mr-1.5"></i> ดาวน์โหลดไฟล์ PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Unregistered Modal -->
   <div id="unregisteredModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
     <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-rose-500/60 overflow-hidden flex flex-col">
@@ -2166,13 +2202,27 @@
       // สร้างช่องกรอกนักเรียน
       buildStudentFields(quotaRequired, compDef.level);
 
-      // กรองนักเรียนที่ข้อมูลไม่ถูกต้องออก
-      const validStudents = (entry.students || []).filter(st => {
-        const raw = (st.fullName || st.name || "");
-        return raw && !raw.includes("คนครบ") && !raw.includes("ขาดอีก");
+      // กรองและกู้คืนรายชื่อนักเรียนที่แท้จริง (รองรับทั้งชื่อตรงๆ หรือชื่อที่เคยมีข้อความติดมา)
+      let rawStudentList = entry.students || [];
+      let cleanedStudents = [];
+      rawStudentList.forEach(st => {
+        let fullName = (st.fullName || st.name || "").trim();
+        let classInfo = st.classInfo || "";
+        
+        // ถ้ามีชื่อจริงซ่อนอยู่ในวงเล็บ เช่น "คนครบแล้ว (เด็กชายธีรดนย์ สุริยันต์)"
+        let matchParen = fullName.match(/\(([^)]+)\)/);
+        if (matchParen && matchParen[1]) {
+          fullName = matchParen[1].trim();
+        } else if (fullName.includes("คนครบแล้ว") || fullName.includes("ขาดอีก") || fullName.includes("ยังไม่ครบ")) {
+          fullName = "";
+        }
+
+        if (fullName) {
+          cleanedStudents.push({ fullName: fullName, name: fullName, classInfo: classInfo });
+        }
       });
 
-      validStudents.forEach((st, idx) => {
+      cleanedStudents.forEach((st, idx) => {
         if (idx < quotaRequired) {
           const pfxEl = document.getElementById(`stPrefix_${idx}`);
           const nameEl = document.getElementById(`stName_${idx}`);
@@ -2206,8 +2256,15 @@
         }
       });
 
-      // กรองครูผู้ฝึกสอนที่ข้อมูลผิดปกติออก (เช่น เป็นข้อความระดับชั้น ป.6/1)
-      const validTeachers = (entry.teachers || []).filter(tc => {
+      // กรองและกู้คืนรายชื่อครูผู้ฝึกสอนที่แท้จริง
+      let rawTeacherList = entry.teachers || [];
+      // หากพบว่าช่องครูมีแค่คำว่า "ป.6/1" แต่ชื่อครูจริงหลุดไปอยู่ในช่อง award (ผลการแข่งขัน) ให้กู้กลับมา
+      if ((!rawTeacherList.length || rawTeacherList.every(t => /^[อป]\.\d/i.test(t.fullName || t.name))) && entry.award && (entry.award.includes("นาง") || entry.award.includes("นาย"))) {
+        let awardTeachers = entry.award.split(/\d+\.\s*/).filter(t => t.trim() !== "");
+        rawTeacherList = awardTeachers.map(tName => ({ fullName: tName.trim(), name: tName.trim() }));
+      }
+
+      const validTeachers = rawTeacherList.filter(tc => {
         const raw = (tc.fullName || tc.name || "");
         return raw && !/^[อป]\.\d/i.test(raw);
       });
@@ -2536,6 +2593,135 @@
 
     function openDuplicateModal() {
       openModal('duplicateModal');
+    }
+
+    /* ========================================================
+       DOCUMENT & PDF VIEWER HANDLERS
+       ======================================================== */
+    function previewOfficialPDF(filename, title) {
+      const modal = document.getElementById("pdfPreviewModal");
+      const titleEl = document.getElementById("pdfPreviewTitle");
+      const filenameEl = document.getElementById("pdfPreviewFilename");
+      const iframe = document.getElementById("pdfPreviewIframe");
+      const dlBtn = document.getElementById("pdfDownloadBtn");
+      const fallbackNotice = document.getElementById("pdfFallbackNotice");
+      const fallbackDlBtn = document.getElementById("pdfFallbackDownloadBtn");
+
+      if (titleEl) titleEl.textContent = title || filename;
+      if (filenameEl) filenameEl.textContent = filename;
+
+      // สร้าง URL สำหรับดาวน์โหลดและพรีวิว (อ้างอิงไฟล์ PDF ภายในโปรเจกต์เดียวกัน)
+      const encodedFilename = encodeURIComponent(filename);
+      const fileUrl = `./${encodedFilename}`;
+
+      if (iframe) {
+        iframe.src = fileUrl;
+        iframe.onerror = function() {
+          if (fallbackNotice) fallbackNotice.classList.remove("hidden");
+        };
+      }
+
+      if (dlBtn) {
+        dlBtn.onclick = function() { downloadOfficialDoc(filename); };
+      }
+      if (fallbackDlBtn) {
+        fallbackDlBtn.onclick = function() { downloadOfficialDoc(filename); };
+      }
+
+      if (fallbackNotice) fallbackNotice.classList.add("hidden");
+      openModal("pdfPreviewModal");
+    }
+
+    function downloadOfficialDoc(filename) {
+      try {
+        const link = document.createElement("a");
+        link.href = `./${encodeURIComponent(filename)}`;
+        link.download = filename;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast(`เริ่มดาวน์โหลด ${filename}`, "emerald");
+      } catch (err) {
+        window.open(`./${encodeURIComponent(filename)}`, '_blank');
+      }
+    }
+
+    function switchCriteriaTab(tab) {
+      const academicTab = document.getElementById("criteriaTabAcademic");
+      const softpowerTab = document.getElementById("criteriaTabSoftpower");
+      const btnAcademic = document.getElementById("tabBtnAcademic");
+      const btnSoftpower = document.getElementById("tabBtnSoftpower");
+
+      if (tab === 'academic') {
+        if (academicTab) academicTab.classList.remove("hidden");
+        if (softpowerTab) softpowerTab.classList.add("hidden");
+        if (btnAcademic) {
+          btnAcademic.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
+        }
+        if (btnSoftpower) {
+          btnSoftpower.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
+        }
+      } else {
+        if (academicTab) academicTab.classList.add("hidden");
+        if (softpowerTab) softpowerTab.classList.remove("hidden");
+        if (btnSoftpower) {
+          btnSoftpower.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5";
+        }
+        if (btnAcademic) {
+          btnAcademic.className = "py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5";
+        }
+      }
+      renderCriteriaLists();
+    }
+
+    function renderCriteriaLists() {
+      const acList = document.getElementById("academicActivitiesList");
+      const spList = document.getElementById("softpowerActivitiesList");
+
+      if (acList && acList.children.length === 0) {
+        for (const [key, grp] of Object.entries(COMPETITIONS_DATA.academic)) {
+          const card = document.createElement("div");
+          card.className = "p-4 rounded-2xl bg-navy-950 border border-slate-800 space-y-2";
+          const itemsHtml = grp.items.map((it, idx) => `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-900 text-slate-300">
+              <span>${idx + 1}. [${it.level}] ${it.name}</span>
+              <span class="text-gold-400 font-mono">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
+            </div>
+          `).join("");
+
+          card.innerHTML = `
+            <div class="font-bold text-sm text-gold-300 font-prompt flex items-center justify-between">
+              <span>${grp.name}</span>
+              <span class="text-xs text-slate-400 font-normal">${grp.items.length} รายการ</span>
+            </div>
+            <div class="pt-1">${itemsHtml}</div>
+          `;
+          acList.appendChild(card);
+        }
+      }
+
+      if (spList && spList.children.length === 0) {
+        for (const [key, grp] of Object.entries(COMPETITIONS_DATA.softpower)) {
+          const card = document.createElement("div");
+          card.className = "p-4 rounded-2xl bg-navy-950 border border-slate-800 space-y-2";
+          const itemsHtml = grp.items.map((it, idx) => `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-900 text-slate-300">
+              <span>${idx + 1}. [${it.level}] ${it.name}</span>
+              <span class="text-gold-400 font-mono">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
+            </div>
+          `).join("");
+
+          card.innerHTML = `
+            <div class="font-bold text-sm text-gold-300 font-prompt flex items-center justify-between">
+              <span>${grp.name}</span>
+              <span class="text-xs text-slate-400 font-normal">${grp.items.length} รายการ</span>
+            </div>
+            <div class="pt-1">${itemsHtml}</div>
+          `;
+          spList.appendChild(card);
+        }
+      }
     }
 
     function protectedAdminAction(actionKey, payload = null) {
