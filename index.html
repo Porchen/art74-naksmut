@@ -121,7 +121,7 @@
       <!-- Quick Action Navigation Menu -->
       <nav class="space-y-3.5">
         
-        <!-- HIGHLIGHT CARD: สมัครกรรมการตัดสิน (โดดเด่นสะดุดตาเป็นพิเศษ) -->
+        <!-- HIGHLIGHT CARD: สมัครกรรมการตัดสิน -->
         <div class="rounded-2xl p-3 bg-gradient-to-br from-purple-900/90 via-indigo-950 to-navy-950 border-2 border-purple-400 shadow-[0_0_18px_rgba(168,85,247,0.35)] relative overflow-hidden group">
           <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
           <div class="flex items-center justify-between mb-2">
@@ -198,6 +198,17 @@
                   <span class="truncate">เกณฑ์ Soft Power</span>
                 </button>
                 <button onclick="downloadOfficialDoc('ประเภท Soft Power.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-gold-300 hover:bg-gold-500/20 transition" title="ดาวน์โหลด PDF">
+                  <i class="fa-solid fa-download text-[10px]"></i>
+                </button>
+              </div>
+
+              <!-- รายการเอกสาร: บันทึกขออนุมัติงบประมาณ -->
+              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
+                <button onclick="previewOfficialPDF('บันทึกขออนุมัติงบประมาณ.pdf', 'บันทึกขออนุมัติงบประมาณ ในการฝึกซ้อม')" class="flex items-center gap-1.5 hover:text-sky-300 text-left truncate flex-1 pr-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
+                  <span class="truncate text-sky-200">บันทึกขออนุมัติงบประมาณ</span>
+                </button>
+                <button onclick="downloadOfficialDoc('บันทึกขออนุมัติงบประมาณ.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-sky-300 hover:bg-sky-500/20 transition" title="ดาวน์โหลด PDF">
                   <i class="fa-solid fa-download text-[10px]"></i>
                 </button>
               </div>
@@ -334,7 +345,7 @@
   <!-- Success Celebration Modal -->
   <div id="successSaveModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
     <div class="bg-navy-900 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border-2 border-emerald-500/70 text-center space-y-4">
-      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-3xl font-black shadow-[0_0_20px_rgba(16,185,129,0.5)]">
+      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-3xl font-black shadow-[0_0_20px_rgba(168,85,247,0.5)]">
         <i class="fa-solid fa-check"></i>
       </div>
       <div class="space-y-1">
@@ -773,7 +784,6 @@
         </div>
       </div>
 
-      <!-- ปิดโครงสร้าง entriesModal ให้ถูกต้องเพื่อไม่ให้ modal อื่นโดนกลืนเข้าไป -->
       <div class="overflow-y-auto flex-1 p-3 sm:p-5">
         <table class="w-full text-left text-sm border-collapse">
           <thead>
@@ -2203,8 +2213,8 @@
         compDef = {
           id: entry.competitionId || ('comp-' + Date.now()),
           name: entry.competitionName,
-          students: entry.studentsQuota || (entry.students ? entry.students.length : 1),
-          teachers: [1, entry.teachers ? Math.max(2, entry.teachers.length) : 2],
+          students: entry.studentsQuota || (entry.students && entry.students.length > 0 ? entry.students.length : 1),
+          teachers: [1, entry.teachers && entry.teachers.length > 0 ? Math.max(2, entry.teachers.length) : 2],
           type: entry.competitionType || "ทีม",
           level: entry.competitionLevel || "ป.4-6"
         };
@@ -2240,14 +2250,13 @@
       // สร้างช่องกรอกนักเรียน
       buildStudentFields(quotaRequired, compDef.level);
 
-      // กรองและกู้คืนรายชื่อนักเรียนที่แท้จริง (รองรับทั้งชื่อตรงๆ หรือชื่อที่เคยมีข้อความติดมา)
+      // กรองและกู้คืนรายชื่อนักเรียนที่แท้จริง
       let rawStudentList = entry.students || [];
       let cleanedStudents = [];
       rawStudentList.forEach(st => {
         let fullName = (st.fullName || st.name || "").trim();
         let classInfo = st.classInfo || "";
         
-        // ถ้ามีชื่อจริงซ่อนอยู่ในวงเล็บ เช่น "คนครบแล้ว (เด็กชายธีรดนย์ สุริยันต์)"
         let matchParen = fullName.match(/\(([^)]+)\)/);
         if (matchParen && matchParen[1]) {
           fullName = matchParen[1].trim();
@@ -2296,7 +2305,6 @@
 
       // กรองและกู้คืนรายชื่อครูผู้ฝึกสอนที่แท้จริง
       let rawTeacherList = entry.teachers || [];
-      // หากพบว่าช่องครูมีแค่คำว่า "ป.6/1" แต่ชื่อครูจริงหลุดไปอยู่ในช่อง award (ผลการแข่งขัน) ให้กู้กลับมา
       if ((!rawTeacherList.length || rawTeacherList.every(t => /^[อป]\.\d/i.test(t.fullName || t.name))) && entry.award && (entry.award.includes("นาง") || entry.award.includes("นาย"))) {
         let awardTeachers = entry.award.split(/\d+\.\s*/).filter(t => t.trim() !== "");
         rawTeacherList = awardTeachers.map(tName => ({ fullName: tName.trim(), name: tName.trim() }));
@@ -2536,13 +2544,14 @@
       } catch (err) { console.warn("Fetch err", err); }
     }
 
+    let currentEntryFilter = 'all';
+
     function renderEntriesTable() {
       const tbody = document.getElementById("entriesTableBody");
       const emptyState = document.getElementById("modalEmptyState");
       if (!tbody) return;
       tbody.innerHTML = "";
 
-      // รองรับการกรองข้อมูลตาม filter ปัจจุบัน (all หรือ incomplete)
       let listToRender = registrations;
       if (currentEntryFilter === 'incomplete') {
         listToRender = registrations.filter(r => !r.isComplete);
@@ -2624,7 +2633,6 @@
       renderEntriesTable();
       closeModal("deleteEntryConfirmModal");
 
-      // บันทึก Log และส่งคำสั่งลบไปยัง Google Sheets
       addAuditLog(compName, "ลบรายการ", `ยกเลิกการลงทะเบียนกิจกรรม ${compName}`);
 
       if (googleSheetUrl && entry) {
@@ -2688,8 +2696,6 @@
     function openAllEventsDirectoryModal() {
       openModal('documentsModal');
     }
-
-    let currentEntryFilter = 'all';
 
     function openFilteredEntries(filter = 'all') {
       currentEntryFilter = filter;
@@ -2767,21 +2773,18 @@
       closeModal('unregisteredModal');
       cancelEditing();
 
-      // สลับไปประเภทวิชาการ หรือ Soft Power
       const catRadio = document.querySelector(`input[name="formCatType"][value="${catKey}"]`);
       if (catRadio) {
         catRadio.checked = true;
         onCategoryChange();
       }
 
-      // สลับกลุ่มสาระ
       const grpSelect = document.getElementById("groupSelect");
       if (grpSelect) {
         grpSelect.value = groupKey;
         onGroupChange();
       }
 
-      // สลับรายการแข่งขัน
       const compSelect = document.getElementById("competitionSelect");
       if (compSelect) {
         compSelect.value = compId;
@@ -2897,9 +2900,7 @@
       if (titleEl) titleEl.textContent = title || filename;
       if (filenameEl) filenameEl.textContent = filename;
 
-      // สร้าง URL สำหรับดาวน์โหลดและพรีวิว (อ้างอิงไฟล์ PDF ภายในโปรเจกต์เดียวกัน)
-      const encodedFilename = encodeURIComponent(filename);
-      const fileUrl = `./${encodedFilename}`;
+      const fileUrl = `./${encodeURIComponent(filename)}`;
 
       if (iframe) {
         iframe.src = fileUrl;
