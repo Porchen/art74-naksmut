@@ -52,9 +52,9 @@
     html.font-size-xl { font-size: 21px; }
 
     body {
-      background-color: #091322;
-      background-image: radial-gradient(circle at 50% 0%, #152542 0%, #091322 80%);
-      color: #f1f5f9;
+      background-color: #f8fafc;
+      background-image: linear-gradient(to bottom, #f1f5f9 0%, #f8fafc 100%);
+      color: #1e293b;
     }
 
     @media print {
@@ -69,186 +69,185 @@
     }
     
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #0c182b; }
-    ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #facc15; }
+    ::-webkit-scrollbar-track { background: #e2e8f0; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
   </style>
 </head>
-<body class="font-sans min-h-screen flex flex-col lg:flex-row antialiased selection:bg-gold-500 selection:text-navy-950">
+<body class="font-sans min-h-screen flex flex-col lg:flex-row antialiased selection:bg-amber-100 selection:text-navy-900">
 
   <!-- ==========================================
        MOBILE TOP HEADER (เฉพาะจอมือถือ/แท็บเล็ต < lg)
        ========================================== -->
-  <header class="lg:hidden w-full bg-navy-950/95 border-b-2 border-gold-500/40 p-3 shadow-xl sticky top-0 z-40 backdrop-blur-md no-print flex items-center justify-between gap-2">
+  <header class="lg:hidden w-full bg-white border-b-2 border-slate-200 p-3 shadow-sm sticky top-0 z-40 no-print flex items-center justify-between gap-2">
     <!-- School Identity & Brand -->
-    <div class="flex items-center gap-2 min-w-0">
+    <div class="flex items-center gap-2.5 min-w-0">
       <div class="relative group shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-royal-700 via-royal-900 to-navy-950 p-1 border border-gold-400 shadow-[0_0_10px_rgba(234,179,8,0.3)] flex items-center justify-center text-gold-300">
-          <i class="fa-solid fa-school-flag text-base text-gold-400"></i>
+        <div class="w-10 h-10 rounded-xl bg-royal-800 p-1 border border-royal-700 shadow-sm flex items-center justify-center text-amber-300">
+          <i class="fa-solid fa-school-flag text-lg text-amber-300"></i>
         </div>
       </div>
       <div class="min-w-0">
-        <h1 class="text-xs font-bold font-prompt text-amber-300 tracking-tight leading-tight truncate">
+        <h1 class="text-xs sm:text-sm font-bold font-prompt text-navy-900 tracking-tight leading-tight truncate">
           โรงเรียนอนุบาลนาคสมุทรเดชอุดม
         </h1>
-        <p class="text-[10px] text-slate-300 truncate">
+        <p class="text-[11px] text-slate-600 truncate font-medium">
           ศิลปหัตถกรรมนักเรียน ครั้งที่ 74 • สพป.อบ.5
         </p>
       </div>
     </div>
 
     <!-- Accessibility Font Resizer -->
-    <div class="flex items-center gap-0.5 bg-navy-900 border border-gold-500/40 rounded-xl px-1.5 py-0.5 shadow-inner shrink-0">
-      <button onclick="setFontSize('md')" class="px-1.5 py-0.5 rounded text-[11px] text-slate-300 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก-</button>
-      <button onclick="setFontSize('lg')" class="px-1.5 py-0.5 rounded text-[11px] text-gold-300 bg-gold-600/30 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก</button>
-      <button onclick="setFontSize('xl')" class="px-1.5 py-0.5 rounded text-xs text-gold-400 hover:bg-gold-500 hover:text-navy-950 font-extrabold transition">ก+</button>
+    <div class="flex items-center gap-1 bg-slate-100 border border-slate-300 rounded-xl px-2 py-1 shadow-inner shrink-0">
+      <button onclick="setFontSize('md')" class="px-1.5 py-0.5 rounded text-xs text-slate-700 hover:bg-royal-800 hover:text-white font-bold transition">ก-</button>
+      <button onclick="setFontSize('lg')" class="px-1.5 py-0.5 rounded text-xs text-royal-800 bg-white shadow-sm hover:bg-royal-800 hover:text-white font-bold transition">ก</button>
+      <button onclick="setFontSize('xl')" class="px-1.5 py-0.5 rounded text-sm text-royal-900 hover:bg-royal-800 hover:text-white font-extrabold transition">ก+</button>
     </div>
   </header>
 
   <!-- ==========================================
        LEFT DEDICATED CONTROL SIDEBAR
        ========================================== -->
-  <aside class="w-full lg:w-72 lg:min-w-[18rem] lg:h-screen lg:sticky lg:top-0 bg-navy-950/95 border-t-2 lg:border-t-0 lg:border-r-2 border-gold-500/40 shadow-2xl z-30 backdrop-blur-md flex flex-col justify-between overflow-y-auto no-print order-2 lg:order-1 mt-6 lg:mt-0">
+  <aside class="w-full lg:w-72 lg:min-w-[18rem] lg:h-screen lg:sticky lg:top-0 bg-white border-t-2 lg:border-t-0 lg:border-r-2 border-slate-200 shadow-sm z-30 flex flex-col justify-between overflow-y-auto no-print order-2 lg:order-1 mt-6 lg:mt-0">
     
-    <div class="p-3.5 sm:p-4 space-y-3.5">
+    <div class="p-4 space-y-4">
       <!-- School Identity & Brand (แสดงเฉพาะจอคอมพิวเตอร์ hidden lg:flex) -->
-      <div class="hidden lg:flex items-center gap-2.5 pb-3 border-b border-gold-500/30">
+      <div class="hidden lg:flex items-center gap-2.5 pb-3 border-b border-slate-200">
         <div class="relative group shrink-0">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-royal-700 via-royal-900 to-navy-950 p-1 border-2 border-gold-400 shadow-[0_0_12px_rgba(234,179,8,0.3)] flex items-center justify-center text-gold-300">
-            <i class="fa-solid fa-school-flag text-xl text-gold-400"></i>
+          <div class="w-11 h-11 rounded-xl bg-royal-800 p-1 border-2 border-royal-700 shadow-md flex items-center justify-center text-amber-300">
+            <i class="fa-solid fa-school-flag text-xl text-amber-300"></i>
           </div>
-          <div class="absolute -bottom-1 -right-1 bg-gold-500 text-navy-950 rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold shadow">
+          <div class="absolute -bottom-1 -right-1 bg-amber-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold shadow">
             <i class="fa-solid fa-check"></i>
           </div>
         </div>
         
         <div class="min-w-0">
-          <h1 class="text-xs sm:text-sm font-bold font-prompt text-amber-300 tracking-tight leading-snug drop-shadow-sm whitespace-nowrap">
+          <h1 class="text-xs sm:text-sm font-bold font-prompt text-navy-900 tracking-tight leading-snug drop-shadow-sm whitespace-nowrap">
             โรงเรียนอนุบาลนาคสมุทรเดชอุดม
           </h1>
-          <p class="text-[11px] text-slate-300 font-medium">
+          <p class="text-[11px] text-slate-600 font-medium">
             ศิลปหัตถกรรมนักเรียน ครั้งที่ 74
           </p>
-          <div class="text-[10px] text-gold-400/90 font-semibold truncate">
+          <div class="text-[10px] text-royal-800 font-bold truncate">
             สพป.อุบลราชธานี เขต 5
           </div>
         </div>
       </div>
 
       <!-- Accessibility Font Resizer (แสดงเฉพาะจอคอมพิวเตอร์ hidden lg:flex) -->
-      <div class="hidden lg:flex items-center justify-between bg-navy-900 border border-gold-500/40 rounded-xl px-2.5 py-1 shadow-inner">
-        <span class="text-[11px] text-gold-400 font-bold flex items-center gap-1">
-          <i class="fa-solid fa-eye"></i> ขนาดอักษร:
+      <div class="hidden lg:flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 shadow-inner">
+        <span class="text-[11px] text-slate-700 font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-eye text-royal-800"></i> ขนาดอักษร:
         </span>
         <div class="flex items-center gap-1">
-          <button onclick="setFontSize('md')" class="px-2 py-0.5 rounded text-xs text-slate-300 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก-</button>
-          <button onclick="setFontSize('lg')" class="px-2 py-0.5 rounded text-xs text-gold-300 bg-gold-600/30 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก</button>
-          <button onclick="setFontSize('xl')" class="px-2 py-0.5 rounded text-sm text-gold-400 hover:bg-gold-500 hover:text-navy-950 font-extrabold transition">ก+</button>
+          <button onclick="setFontSize('md')" class="px-2 py-0.5 rounded text-xs text-slate-700 hover:bg-royal-800 hover:text-white font-bold transition">ก-</button>
+          <button onclick="setFontSize('lg')" class="px-2 py-0.5 rounded text-xs text-royal-800 bg-white shadow-sm hover:bg-royal-800 hover:text-white font-bold transition">ก</button>
+          <button onclick="setFontSize('xl')" class="px-2 py-0.5 rounded text-sm text-royal-900 hover:bg-royal-800 hover:text-white font-extrabold transition">ก+</button>
         </div>
       </div>
 
       <!-- Quick Action Navigation Menu -->
-      <nav class="space-y-3.5">
+      <nav class="space-y-4">
         
         <!-- HIGHLIGHT CARD: สมัครกรรมการตัดสิน -->
-        <div class="rounded-2xl p-3 bg-gradient-to-br from-purple-900/90 via-indigo-950 to-navy-950 border-2 border-purple-400 shadow-[0_0_18px_rgba(168,85,247,0.35)] relative overflow-hidden group">
-          <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="rounded-2xl p-3.5 bg-gradient-to-br from-purple-50 via-purple-100/50 to-white border-2 border-purple-200 shadow-sm relative overflow-hidden group">
           <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-1.5 text-xs font-bold text-purple-200 font-prompt">
-              <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+            <div class="flex items-center gap-1.5 text-xs font-bold text-purple-900 font-prompt">
+              <span class="w-2 h-2 rounded-full bg-purple-600"></span>
               <span>ร่วมตัดสินการแข่งขัน</span>
             </div>
-            <span class="text-[9px] bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-extrabold px-2 py-0.5 rounded-full shadow-sm tracking-wider uppercase">
+            <span class="text-[9px] bg-purple-700 text-white font-bold px-2 py-0.5 rounded-full shadow-sm tracking-wider uppercase">
               เปิดรับสมัคร
             </span>
           </div>
           
-          <p class="text-[11px] text-slate-300 mb-2.5 leading-snug">
+          <p class="text-[11px] text-slate-600 mb-2.5 leading-snug">
             ขอเชิญคุณครูร่วมเสนอชื่อเป็นคณะกรรมการตัดสินในแต่ละกิจกรรม
           </p>
 
-          <div class="space-y-1.5">
-            <button type="button" onclick="openJudgeRegistrationModal()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-prompt font-extrabold text-xs sm:text-sm shadow-[0_4px_12px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 transition active:scale-98">
+          <div class="space-y-2">
+            <button type="button" onclick="openJudgeRegistrationModal()" class="w-full py-2 px-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-prompt font-bold text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 transition active:scale-98">
               <i class="fa-solid fa-user-plus text-amber-300"></i>
               <span>สมัครกรรมการตัดสิน</span>
             </button>
             
-            <button type="button" onclick="openModal('judgesListModal')" class="w-full py-1.5 px-2.5 rounded-lg bg-navy-950/70 hover:bg-navy-900 border border-purple-500/40 text-purple-300 hover:text-white text-[11px] font-semibold flex items-center justify-between transition">
+            <button type="button" onclick="openModal('judgesListModal')" class="w-full py-1.5 px-2.5 rounded-lg bg-white hover:bg-purple-50 border border-purple-200 text-purple-900 text-[11px] font-semibold flex items-center justify-between transition shadow-2xs">
               <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-clipboard-list text-purple-400"></i>
+                <i class="fa-solid fa-clipboard-list text-purple-600"></i>
                 <span>ดูรายชื่อกรรมการที่สมัครแล้ว</span>
               </span>
-              <span id="sidebarJudgeCountBadge" class="bg-purple-800 text-purple-100 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full">0</span>
+              <span id="sidebarJudgeCountBadge" class="bg-purple-100 text-purple-800 text-[10px] font-mono font-bold px-2 py-0.2 rounded-full">0</span>
             </button>
           </div>
         </div>
 
         <!-- Group 1: Documents & Results -->
         <div class="space-y-2">
-          <span class="text-[10px] font-bold text-gold-400/80 uppercase tracking-wider block px-1">เอกสารและผลการแข่งขัน</span>
+          <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-1">เอกสารและผลการแข่งขัน</span>
           
           <!-- Criteria & Download Card -->
-          <div class="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-950 border-2 border-gold-500/50 shadow-lg overflow-hidden">
-            <button onclick="openModal('documentsModal')" class="w-full p-2.5 text-left bg-gradient-to-r from-amber-600 via-gold-600 to-amber-600 hover:from-amber-500 hover:to-gold-500 text-navy-950 font-black shadow flex items-center justify-between transition group">
+          <div class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+            <button onclick="openModal('documentsModal')" class="w-full p-2.5 text-left bg-gradient-to-r from-royal-800 to-navy-900 hover:from-royal-700 hover:to-navy-800 text-white font-bold shadow-sm flex items-center justify-between transition group">
               <div class="flex items-center gap-2">
-                <i class="fa-solid fa-file-arrow-down text-sm"></i>
+                <i class="fa-solid fa-file-arrow-down text-sm text-amber-300"></i>
                 <span class="text-xs sm:text-sm font-bold font-prompt">เกณฑ์แข่งขัน & เอกสาร</span>
               </div>
-              <span class="text-[10px] bg-navy-950 text-gold-300 px-2 py-0.5 rounded-full font-bold group-hover:bg-navy-900 transition">
+              <span class="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded-full font-bold group-hover:bg-white group-hover:text-royal-900 transition">
                 ดูทั้งหมด
               </span>
             </button>
 
             <!-- Clickable Bullet Items -->
-            <div class="p-2 space-y-1 text-[11px] font-medium bg-navy-950/80">
-              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="previewOfficialPDF('กำหนดการแข่งขัน.pdf', 'กำหนดการแข่งขัน ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-1.5 hover:text-gold-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-gold-400 shrink-0"></span>
+            <div class="p-2 space-y-1 text-xs font-medium bg-slate-50/60 divide-y divide-slate-100">
+              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="previewOfficialPDF('กำหนดการแข่งขัน.pdf', 'กำหนดการแข่งขัน ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-2 hover:text-royal-800 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-royal-700 shrink-0"></span>
                   <span class="truncate">กำหนดการแข่งขัน</span>
                 </button>
-                <button onclick="downloadOfficialDoc('กำหนดการแข่งขัน.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-gold-300 hover:bg-gold-500/20 transition" title="ดาวน์โหลด PDF">
-                  <i class="fa-solid fa-download text-[10px]"></i>
+                <button onclick="downloadOfficialDoc('กำหนดการแข่งขัน.pdf')" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-royal-800 hover:bg-slate-200 transition" title="ดาวน์โหลด PDF">
+                  <i class="fa-solid fa-download text-xs"></i>
                 </button>
               </div>
 
-              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="previewOfficialPDF('ประเภทวิชาการ.pdf', 'เกณฑ์ประเภทวิชาการ ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-1.5 hover:text-gold-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+              <div class="flex items-center justify-between p-1 pt-1.5 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="previewOfficialPDF('ประเภทวิชาการ.pdf', 'เกณฑ์ประเภทวิชาการ ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-2 hover:text-royal-800 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
                   <span class="truncate">เกณฑ์ประเภทวิชาการ</span>
                 </button>
-                <button onclick="downloadOfficialDoc('ประเภทวิชาการ.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-gold-300 hover:bg-gold-500/20 transition" title="ดาวน์โหลด PDF">
-                  <i class="fa-solid fa-download text-[10px]"></i>
+                <button onclick="downloadOfficialDoc('ประเภทวิชาการ.pdf')" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-royal-800 hover:bg-slate-200 transition" title="ดาวน์โหลด PDF">
+                  <i class="fa-solid fa-download text-xs"></i>
                 </button>
               </div>
 
-              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="previewOfficialPDF('ประเภท Soft Power.pdf', 'เกณฑ์ประเภท Soft Power ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-1.5 hover:text-gold-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+              <div class="flex items-center justify-between p-1 pt-1.5 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="previewOfficialPDF('ประเภท Soft Power.pdf', 'เกณฑ์ประเภท Soft Power ศิลปหัตถกรรมครั้งที่ 74')" class="flex items-center gap-2 hover:text-royal-800 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                   <span class="truncate">เกณฑ์ Soft Power</span>
                 </button>
-                <button onclick="downloadOfficialDoc('ประเภท Soft Power.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-gold-300 hover:bg-gold-500/20 transition" title="ดาวน์โหลด PDF">
-                  <i class="fa-solid fa-download text-[10px]"></i>
+                <button onclick="downloadOfficialDoc('ประเภท Soft Power.pdf')" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-royal-800 hover:bg-slate-200 transition" title="ดาวน์โหลด PDF">
+                  <i class="fa-solid fa-download text-xs"></i>
                 </button>
               </div>
 
               <!-- รายการเอกสาร: บันทึกขออนุมัติงบประมาณ -->
-              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="previewOfficialPDF('บันทึกขออนุมัติงบประมาณ.pdf', 'บันทึกขออนุมัติงบประมาณ ในการฝึกซ้อม')" class="flex items-center gap-1.5 hover:text-sky-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0"></span>
-                  <span class="truncate text-sky-200">บันทึกขออนุมัติงบประมาณ</span>
+              <div class="flex items-center justify-between p-1 pt-1.5 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="previewOfficialPDF('บันทึกขออนุมัติงบประมาณ.pdf', 'บันทึกขออนุมัติงบประมาณ ในการฝึกซ้อม')" class="flex items-center gap-2 hover:text-blue-700 text-left truncate flex-1 pr-1 font-semibold text-blue-900">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"></span>
+                  <span class="truncate">บันทึกขออนุมัติงบประมาณ</span>
                 </button>
-                <button onclick="downloadOfficialDoc('บันทึกขออนุมัติงบประมาณ.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-slate-400 hover:text-sky-300 hover:bg-sky-500/20 transition" title="ดาวน์โหลด PDF">
-                  <i class="fa-solid fa-download text-[10px]"></i>
+                <button onclick="downloadOfficialDoc('บันทึกขออนุมัติงบประมาณ.pdf')" class="w-6 h-6 rounded flex items-center justify-center text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition" title="ดาวน์โหลด PDF">
+                  <i class="fa-solid fa-download text-xs"></i>
                 </button>
               </div>
 
-              <div class="flex items-center justify-between p-1 rounded-lg hover:bg-navy-900 transition text-slate-300 group border-t border-slate-800/80 mt-1 pt-1">
-                <button onclick="previewOfficialPDF('ใบรายงานตัว กลุ่มเครือข่าย69_2.pdf', 'ใบรายงานตัวร่วมแข่งขัน กลุ่มเครือข่ายเดชอุดม (ปีการศึกษา 2569)')" class="flex items-center gap-1.5 hover:text-emerald-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-                  <span class="text-emerald-300 font-semibold truncate">ใบรายงานตัวเครือข่าย 69</span>
+              <div class="flex items-center justify-between p-1 pt-1.5 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="previewOfficialPDF('ใบรายงานตัว กลุ่มเครือข่าย69_2.pdf', 'ใบรายงานตัวร่วมแข่งขัน กลุ่มเครือข่ายเดชอุดม (ปีการศึกษา 2569)')" class="flex items-center gap-2 hover:text-emerald-700 text-left truncate flex-1 pr-1 font-semibold text-emerald-800">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0"></span>
+                  <span class="truncate">ใบรายงานตัวเครือข่าย 69</span>
                 </button>
-                <button onclick="downloadOfficialDoc('ใบรายงานตัว กลุ่มเครือข่าย69_2.pdf')" class="w-5 h-5 rounded flex items-center justify-center text-emerald-400 hover:bg-emerald-500/20 transition" title="ดาวน์โหลด PDF ใบรายงานตัว">
-                  <i class="fa-solid fa-download text-[10px]"></i>
+                <button onclick="downloadOfficialDoc('ใบรายงานตัว กลุ่มเครือข่าย69_2.pdf')" class="w-6 h-6 rounded flex items-center justify-center text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 transition" title="ดาวน์โหลด PDF ใบรายงานตัว">
+                  <i class="fa-solid fa-download text-xs"></i>
                 </button>
               </div>
             </div>
@@ -256,85 +255,85 @@
         </div>
 
         <!-- Group 2: Data & Cloud Sync -->
-        <div class="space-y-2 pt-2 border-t border-slate-800">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block px-1">ระบบข้อมูลและส่งออก</span>
+        <div class="space-y-2 pt-2 border-t border-slate-200">
+          <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-1">ระบบข้อมูลและส่งออก</span>
           
-          <div class="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-950 border-2 border-emerald-500/50 shadow-lg overflow-hidden">
-            <div class="p-2.5 bg-gradient-to-r from-emerald-800 via-royal-800 to-navy-950 text-emerald-300 font-bold text-xs sm:text-sm font-prompt flex items-center justify-between border-b border-emerald-500/30">
+          <div class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-2.5 bg-gradient-to-r from-emerald-700 to-teal-800 text-white font-bold text-xs sm:text-sm font-prompt flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <i class="fa-solid fa-database text-xs text-emerald-400"></i>
+                <i class="fa-solid fa-database text-xs text-amber-300"></i>
                 <span>จัดการข้อมูล & ส่งออก</span>
               </div>
-              <span id="sheetStatusBadge" class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <span id="sheetStatusBadge" class="w-2.5 h-2.5 rounded-full bg-emerald-300 shrink-0 ring-2 ring-white/50"></span>
             </div>
 
             <!-- Bullet Items -->
-            <div class="p-2 space-y-1 text-[11px] font-medium bg-navy-950/80">
-              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="openModal('summaryResultsModal')" class="flex items-center gap-2 hover:text-gold-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-gold-400 shrink-0"></span>
+            <div class="p-2 space-y-1 text-xs font-medium bg-slate-50/60 divide-y divide-slate-100">
+              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="openModal('summaryResultsModal')" class="flex items-center gap-2 hover:text-royal-800 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
                   <span class="truncate">สรุปผลรางวัล & เหรียญ</span>
                 </button>
-                <span class="text-[9px] text-gold-400/80 font-mono shrink-0">เปิดดู</span>
+                <span class="text-[10px] text-royal-700 font-bold bg-royal-50 px-2 py-0.5 rounded-md shrink-0">เปิดดู</span>
               </div>
 
-              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="protectedAdminAction('auditLogs')" class="flex items-center gap-2 hover:text-amber-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+              <div class="flex items-center justify-between p-1.5 pt-2 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="protectedAdminAction('auditLogs')" class="flex items-center gap-2 hover:text-royal-800 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0"></span>
                   <span class="truncate">การแก้ไขล่าสุด</span>
                 </button>
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <span id="unreadChangesBadge" class="bg-amber-500 text-navy-950 text-[10px] px-2 py-0.5 rounded-full font-bold font-mono shadow-sm">0</span>
-                  <i class="fa-solid fa-lock text-[10px] text-amber-400/80" title="เฉพาะแอดมิน"></i>
+                  <span id="unreadChangesBadge" class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] px-2 py-0.5 rounded-full font-bold font-mono">0</span>
+                  <i class="fa-solid fa-lock text-[10px] text-slate-400" title="เฉพาะแอดมิน"></i>
                 </div>
               </div>
 
-              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="protectedAdminAction('districtTransfer')" class="flex items-center gap-2 hover:text-emerald-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-                  <span class="text-emerald-300 font-semibold truncate">โอนข้อมูลสู่รอบเขต</span>
+              <div class="flex items-center justify-between p-1.5 pt-2 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="protectedAdminAction('districtTransfer')" class="flex items-center gap-2 hover:text-emerald-700 text-left truncate flex-1 pr-1 font-semibold text-emerald-800">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0"></span>
+                  <span class="truncate">โอนข้อมูลสู่รอบเขต</span>
                 </button>
                 <div class="flex items-center gap-1.5 shrink-0">
                   <span id="navDistrictBadge" class="bg-emerald-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
-                  <i class="fa-solid fa-lock text-[10px] text-amber-400/80" title="เฉพาะแอดมิน"></i>
+                  <i class="fa-solid fa-lock text-[10px] text-slate-400" title="เฉพาะแอดมิน"></i>
                 </div>
               </div>
 
-              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-navy-900 transition text-slate-300 group border-t border-slate-800/80 pt-1.5 mt-0.5">
-                <button onclick="protectedAdminAction('sheetConfig')" class="flex items-center gap-2 hover:text-teal-300 text-left truncate flex-1 pr-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-teal-400 shrink-0"></span>
+              <div class="flex items-center justify-between p-1.5 pt-2 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="protectedAdminAction('sheetConfig')" class="flex items-center gap-2 hover:text-teal-700 text-left truncate flex-1 pr-1 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-600 shrink-0"></span>
                   <span class="truncate">เชื่อมต่อ Google Sheets</span>
                 </button>
-                <i class="fa-solid fa-lock text-[10px] text-amber-400/80 shrink-0" title="เฉพาะแอดมิน"></i>
+                <i class="fa-solid fa-lock text-[10px] text-slate-400 shrink-0" title="เฉพาะแอดมิน"></i>
               </div>
 
-              <div class="flex items-center justify-between p-1.5 rounded-lg hover:bg-navy-900 transition text-slate-300 group">
-                <button onclick="exportToCSV()" class="flex items-center gap-2 hover:text-emerald-300 text-left truncate flex-1 pr-1">
+              <div class="flex items-center justify-between p-1.5 pt-2 rounded-lg hover:bg-white transition text-slate-700 group">
+                <button onclick="exportToCSV()" class="flex items-center gap-2 hover:text-emerald-700 text-left truncate flex-1 pr-1 font-semibold text-emerald-800">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
                   <span class="truncate">ส่งออกไฟล์ Excel / CSV</span>
                 </button>
-                <i class="fa-solid fa-file-excel text-[10px] text-emerald-400"></i>
+                <i class="fa-solid fa-file-excel text-xs text-emerald-600"></i>
               </div>
             </div>
           </div>
 
           <!-- Real-time Status -->
-          <div class="flex items-center justify-between bg-navy-900/90 border border-emerald-500/30 rounded-xl px-2.5 py-1 text-[11px]">
-            <span class="text-emerald-300 font-bold flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1.5 text-xs">
+            <span class="text-emerald-800 font-bold flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>ซิงค์สด Real-time</span>
             </span>
-            <button onclick="fetchDataFromGoogleSheet(false)" title="กดเพื่ออัปเดตข้อมูลทันที" class="text-gold-300 hover:text-white p-0.5">
-              <i class="fa-solid fa-rotate text-[11px]"></i>
+            <button onclick="fetchDataFromGoogleSheet(false)" title="กดเพื่ออัปเดตข้อมูลทันที" class="text-emerald-700 hover:text-emerald-900 p-0.5">
+              <i class="fa-solid fa-rotate text-xs"></i>
             </button>
           </div>
 
           <!-- Last Updated Info -->
-          <div class="flex items-center justify-between bg-navy-900/60 border border-slate-800 rounded-xl px-2.5 py-1 text-[10px] text-slate-400">
-            <span class="flex items-center gap-1">
-              <i class="fa-regular fa-clock text-gold-400"></i> อัปเดตล่าสุด:
+          <div class="flex items-center justify-between bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] text-slate-600">
+            <span class="flex items-center gap-1 font-medium">
+              <i class="fa-regular fa-clock text-slate-500"></i> อัปเดตล่าสุด:
             </span>
-            <span id="sidebarLastUpdateText" class="font-mono text-slate-300 font-semibold truncate max-w-[110px] text-right">
+            <span id="sidebarLastUpdateText" class="font-mono text-slate-800 font-semibold truncate max-w-[110px] text-right">
               เพิ่งเริ่มต้น
             </span>
           </div>
@@ -342,15 +341,15 @@
       </nav>
 
       <!-- Step Flow Status Pill in Sidebar -->
-      <div class="pt-2 border-t border-gold-500/30">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">ขั้นตอนปัจจุบัน:</span>
-        <div class="space-y-1 text-xs font-prompt">
-          <div id="sideStep1Indicator" class="flex items-center gap-2 p-1.5 rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/40 font-bold">
-            <span class="w-4 h-4 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-[9px] font-black">1</span>
+      <div class="pt-3 border-t border-slate-200">
+        <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">ขั้นตอนปัจจุบัน:</span>
+        <div class="space-y-1.5 text-xs font-prompt">
+          <div id="sideStep1Indicator" class="flex items-center gap-2 p-2 rounded-xl bg-royal-50 text-royal-900 border border-royal-200 font-bold shadow-2xs">
+            <span class="w-4 h-4 rounded-full bg-royal-800 text-white flex items-center justify-center text-[10px] font-black">1</span>
             <span>1. เลือกหมวด & กิจกรรม</span>
           </div>
-          <div id="sideStep2Indicator" class="flex items-center gap-2 p-1.5 rounded-lg bg-navy-900 text-slate-400 border border-slate-800 font-medium">
-            <span class="w-4 h-4 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[9px] font-black">2</span>
+          <div id="sideStep2Indicator" class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 text-slate-500 border border-slate-200 font-medium">
+            <span class="w-4 h-4 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-[10px] font-bold">2</span>
             <span>2. กรอกรายชื่อผู้แข่งขัน</span>
           </div>
         </div>
@@ -358,47 +357,47 @@
     </div>
 
     <!-- Sidebar Bottom Footer -->
-    <div class="p-2.5 border-t border-slate-800 text-[10px] text-slate-400 text-center">
+    <div class="p-3 border-t border-slate-200 text-[11px] text-slate-500 text-center font-medium">
       กลุ่มเครือข่ายสถานศึกษา สพป.อบ.5
     </div>
   </aside>
 
   <!-- Notification Toast -->
   <div id="toast" class="fixed top-6 right-4 left-4 sm:left-auto sm:w-96 z-50 transform transition-all duration-300 -translate-y-24 opacity-0 pointer-events-none no-print">
-    <div id="toastContent" class="p-4 rounded-2xl shadow-2xl flex items-center gap-3 text-base text-white font-bold border-2">
-      <i id="toastIcon" class="fa-solid fa-circle-check text-2xl"></i>
+    <div id="toastContent" class="p-4 rounded-2xl shadow-xl flex items-center gap-3 text-base text-slate-900 font-bold border-2 bg-white">
+      <i id="toastIcon" class="fa-solid fa-circle-check text-2xl text-emerald-600"></i>
       <span id="toastMsg">บันทึกข้อมูลเรียบร้อย</span>
     </div>
   </div>
 
   <!-- Success Celebration Modal -->
-  <div id="successSaveModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border-2 border-emerald-500/70 text-center space-y-4">
-      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500 text-navy-950 flex items-center justify-center text-3xl font-black shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+  <div id="successSaveModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200 text-center space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-700 border-2 border-emerald-200 flex items-center justify-center text-3xl font-black shadow-inner">
         <i class="fa-solid fa-check"></i>
       </div>
       <div class="space-y-1">
-        <h3 class="font-prompt font-extrabold text-emerald-300 text-xl sm:text-2xl">บันทึกข้อมูลสำเร็จแล้ว!</h3>
-        <p id="successSaveCompTitle" class="text-xs sm:text-sm text-gold-300 font-bold truncate">รายการแข่งขัน</p>
-        <p id="successSaveSubText" class="text-xs text-slate-300 pt-1">ข้อมูลถูกส่งเข้าสู่ระบบและ Google Sheets เรียบร้อยแล้วค่ะ</p>
+        <h3 class="font-prompt font-extrabold text-slate-900 text-xl sm:text-2xl">บันทึกข้อมูลสำเร็จแล้ว!</h3>
+        <p id="successSaveCompTitle" class="text-sm font-bold text-royal-800 truncate">รายการแข่งขัน</p>
+        <p id="successSaveSubText" class="text-xs text-slate-600 pt-1">ข้อมูลถูกส่งเข้าสู่ระบบและ Google Sheets เรียบร้อยแล้วค่ะ</p>
       </div>
 
-      <div class="bg-navy-950 p-3 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-1">
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs text-slate-700 space-y-1">
         <div class="flex items-center justify-between">
-          <span>สถานะรายการ:</span>
-          <strong id="successSaveStatusBadge" class="text-emerald-400 font-bold">คนครบตามเกณฑ์</strong>
+          <span class="font-medium">สถานะรายการ:</span>
+          <strong id="successSaveStatusBadge" class="text-emerald-700 font-bold">คนครบตามเกณฑ์</strong>
         </div>
         <div class="flex items-center justify-between">
-          <span>เวลาที่บันทึก:</span>
-          <span id="successSaveTimeText" class="text-slate-400 font-mono">เพิ่งบันทึก</span>
+          <span class="font-medium">เวลาที่บันทึก:</span>
+          <span id="successSaveTimeText" class="text-slate-600 font-mono">เพิ่งบันทึก</span>
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 font-prompt">
-        <button type="button" onclick="closeSuccessModalAndContinue()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-navy-800 text-gold-300 border border-gold-500/40 transition flex items-center justify-center gap-1.5 shadow">
-          <i class="fa-solid fa-plus"></i> ลงรายการอื่นต่อ
+        <button type="button" onclick="closeSuccessModalAndContinue()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition flex items-center justify-center gap-1.5 shadow-xs">
+          <i class="fa-solid fa-plus text-royal-700"></i> ลงรายการอื่นต่อ
         </button>
-        <button type="button" onclick="closeSuccessModalAndViewList()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+        <button type="button" onclick="closeSuccessModalAndViewList()" class="min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-royal-800 hover:bg-royal-700 text-white shadow-md transition flex items-center justify-center gap-1.5">
           <i class="fa-solid fa-list-check"></i> ดูรายการที่ลงแล้ว
         </button>
       </div>
@@ -411,98 +410,98 @@
   <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 order-1 lg:order-2">
     
     <!-- Visual Step Wizard พร้อมปุ่มทางลัดสมัครกรรมการ -->
-    <div class="bg-navy-900/90 rounded-2xl p-3 border border-gold-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs sm:text-sm font-prompt no-print shadow-md">
+    <div class="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs sm:text-sm font-prompt no-print">
       <div class="flex items-center justify-between gap-2 flex-1">
-        <div id="topWizardStep1" class="flex items-center gap-2 font-bold text-gold-300 flex-1">
-          <span class="w-7 h-7 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center text-xs font-black shadow">1</span>
+        <div id="topWizardStep1" class="flex items-center gap-2 font-bold text-royal-900 flex-1">
+          <span class="w-7 h-7 rounded-full bg-royal-800 text-white flex items-center justify-center text-xs font-black shadow-xs">1</span>
           <span class="truncate">เลือกรายการแข่งขัน</span>
         </div>
-        <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+        <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
         <div id="topWizardStep2" class="flex items-center gap-2 font-medium text-slate-400 flex-1 justify-center">
-          <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700">2</span>
+          <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-300">2</span>
           <span class="truncate">พิมพ์ชื่อ นร. & ครู</span>
         </div>
-        <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+        <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
         <div id="topWizardStep3" class="flex items-center gap-2 font-medium text-slate-400 flex-1 justify-end">
-          <span class="w-7 h-7 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold border border-slate-700">3</span>
+          <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-300">3</span>
           <span class="truncate">บันทึกสำเร็จ</span>
         </div>
       </div>
 
       <!-- Quick Shortcut Badge สำหรับสมัครกรรมการ -->
-      <button type="button" onclick="openJudgeRegistrationModal()" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 border border-purple-400/60 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)] transition active:scale-95">
+      <button type="button" onclick="openJudgeRegistrationModal()" class="shrink-0 px-3.5 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition active:scale-95">
         <i class="fa-solid fa-user-tie text-amber-300"></i>
         <span>สมัครกรรมการตัดสิน</span>
         <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
       </button>
     </div>
 
-    <!-- Dashboard Summary Cards -->
+    <!-- Dashboard Summary Cards (สไตล์สว่างทางการ คมชัด) -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-3 no-print">
       <!-- Total Available -->
-      <button type="button" onclick="openAllEventsDirectoryModal()" class="p-4 rounded-2xl bg-navy-900/90 border border-slate-700/80 hover:border-gold-400 hover:bg-navy-800/80 transition shadow-lg text-left group">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+      <button type="button" onclick="openAllEventsDirectoryModal()" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-royal-500 hover:shadow-md transition text-left group shadow-xs">
+        <div class="flex items-center justify-between text-slate-600 text-xs font-bold mb-1">
           <span>รายการทั้งหมด</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-gold-400 opacity-60 group-hover:opacity-100 transition"></i>
+          <i class="fa-solid fa-arrow-up-right-from-square text-royal-700 opacity-60 group-hover:opacity-100 transition"></i>
         </div>
-        <div class="text-2xl font-black font-prompt text-white">78</div>
-        <span class="text-[11px] text-gold-400/90 group-hover:underline">คลิกดูรายการทั้งหมด ➔</span>
+        <div class="text-2xl sm:text-3xl font-black font-prompt text-navy-900">78</div>
+        <span class="text-[11px] text-royal-800 font-semibold group-hover:underline">คลิกดูรายการทั้งหมด ➔</span>
       </button>
 
       <!-- Registered Count -->
-      <button type="button" onclick="openFilteredEntries('all')" class="p-4 rounded-2xl bg-navy-900/90 border border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-950/30 transition shadow-lg text-left group">
-        <div class="flex items-center justify-between text-emerald-400 text-xs font-bold mb-1">
+      <button type="button" onclick="openFilteredEntries('all')" class="p-4 rounded-2xl bg-white border border-emerald-200 hover:border-emerald-500 hover:shadow-md transition text-left group shadow-xs">
+        <div class="flex items-center justify-between text-emerald-800 text-xs font-bold mb-1">
           <span>ลงทะเบียนแล้ว</span>
-          <i class="fa-solid fa-circle-check text-emerald-400"></i>
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
         </div>
-        <div class="text-2xl font-black font-prompt text-emerald-300" id="dashRegisteredCount">0</div>
-        <span class="text-[11px] text-emerald-400/90 group-hover:underline" id="dashRegisteredPercent">0% (คลิกเพื่อตรวจ/แก้ไข)</span>
+        <div class="text-2xl sm:text-3xl font-black font-prompt text-emerald-700" id="dashRegisteredCount">0</div>
+        <span class="text-[11px] text-emerald-800 font-semibold group-hover:underline" id="dashRegisteredPercent">0% (คลิกเพื่อตรวจ/แก้ไข)</span>
       </button>
 
       <!-- Remaining / Unregistered -->
-      <button type="button" onclick="openUnregisteredModal()" class="p-4 rounded-2xl bg-navy-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/30 transition shadow-lg text-left group">
-        <div class="flex items-center justify-between text-rose-400 text-xs font-bold mb-1">
+      <button type="button" onclick="openUnregisteredModal()" class="p-4 rounded-2xl bg-white border border-rose-200 hover:border-rose-500 hover:shadow-md transition text-left group shadow-xs">
+        <div class="flex items-center justify-between text-rose-800 text-xs font-bold mb-1">
           <span>ยังไม่ลงทะเบียน</span>
-          <i class="fa-solid fa-hourglass-start text-rose-400"></i>
+          <i class="fa-solid fa-hourglass-start text-rose-600"></i>
         </div>
-        <div class="text-2xl font-black font-prompt text-rose-300" id="dashRemainingCount">78</div>
-        <span class="text-[11px] text-rose-300/90 group-hover:underline">คลิกดูรายการที่ว่าง ➔</span>
+        <div class="text-2xl sm:text-3xl font-black font-prompt text-rose-700" id="dashRemainingCount">78</div>
+        <span class="text-[11px] text-rose-800 font-semibold group-hover:underline">คลิกดูรายการที่ว่าง ➔</span>
       </button>
 
       <!-- Incomplete Data -->
-      <button type="button" onclick="openFilteredEntries('incomplete')" class="p-4 rounded-2xl bg-navy-900/90 border border-amber-500/40 hover:border-amber-400 hover:bg-amber-950/30 transition shadow-lg text-left group">
-        <div class="flex items-center justify-between text-amber-400 text-xs font-bold mb-1">
+      <button type="button" onclick="openFilteredEntries('incomplete')" class="p-4 rounded-2xl bg-white border border-amber-200 hover:border-amber-500 hover:shadow-md transition text-left group shadow-xs">
+        <div class="flex items-center justify-between text-amber-800 text-xs font-bold mb-1">
           <span>ข้อมูลไม่สมบูรณ์</span>
-          <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+          <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
         </div>
-        <div class="text-2xl font-black font-prompt text-amber-300" id="dashIncompleteCount">0</div>
-        <span class="text-[11px] text-amber-300/90 group-hover:underline">คลิกเพื่อเติมคนทันที ➔</span>
+        <div class="text-2xl sm:text-3xl font-black font-prompt text-amber-700" id="dashIncompleteCount">0</div>
+        <span class="text-[11px] text-amber-800 font-semibold group-hover:underline">คลิกเพื่อเติมคนทันที ➔</span>
       </button>
 
       <!-- Students & Teachers Total + Duplicate Check Button -->
-      <button type="button" onclick="openDuplicateModal()" class="col-span-2 md:col-span-1 p-4 rounded-2xl bg-navy-900/90 border border-gold-500/40 hover:border-gold-300 hover:bg-gold-500/10 transition shadow-lg text-left group">
-        <div class="flex items-center justify-between text-gold-400 text-xs font-bold mb-1">
-          <span>ยอดคน & ตรวจชื่อซ้ำ</span>
-          <i class="fa-solid fa-magnifying-glass-chart text-gold-400"></i>
+      <button type="button" onclick="openDuplicateModal()" class="col-span-2 md:col-span-1 p-4 rounded-2xl bg-white border border-slate-200 hover:border-royal-500 hover:shadow-md transition text-left group shadow-xs">
+        <div class="flex items-center justify-between text-slate-600 text-xs font-bold mb-1">
+          <span>ยอดคน & ตรวจซ้ำ</span>
+          <i class="fa-solid fa-magnifying-glass-chart text-royal-700"></i>
         </div>
-        <div class="text-lg font-black font-prompt text-gold-300">
+        <div class="text-lg sm:text-xl font-black font-prompt text-navy-900">
           นร. <span id="dashTotalStudents">0</span> | ครู <span id="dashTotalTeachers">0</span>
         </div>
-        <span class="text-[11px] text-slate-300 group-hover:text-gold-200">
-          พบซ้ำ: <strong id="dashDuplicateCount" class="text-rose-400 font-bold">0</strong> คน (คลิกตรวจ)
+        <span class="text-[11px] text-slate-600">
+          พบซ้ำ: <strong id="dashDuplicateCount" class="text-rose-600 font-bold">0</strong> คน (คลิกตรวจ)
         </span>
       </button>
     </div>
 
     <!-- Banner when editing an entry -->
-    <div id="editingBanner" class="hidden bg-gradient-to-r from-amber-500 to-gold-500 text-navy-950 p-4 rounded-2xl shadow-xl border-2 border-gold-300 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+    <div id="editingBanner" class="hidden bg-amber-50 border-2 border-amber-300 text-amber-950 p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
       <div class="flex items-center gap-3 text-sm sm:text-base font-bold font-prompt">
-        <span class="w-9 h-9 rounded-full bg-navy-950 text-gold-400 flex items-center justify-center text-lg shrink-0">
+        <span class="w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center text-lg shrink-0 shadow-xs">
           <i class="fa-solid fa-pen-to-square"></i>
         </span>
         <span>กำลังอยู่ในโหมด: แก้ไขรายชื่อ / เติมคนเข้าแข่งขันในรายการเดิม</span>
       </div>
-      <button onclick="cancelEditing()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-navy-950 text-gold-300 text-sm hover:bg-navy-900 font-bold border border-gold-400 shadow transition">
+      <button onclick="cancelEditing()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-white text-slate-800 text-sm hover:bg-slate-100 font-bold border border-slate-300 shadow-xs transition">
         ยกเลิกการแก้ไข
       </button>
     </div>
@@ -510,23 +509,23 @@
     <!-- ========================================================
          STEP 1: SELECT CATEGORY & COMPETITION
          ======================================================== -->
-    <div id="step1Section" class="bg-navy-900/95 rounded-3xl p-5 sm:p-7 border-2 border-gold-500/40 shadow-2xl space-y-6 no-print">
+    <div id="step1Section" class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-6 no-print">
       
-      <div class="border-b-2 border-gold-500/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gold-500/20 text-gold-300 border border-gold-400/30 mb-2 font-prompt">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-royal-50 text-royal-800 border border-royal-200 mb-2 font-prompt">
             <i class="fa-solid fa-layer-group"></i> ขั้นตอนที่ 1 จาก 2
           </span>
-          <h2 class="text-xl sm:text-2xl font-black font-prompt text-gold-300">
+          <h2 class="text-xl sm:text-2xl font-black font-prompt text-navy-900">
             เลือกหมวดหมู่และรายการแข่งขัน
           </h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+          <p class="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
             เลือกประเภท กิจกรรม และรายการที่ต้องการส่งแข่งขัน จากนั้นกดปุ่มไปขั้นตอนถัดไปเพื่อลงทะเบียน
           </p>
         </div>
         <div class="text-left sm:text-right">
-          <span class="text-xs text-slate-400 block font-medium">สังกัดโรงเรียน</span>
-          <span class="text-sm sm:text-base font-bold text-gold-400 font-prompt whitespace-nowrap">
+          <span class="text-xs text-slate-500 block font-medium">สังกัดโรงเรียน</span>
+          <span class="text-sm sm:text-base font-bold text-royal-900 font-prompt whitespace-nowrap">
             โรงเรียนอนุบาลนาคสมุทรเดชอุดม
           </span>
         </div>
@@ -537,32 +536,32 @@
         <!-- Col 1: Group Selection -->
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-bold text-slate-200 mb-2 font-prompt">
+            <label class="block text-sm font-bold text-slate-800 mb-2 font-prompt">
               ประเภทการแข่งขัน *
             </label>
             <div class="grid grid-cols-2 gap-3">
-              <label class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-navy-950 border-2 border-slate-700 cursor-pointer hover:border-gold-500 text-sm font-bold text-slate-200 transition text-center gap-2 has-[:checked]:border-gold-400 has-[:checked]:bg-gold-500/10 shadow-sm">
+              <label class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 cursor-pointer hover:border-royal-600 text-sm font-bold text-slate-800 transition text-center gap-2 has-[:checked]:border-royal-800 has-[:checked]:bg-royal-50 shadow-2xs">
                 <input type="radio" name="formCatType" value="academic" onchange="onCategoryChange()" checked class="sr-only">
-                <i class="fa-solid fa-graduation-cap text-gold-400 text-2xl"></i>
+                <i class="fa-solid fa-graduation-cap text-royal-700 text-2xl"></i>
                 <span>ประเภทวิชาการ</span>
               </label>
 
-              <label class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-navy-950 border-2 border-slate-700 cursor-pointer hover:border-gold-500 text-sm font-bold text-slate-200 transition text-center gap-2 has-[:checked]:border-gold-400 has-[:checked]:bg-gold-500/10 shadow-sm">
+              <label class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 cursor-pointer hover:border-royal-600 text-sm font-bold text-slate-800 transition text-center gap-2 has-[:checked]:border-royal-800 has-[:checked]:bg-royal-50 shadow-2xs">
                 <input type="radio" name="formCatType" value="softpower" onchange="onCategoryChange()" class="sr-only">
-                <i class="fa-solid fa-masks-theater text-gold-400 text-2xl"></i>
+                <i class="fa-solid fa-masks-theater text-royal-700 text-2xl"></i>
                 <span>Soft Power</span>
               </label>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-bold text-slate-200 mb-2 font-prompt">
+            <label class="block text-sm font-bold text-slate-800 mb-2 font-prompt">
               กลุ่มสาระการเรียนรู้ / กิจกรรม *
             </label>
-            <select id="groupSelect" onchange="onGroupChange()" required class="w-full min-h-[50px] text-sm sm:text-base font-semibold rounded-2xl border-2 border-slate-700 bg-navy-950 text-white p-3 focus:border-gold-500 focus:outline-none shadow-inner">
+            <select id="groupSelect" onchange="onGroupChange()" required class="w-full min-h-[50px] text-sm sm:text-base font-semibold rounded-2xl border-2 border-slate-300 bg-white text-slate-900 p-3 focus:border-royal-700 focus:outline-none shadow-xs">
               <!-- Populated via JS -->
             </select>
-            <p class="text-[11px] text-slate-400 mt-1.5">
+            <p class="text-[11px] text-slate-500 mt-1.5 font-medium">
               เลือกกลุ่มสาระการเรียนรู้หรือกิจกรรมที่ต้องการส่งแข่งขัน
             </p>
           </div>
@@ -572,39 +571,39 @@
         <div class="space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label class="block text-sm font-bold text-slate-200 font-prompt">
+              <label class="block text-sm font-bold text-slate-800 font-prompt">
                 รายการแข่งขันและระดับชั้น *
               </label>
               <span id="compStatusNotice" class="text-[11px] font-bold px-2 py-0.5 rounded-full hidden"></span>
             </div>
-            <select id="competitionSelect" onchange="onCompetitionChange()" required class="w-full min-h-[50px] text-sm sm:text-base font-semibold rounded-2xl border-2 border-slate-700 bg-navy-950 text-white p-3 focus:border-gold-500 focus:outline-none shadow-inner">
+            <select id="competitionSelect" onchange="onCompetitionChange()" required class="w-full min-h-[50px] text-sm sm:text-base font-semibold rounded-2xl border-2 border-slate-300 bg-white text-slate-900 p-3 focus:border-royal-700 focus:outline-none shadow-xs">
               <!-- Populated via JS -->
             </select>
           </div>
 
           <!-- Quota Rule Box -->
-          <div id="eventRuleBox" class="p-4 rounded-2xl bg-navy-950 border-2 border-gold-500/50 text-slate-200 text-sm space-y-2 shadow-inner">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-2 font-bold text-gold-300 font-prompt">
-                <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+          <div id="eventRuleBox" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-sm space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+              <span class="flex items-center gap-2 font-bold text-navy-900 font-prompt">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
                 <span>เกณฑ์โควตารายการที่เลือก</span>
               </span>
-              <span id="selectedItemLiveStatus" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-300">
+              <span id="selectedItemLiveStatus" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-white text-slate-700 border border-slate-300">
                 ยังไม่มีผู้ลงทะเบียน
               </span>
             </div>
             <div class="grid grid-cols-3 gap-2 pt-1 text-center">
-              <div class="bg-navy-900/80 p-2 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block mb-0.5">ประเภท</span>
-                <span class="font-bold text-white text-xs sm:text-sm font-prompt" id="ruleTypeName">ทีม</span>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-xs text-slate-500 block mb-0.5 font-medium">ประเภท</span>
+                <span class="font-bold text-slate-800 text-xs sm:text-sm font-prompt" id="ruleTypeName">ทีม</span>
               </div>
-              <div class="bg-navy-900/80 p-2 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block mb-0.5">นักเรียน</span>
-                <strong id="ruleStudentsQuota" class="text-gold-300 font-prompt text-base">1</strong> <span class="text-[11px] text-slate-400">คน</span>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-xs text-slate-500 block mb-0.5 font-medium">นักเรียน</span>
+                <strong id="ruleStudentsQuota" class="text-royal-800 font-prompt text-base">1</strong> <span class="text-[11px] text-slate-500 font-medium">คน</span>
               </div>
-              <div class="bg-navy-900/80 p-2 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block mb-0.5">ครูฝึกสอน</span>
-                <strong id="ruleTeachersQuota" class="text-gold-300 font-prompt text-base">1 - 2</strong> <span class="text-[11px] text-slate-400">คน</span>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-xs text-slate-500 block mb-0.5 font-medium">ครูฝึกสอน</span>
+                <strong id="ruleTeachersQuota" class="text-royal-800 font-prompt text-base">1 - 2</strong> <span class="text-[11px] text-slate-500 font-medium">คน</span>
               </div>
             </div>
           </div>
@@ -612,12 +611,12 @@
       </div>
 
       <!-- Action Button to Step 2 -->
-      <div class="pt-4 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div id="step1AlertBox" class="text-xs sm:text-sm text-slate-300 flex items-center gap-2">
-          <i class="fa-solid fa-circle-info text-gold-400"></i>
+      <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div id="step1AlertBox" class="text-xs sm:text-sm text-slate-600 flex items-center gap-2 font-medium">
+          <i class="fa-solid fa-circle-info text-royal-700"></i>
           <span>เลือกรายการแข่งขันแล้วกดปุ่มเพื่อเริ่มกรอกรายชื่อผู้แข่งขัน</span>
         </div>
-        <button type="button" id="btnGoToStep2" onclick="handleGoToStep2Validation()" class="w-full sm:w-auto min-h-[52px] px-8 py-3 rounded-xl text-base font-extrabold font-prompt text-navy-950 bg-gradient-to-r from-gold-400 via-gold-500 to-amber-500 hover:from-gold-300 hover:to-gold-400 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition flex items-center justify-center gap-2.5">
+        <button type="button" id="btnGoToStep2" onclick="handleGoToStep2Validation()" class="w-full sm:w-auto min-h-[52px] px-8 py-3 rounded-xl text-base font-extrabold font-prompt text-white bg-royal-800 hover:bg-royal-700 shadow-md transition flex items-center justify-center gap-2.5">
           <span>ไปที่ขั้นตอนที่ 2: กรอกรายชื่อผู้แข่งขัน</span>
           <i class="fa-solid fa-arrow-right text-lg"></i>
         </button>
@@ -632,45 +631,45 @@
       <input type="hidden" id="editingRecordId" value="">
       <input type="hidden" id="editingCompIdSnapshot" value="">
 
-      <div class="bg-navy-900/95 rounded-3xl p-5 sm:p-7 border-2 border-gold-500/40 shadow-2xl space-y-6">
+      <div class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-6">
         
-        <div class="border-b-2 border-gold-500/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <button type="button" onclick="goToStep(1)" class="px-3 py-1 rounded-lg text-xs font-bold text-gold-300 bg-navy-950 border border-gold-500/40 hover:bg-gold-500 hover:text-navy-950 transition flex items-center gap-1.5">
+              <button type="button" onclick="goToStep(1)" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 border border-slate-300 hover:bg-slate-200 transition flex items-center gap-1.5 shadow-2xs">
                 <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปเปลี่ยนรายการ
               </button>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-prompt">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-prompt">
                 <i class="fa-solid fa-user-pen"></i> ขั้นตอนที่ 2 จาก 2
               </span>
             </div>
-            <h2 id="mainFormTitle" class="text-xl sm:text-2xl font-black font-prompt text-gold-300">
+            <h2 id="mainFormTitle" class="text-xl sm:text-2xl font-black font-prompt text-navy-900">
               กรอกข้อมูลผู้เข้าแข่งขันและครูฝึกซ้อม
             </h2>
             <div class="flex flex-wrap items-center gap-2 mt-2">
-              <span id="selectedCompBadge" class="bg-gold-500 text-navy-950 text-xs sm:text-sm font-bold px-3 py-1 rounded-xl font-prompt shadow">
+              <span id="selectedCompBadge" class="bg-royal-800 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-xl font-prompt shadow-xs">
                 <!-- Injected via JS -->
               </span>
-              <span id="selectedQuotaBadge" class="bg-navy-950 text-slate-300 text-xs px-2.5 py-1 rounded-xl border border-slate-700">
+              <span id="selectedQuotaBadge" class="bg-slate-100 text-slate-700 text-xs px-2.5 py-1 rounded-xl border border-slate-300 font-semibold">
                 <!-- Injected via JS -->
               </span>
             </div>
           </div>
           <div class="text-left sm:text-right">
-            <span class="text-xs text-slate-400 block font-medium">สังกัดโรงเรียน</span>
-            <span class="text-sm sm:text-base font-bold text-gold-400 font-prompt whitespace-nowrap">
+            <span class="text-xs text-slate-500 block font-medium">สังกัดโรงเรียน</span>
+            <span class="text-sm sm:text-base font-bold text-royal-900 font-prompt whitespace-nowrap">
               โรงเรียนอนุบาลนาคสมุทรเดชอุดม
             </span>
           </div>
         </div>
 
         <!-- Edit Mode Notice -->
-        <div id="editModeNoticeBox" class="hidden p-3.5 rounded-2xl bg-amber-950/80 border-2 border-amber-500/60 text-amber-200 text-xs sm:text-sm space-y-1 shadow-md">
-          <div class="flex items-start gap-2.5 font-bold font-prompt text-amber-300">
-            <i class="fa-solid fa-circle-info text-base mt-0.5 text-gold-400 shrink-0"></i>
+        <div id="editModeNoticeBox" class="hidden p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm space-y-1 shadow-2xs">
+          <div class="flex items-start gap-2.5 font-bold font-prompt text-amber-900">
+            <i class="fa-solid fa-circle-info text-base mt-0.5 text-amber-600 shrink-0"></i>
             <div>
               <span>คำแนะนำในการแก้ไขข้อมูล:</span>
-              <p class="font-normal text-slate-200 text-xs mt-0.5 leading-relaxed">
+              <p class="font-normal text-slate-700 text-xs mt-0.5 leading-relaxed">
                 หน้านี้สำหรับ<strong>แก้ไขตัวสะกด เปลี่ยนตัว หรือเพิ่มเติมรายชื่อนักเรียนและครูผู้ฝึกสอนในกิจกรรมนี้</strong>เท่านั้น หากต้องการเปลี่ยนไปลงกิจกรรมอื่น ให้ไปลบรายการเดิมในตารางก่อนนะคะ
               </p>
             </div>
@@ -679,13 +678,13 @@
 
         <!-- Students Container -->
         <div class="space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h3 class="font-prompt font-extrabold text-gold-300 text-sm sm:text-base flex items-center gap-2">
-              <i class="fa-solid fa-child text-gold-400"></i>
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h3 class="font-prompt font-extrabold text-navy-900 text-sm sm:text-base flex items-center gap-2">
+              <i class="fa-solid fa-child text-royal-700"></i>
               รายชื่อนักเรียนผู้เข้าแข่งขัน
-              <span class="text-xs font-normal text-slate-300">(ตามเกณฑ์ <span id="quotaStudentText" class="font-bold text-white">1</span> คน)</span>
+              <span class="text-xs font-normal text-slate-600">(ตามเกณฑ์ <span id="quotaStudentText" class="font-bold text-slate-900">1</span> คน)</span>
             </h3>
-            <span class="text-xs text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+            <span class="text-xs text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-300 font-semibold">
               ยังไม่ครบก็บันทึกก่อนได้
             </span>
           </div>
@@ -696,19 +695,19 @@
         </div>
 
         <!-- Teachers Container -->
-        <div class="space-y-4 pt-4 border-t-2 border-gold-500/30">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h3 class="font-prompt font-extrabold text-gold-300 text-sm sm:text-base flex items-center gap-2">
-              <i class="fa-solid fa-chalkboard-user text-emerald-400"></i>
+        <div class="space-y-4 pt-4 border-t border-slate-200">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h3 class="font-prompt font-extrabold text-navy-900 text-sm sm:text-base flex items-center gap-2">
+              <i class="fa-solid fa-chalkboard-user text-emerald-700"></i>
               รายชื่อครูผู้ฝึกสอน
-              <span class="text-xs font-normal text-slate-300">(เกณฑ์ <span id="quotaTeacherText" class="font-bold text-white">1-2</span> คน)</span>
+              <span class="text-xs font-normal text-slate-600">(เกณฑ์ <span id="quotaTeacherText" class="font-bold text-slate-900">1-2</span> คน)</span>
             </h3>
             
             <div class="flex items-center gap-2">
-              <button type="button" onclick="increaseTeacher()" class="min-h-[36px] px-3 py-1 rounded-xl text-xs font-bold text-emerald-300 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/60 transition flex items-center gap-1">
+              <button type="button" onclick="increaseTeacher()" class="min-h-[36px] px-3 py-1 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 transition flex items-center gap-1 shadow-2xs">
                 <i class="fa-solid fa-plus"></i> เพิ่มครู
               </button>
-              <button type="button" onclick="decreaseTeacher()" class="min-h-[36px] px-3 py-1 rounded-xl text-xs font-bold text-rose-300 bg-rose-950 hover:bg-rose-900 border border-rose-500/60 transition flex items-center gap-1">
+              <button type="button" onclick="decreaseTeacher()" class="min-h-[36px] px-3 py-1 rounded-xl text-xs font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-300 transition flex items-center gap-1 shadow-2xs">
                 <i class="fa-solid fa-minus"></i> ลดครู
               </button>
             </div>
@@ -720,18 +719,18 @@
         </div>
 
         <!-- FORM ACTION BUTTONS -->
-        <div class="pt-6 border-t-2 border-gold-500/30 flex flex-col sm:flex-row items-center gap-3 justify-between pb-12 sm:pb-4">
-          <button type="button" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 bg-navy-950 hover:bg-navy-800 border border-slate-700 transition flex items-center justify-center gap-1.5">
+        <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center gap-3 justify-between pb-12 sm:pb-4">
+          <button type="button" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center justify-center gap-1.5 shadow-2xs">
             <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปขั้นตอนที่ 1
           </button>
 
           <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button type="button" id="btnFormResetClear" onclick="handleSmartFormReset()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-amber-300 bg-amber-950/60 hover:bg-amber-900 border border-amber-500/50 transition flex items-center justify-center gap-1.5 shadow">
+            <button type="button" id="btnFormResetClear" onclick="handleSmartFormReset()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 transition flex items-center justify-center gap-1.5 shadow-2xs">
               <i class="fa-solid fa-arrow-rotate-left"></i> <span id="textFormResetClear">ล้างข้อมูล</span>
             </button>
             
-            <button type="submit" id="submitFormBtn" class="w-full sm:w-auto min-h-[52px] px-8 py-3 rounded-xl text-base font-extrabold font-prompt text-navy-950 bg-gradient-to-r from-gold-400 via-gold-500 to-amber-500 hover:from-gold-300 hover:to-gold-400 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition flex items-center justify-center gap-2.5">
-              <i class="fa-solid fa-floppy-disk text-xl"></i>
+            <button type="submit" id="submitFormBtn" class="w-full sm:w-auto min-h-[52px] px-8 py-3 rounded-xl text-base font-extrabold font-prompt text-white bg-royal-800 hover:bg-royal-700 shadow-md transition flex items-center justify-center gap-2.5">
+              <i class="fa-solid fa-floppy-disk text-xl text-amber-300"></i>
               <span id="submitFormText">บันทึกข้อมูลการลงทะเบียน</span>
             </button>
           </div>
@@ -741,12 +740,12 @@
     </form>
 
     <!-- Timeline Notice Card -->
-    <div class="p-4 sm:p-5 rounded-2xl bg-navy-900/90 border border-gold-500/30 text-slate-300 text-sm sm:text-base flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg no-print">
+    <div class="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 text-slate-700 text-sm sm:text-base flex flex-col md:flex-row items-center justify-between gap-3 shadow-xs no-print">
       <div class="flex items-center gap-3">
-        <i class="fa-solid fa-calendar-check text-gold-400 text-2xl shrink-0"></i>
-        <span>การแข่งขันระดับกลุ่มเครือข่ายสถานศึกษา: <strong class="text-gold-300 font-bold">1 - 11 ธันวาคม 2569</strong></span>
+        <i class="fa-solid fa-calendar-check text-royal-700 text-2xl shrink-0"></i>
+        <span>การแข่งขันระดับกลุ่มเครือข่ายสถานศึกษา: <strong class="text-royal-900 font-bold">1 - 11 ธันวาคม 2569</strong></span>
       </div>
-      <button onclick="openModal('entriesModal')" class="text-gold-400 hover:text-gold-300 font-bold underline flex items-center gap-1.5">
+      <button onclick="openModal('entriesModal')" class="text-royal-800 hover:text-royal-900 font-bold underline flex items-center gap-1.5">
         <i class="fa-solid fa-table-list"></i> ตรวจสอบรายการที่ลงไว้ทั้งหมด (<span class="entriesSummaryCount">0</span>)
       </button>
     </div>
@@ -754,36 +753,36 @@
   </main>
 
   <!-- ==========================================
-       MODALS SECTION
+       MODALS SECTION (Light Official Tone)
        ========================================== -->
   <!-- 1. Google Sheets Modal -->
-  <div id="sheetConfigModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl border-2 border-emerald-500/60 space-y-5">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+  <div id="sheetConfigModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl border border-slate-200 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-emerald-950 text-emerald-400 border border-emerald-500 flex items-center justify-center text-2xl font-bold shadow-md">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center text-2xl font-bold shadow-2xs">
             <i class="fa-solid fa-table"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-emerald-300 text-lg sm:text-xl">เชื่อมต่อ & ซิงค์ Google Sheets</h3>
-            <p class="text-xs text-slate-300">ซิงค์อัตโนมัติ Real-time ตลอดการใช้งาน</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">เชื่อมต่อ & ซิงค์ Google Sheets</h3>
+            <p class="text-xs text-slate-500 font-medium">ซิงค์อัตโนมัติ Real-time ตลอดการใช้งาน</p>
           </div>
         </div>
-        <button onclick="closeModal('sheetConfigModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('sheetConfigModal')" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <div class="space-y-3">
-        <label class="block text-sm font-bold text-slate-200 font-prompt">
+        <label class="block text-sm font-bold text-slate-800 font-prompt">
           Google Apps Script Web App URL:
         </label>
-        <input type="url" id="sheetApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full min-h-[50px] px-3.5 rounded-xl border-2 border-slate-700 bg-navy-950 text-white text-xs sm:text-sm focus:border-emerald-400 focus:outline-none font-mono shadow-inner">
+        <input type="url" id="sheetApiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full min-h-[50px] px-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 text-xs sm:text-sm focus:border-royal-700 focus:outline-none font-mono shadow-xs">
       </div>
 
-      <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
-        <button type="button" onclick="closeModal('sheetConfigModal')" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm text-slate-300 hover:text-white">ปิด</button>
-        <button type="button" onclick="saveSheetConfig()" class="min-h-[44px] px-6 py-2.5 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition flex items-center gap-1.5 font-prompt">
+      <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+        <button type="button" onclick="closeModal('sheetConfigModal')" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm text-slate-600 hover:text-slate-900 font-medium">ปิด</button>
+        <button type="button" onclick="saveSheetConfig()" class="min-h-[44px] px-6 py-2.5 rounded-xl text-sm font-bold bg-emerald-700 hover:bg-emerald-800 text-white shadow-md transition flex items-center gap-1.5 font-prompt">
           <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่า
         </button>
       </div>
@@ -791,23 +790,23 @@
   </div>
 
   <!-- 2. Registered Entries Modal -->
-  <div id="entriesModal" class="fixed inset-0 bg-navy-950/85 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl w-full max-w-[96vw] xl:max-w-7xl max-h-[95vh] shadow-2xl border-2 border-gold-500/50 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="entriesModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 no-print hidden">
+    <div class="bg-white rounded-3xl w-full max-w-[96vw] xl:max-w-7xl max-h-[95vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gold-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
-            <i class="fa-solid fa-list-check"></i>
+          <div class="w-11 h-11 rounded-2xl bg-royal-800 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
+            <i class="fa-solid fa-list-check text-amber-300"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-gold-300 text-lg sm:text-2xl">รายการที่ลงทะเบียนแล้ว & บันทึกผลการแข่งขัน</h3>
-            <p class="text-xs sm:text-base text-slate-300">สามารถแก้ไขรายชื่อ เติมคน หรือกดบันทึกผลรางวัลได้ในตารางนี้</p>
+            <h3 class="font-prompt font-bold text-navy-900 text-lg sm:text-2xl">รายการที่ลงทะเบียนแล้ว & บันทึกผลการแข่งขัน</h3>
+            <p class="text-xs sm:text-sm text-slate-600 font-medium">สามารถแก้ไขรายชื่อ เติมคน หรือกดบันทึกผลรางวัลได้ในตารางนี้</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="window.print()" class="px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold bg-navy-800 border border-gold-500/40 text-gold-300 hover:bg-gold-500 hover:text-navy-950 transition flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-print"></i> พิมพ์
+          <button onclick="window.print()" class="px-4 py-2.5 rounded-xl text-sm sm:text-base font-bold bg-white border border-slate-300 text-slate-800 hover:bg-slate-100 transition flex items-center gap-1.5 shadow-2xs">
+            <i class="fa-solid fa-print text-royal-700"></i> พิมพ์
           </button>
-          <button onclick="closeModal('entriesModal')" class="w-11 h-11 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-2xl transition">
+          <button onclick="closeModal('entriesModal')" class="w-11 h-11 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-2xl transition shadow-2xs">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -816,7 +815,7 @@
       <div class="overflow-y-auto flex-1 p-3 sm:p-5">
         <table class="w-full text-left text-sm border-collapse">
           <thead>
-            <tr class="bg-navy-950 text-gold-400 border-b border-gold-500/30 font-bold">
+            <tr class="bg-slate-100 text-slate-700 border-b border-slate-300 font-bold text-xs sm:text-sm">
               <th class="p-3 w-12 text-center">#</th>
               <th class="p-3">รายการแข่งขัน & กลุ่มสาระ</th>
               <th class="p-3">นักเรียน</th>
@@ -825,38 +824,38 @@
               <th class="p-3 text-center w-28">จัดการ</th>
             </tr>
           </thead>
-          <tbody id="entriesTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
+          <tbody id="entriesTableBody" class="divide-y divide-slate-200 text-slate-800"></tbody>
         </table>
-        <div id="modalEmptyState" class="py-12 text-center text-slate-400 hidden">
-          <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-600"></i>
-          <p>ยังไม่มีข้อมูลรายการที่ลงทะเบียน</p>
+        <div id="modalEmptyState" class="py-12 text-center text-slate-500 hidden">
+          <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-400"></i>
+          <p class="font-medium">ยังไม่มีข้อมูลรายการที่ลงทะเบียน</p>
         </div>
       </div>
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end">
-        <button onclick="closeModal('entriesModal')" class="px-5 py-2 bg-gold-500 text-navy-950 font-bold rounded-xl">ปิด</button>
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end">
+        <button onclick="closeModal('entriesModal')" class="px-5 py-2 bg-royal-800 text-white font-bold rounded-xl hover:bg-royal-700 shadow-sm transition">ปิด</button>
       </div>
     </div>
   </div>
 
-  <!-- Delete Entry Confirm Modal (หน้าต่างยืนยันลบรายการแข่งขัน) -->
-  <div id="deleteEntryConfirmModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-rose-500/70 text-center space-y-4">
-      <div class="w-14 h-14 mx-auto rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/50 flex items-center justify-center text-2xl font-black">
+  <!-- Delete Entry Confirm Modal -->
+  <div id="deleteEntryConfirmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center text-2xl font-black">
         <i class="fa-solid fa-trash-can"></i>
       </div>
       <div class="space-y-1">
-        <h3 class="font-prompt font-extrabold text-rose-300 text-lg sm:text-xl">ยืนยันการลบรายการแข่งขัน?</h3>
-        <p id="deleteEntryTargetComp" class="text-xs sm:text-sm text-gold-300 font-bold truncate">ชื่อรายการแข่งขัน</p>
-        <p id="deleteEntryTargetGroup" class="text-xs text-slate-300 truncate">กลุ่มสาระการเรียนรู้</p>
+        <h3 class="font-prompt font-extrabold text-slate-900 text-lg sm:text-xl">ยืนยันการลบรายการแข่งขัน?</h3>
+        <p id="deleteEntryTargetComp" class="text-xs sm:text-sm text-royal-800 font-bold truncate">ชื่อรายการแข่งขัน</p>
+        <p id="deleteEntryTargetGroup" class="text-xs text-slate-600 truncate">กลุ่มสาระการเรียนรู้</p>
       </div>
 
       <input type="hidden" id="pendingDeleteEntryId" value="">
 
       <div class="grid grid-cols-2 gap-2.5 pt-2 font-prompt">
-        <button type="button" onclick="closeModal('deleteEntryConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">
+        <button type="button" onclick="closeModal('deleteEntryConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition">
           ยกเลิก
         </button>
-        <button type="button" onclick="confirmExecuteDeleteEntry()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+        <button type="button" onclick="confirmExecuteDeleteEntry()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md transition flex items-center justify-center gap-1.5">
           <i class="fa-solid fa-trash-can"></i> ยืนยันลบ
         </button>
       </div>
@@ -864,29 +863,29 @@
   </div>
 
   <!-- Admin Passcode Modal (PIN: 3979) -->
-  <div id="adminAuthModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border-2 border-gold-500/60 space-y-4">
+  <div id="adminAuthModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="text-center space-y-2">
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-gold-500 text-navy-950 flex items-center justify-center text-2xl font-black shadow-lg">
-          <i class="fa-solid fa-shield-halved"></i>
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-royal-800 text-white flex items-center justify-center text-2xl font-black shadow-sm">
+          <i class="fa-solid fa-shield-halved text-amber-300"></i>
         </div>
-        <h3 class="font-prompt font-bold text-gold-300 text-lg">เข้าสู่ระบบเฉพาะผู้ดูแล (Admin)</h3>
-        <p class="text-xs text-slate-300">กรุณาระบุรหัสผ่าน 4 หลัก เพื่อเข้าใช้งานส่วนนี้</p>
+        <h3 class="font-prompt font-bold text-navy-900 text-lg">เข้าสู่ระบบเฉพาะผู้ดูแล (Admin)</h3>
+        <p class="text-xs text-slate-600 font-medium">กรุณาระบุรหัสผ่าน 4 หลัก เพื่อเข้าใช้งานส่วนนี้</p>
       </div>
 
       <form onsubmit="handleAdminAuthSubmit(event)" class="space-y-4">
         <div>
-          <input type="password" id="adminPinInput" maxlength="6" placeholder="ระบุรหัสผ่าน" class="w-full min-h-[50px] text-center text-xl tracking-widest font-mono bg-navy-950 text-gold-300 border-2 border-slate-700 rounded-xl focus:border-gold-400 focus:outline-none" required autofocus>
-          <p id="adminPinError" class="text-rose-400 text-xs text-center font-bold mt-1.5 hidden">
+          <input type="password" id="adminPinInput" maxlength="6" placeholder="ระบุรหัสผ่าน" class="w-full min-h-[50px] text-center text-xl tracking-widest font-mono bg-slate-50 text-slate-900 border-2 border-slate-300 rounded-xl focus:border-royal-700 focus:outline-none" required autofocus>
+          <p id="adminPinError" class="text-rose-600 text-xs text-center font-bold mt-1.5 hidden">
             <i class="fa-solid fa-circle-exclamation mr-1"></i> รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่
           </p>
         </div>
 
         <div class="grid grid-cols-2 gap-2 pt-2">
-          <button type="button" onclick="closeModal('adminAuthModal')" class="min-h-[44px] rounded-xl text-xs font-bold text-slate-400 bg-navy-950 hover:bg-slate-800 border border-slate-700">
+          <button type="button" onclick="closeModal('adminAuthModal')" class="min-h-[44px] rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-300">
             ยกเลิก
           </button>
-          <button type="submit" class="min-h-[44px] rounded-xl text-xs font-bold bg-gold-500 hover:bg-gold-400 text-navy-950 font-prompt shadow transition">
+          <button type="submit" class="min-h-[44px] rounded-xl text-xs font-bold bg-royal-800 hover:bg-royal-700 text-white font-prompt shadow-sm transition">
             ยืนยันรหัสผ่าน
           </button>
         </div>
@@ -894,67 +893,65 @@
     </div>
   </div>
 
-  <!-- Audit Logs Modal (การแก้ไขล่าสุด) -->
-  <div id="auditLogsModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-3xl w-full max-h-[90vh] shadow-2xl border-2 border-amber-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-amber-500/30 bg-navy-950 flex items-center justify-between">
+  <!-- Audit Logs Modal -->
+  <div id="auditLogsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
             <i class="fa-solid fa-clock-rotate-left"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-amber-300 text-lg sm:text-xl">ประวัติการแก้ไขและบันทึกล่าสุด</h3>
-            <p class="text-xs text-slate-300">ติดตามการเปลี่ยนแปลงข้อมูลเพื่อตรวจสอบความถูกต้องในระบบ</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">ประวัติการแก้ไขและบันทึกล่าสุด</h3>
+            <p class="text-xs text-slate-600 font-medium">ติดตามการเปลี่ยนแปลงข้อมูลเพื่อตรวจสอบความถูกต้องในระบบ</p>
           </div>
         </div>
-        <button onclick="closeModal('auditLogsModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('auditLogsModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-3 bg-navy-950/60 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400 px-4">
+      <div class="p-3 bg-slate-100/70 border-b border-slate-200 flex items-center justify-between text-xs text-slate-600 px-4">
         <span>รายการบันทึกย้อนหลัง (เรียงจากล่าสุดไปหาเก่าสุด)</span>
-        <button onclick="clearAuditLogsHistory()" class="text-rose-400 hover:text-rose-300 hover:underline">ล้างประวัติ</button>
+        <button onclick="clearAuditLogsHistory()" class="text-rose-600 hover:text-rose-800 hover:underline font-semibold">ล้างประวัติ</button>
       </div>
 
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
-        <div id="auditLogListContainer" class="space-y-2.5">
-          <!-- Dynamically populated audit logs -->
-        </div>
+        <div id="auditLogListContainer" class="space-y-2.5"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('auditLogsModal')" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-navy-950 font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('auditLogsModal')" class="px-5 py-2 bg-royal-800 hover:bg-royal-700 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
     </div>
   </div>
 
-  <!-- District Transfer Modal (โอนข้อมูลสู่รอบเขต) -->
-  <div id="districtTransferModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-emerald-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-emerald-500/30 bg-navy-950 flex items-center justify-between">
+  <!-- District Transfer Modal -->
+  <div id="districtTransferModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-emerald-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
             <i class="fa-solid fa-share-nodes"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-emerald-300 text-lg sm:text-xl">ข้อมูลตัวแทนแข่งขันระดับเขตพื้นที่การศึกษา</h3>
-            <p class="text-xs text-slate-300">เตรียมและโอนข้อมูลเพื่อนำไปใช้สมัครการแข่งขันรอบ สพป.อบ.5 (11-13 ม.ค. 2570)</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">ข้อมูลตัวแทนแข่งขันระดับเขตพื้นที่การศึกษา</h3>
+            <p class="text-xs text-slate-600 font-medium">เตรียมและโอนข้อมูลเพื่อนำไปใช้สมัครการแข่งขันรอบ สพป.อบ.5 (11-13 ม.ค. 2570)</p>
           </div>
         </div>
-        <button onclick="closeModal('districtTransferModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('districtTransferModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-4 sm:p-5 bg-navy-950/50 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
-        <div class="text-slate-300">
-          พบตัวแทนทั้งหมด: <strong id="districtCountSpan" class="text-emerald-400 font-bold text-base">0</strong> รายการ
+      <div class="p-4 sm:p-5 bg-slate-50/60 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+        <div class="text-slate-700 font-medium">
+          พบตัวแทนทั้งหมด: <strong id="districtCountSpan" class="text-emerald-700 font-bold text-base">0</strong> รายการ
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="copyDistrictTextSummary()" class="px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-slate-700 text-gold-300 border border-gold-500/40 font-bold transition flex items-center gap-1.5 shadow">
+          <button onclick="copyDistrictTextSummary()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-royal-800 border border-slate-300 font-bold transition flex items-center gap-1.5 shadow-2xs">
             <i class="fa-solid fa-copy"></i> คัดลอกข้อมูลสรุป
           </button>
         </div>
@@ -964,8 +961,8 @@
         <div id="districtTransferListContainer" class="space-y-3"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('districtTransferModal')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('districtTransferModal')" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -973,51 +970,51 @@
   </div>
 
   <!-- 3. Summary Results Modal -->
-  <div id="summaryResultsModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="summaryResultsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-gold-400 to-amber-600 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
             <i class="fa-solid fa-trophy"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-gold-300 text-lg sm:text-xl">สรุปผลการแข่งขัน & เหรียญรางวัล</h3>
-            <p class="text-xs text-slate-300">ภาพรวมเหรียญรางวัลและตัวแทนระดับเขตของโรงเรียนอนุบาลนาคสมุทรเดชอุดม</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">สรุปผลการแข่งขัน & เหรียญรางวัล</h3>
+            <p class="text-xs text-slate-600 font-medium">ภาพรวมเหรียญรางวัลและตัวแทนระดับเขตของโรงเรียนอนุบาลนาคสมุทรเดชอุดม</p>
           </div>
         </div>
-        <button onclick="closeModal('summaryResultsModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('summaryResultsModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-4 sm:p-6 border-b border-slate-800 bg-navy-950/50">
+      <div class="p-4 sm:p-6 border-b border-slate-200 bg-slate-50/50">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          <div class="p-3 rounded-2xl bg-navy-900 border border-amber-500/40 shadow">
-            <span class="text-xs text-amber-300 block font-bold mb-1">🥇 ชนะเลิศ</span>
-            <span id="statGoldWinner" class="text-2xl sm:text-3xl font-black font-prompt text-white">0</span>
+          <div class="p-3 rounded-2xl bg-white border border-amber-300 shadow-2xs">
+            <span class="text-xs text-amber-800 block font-bold mb-1">🥇 ชนะเลิศ</span>
+            <span id="statGoldWinner" class="text-2xl sm:text-3xl font-black font-prompt text-slate-900">0</span>
           </div>
-          <div class="p-3 rounded-2xl bg-navy-900 border border-gold-500/40 shadow">
-            <span class="text-xs text-gold-400 block font-bold mb-1">🥇 เหรียญทอง</span>
-            <span id="statGold" class="text-2xl sm:text-3xl font-black font-prompt text-gold-300">0</span>
+          <div class="p-3 rounded-2xl bg-white border border-yellow-300 shadow-2xs">
+            <span class="text-xs text-yellow-800 block font-bold mb-1">🥇 เหรียญทอง</span>
+            <span id="statGold" class="text-2xl sm:text-3xl font-black font-prompt text-yellow-700">0</span>
           </div>
-          <div class="p-3 rounded-2xl bg-navy-900 border border-slate-400/40 shadow">
-            <span class="text-xs text-slate-300 block font-bold mb-1">🥈 เหรียญเงิน</span>
-            <span id="statSilver" class="text-2xl sm:text-3xl font-black font-prompt text-slate-200">0</span>
+          <div class="p-3 rounded-2xl bg-white border border-slate-300 shadow-2xs">
+            <span class="text-xs text-slate-600 block font-bold mb-1">🥈 เหรียญเงิน</span>
+            <span id="statSilver" class="text-2xl sm:text-3xl font-black font-prompt text-slate-700">0</span>
           </div>
-          <div class="p-3 rounded-2xl bg-navy-900 border border-amber-700/40 shadow">
-            <span class="text-xs text-amber-500 block font-bold mb-1">🥉 ทองแดง / ร่วม</span>
-            <span id="statBronze" class="text-2xl sm:text-3xl font-black font-prompt text-amber-400">0</span>
+          <div class="p-3 rounded-2xl bg-white border border-amber-400 shadow-2xs">
+            <span class="text-xs text-amber-900 block font-bold mb-1">🥉 ทองแดง / ร่วม</span>
+            <span id="statBronze" class="text-2xl sm:text-3xl font-black font-prompt text-amber-800">0</span>
           </div>
         </div>
       </div>
 
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
-        <h4 class="text-xs font-bold text-gold-400 uppercase tracking-wider font-prompt">รายการแข่งขันที่มีการบันทึกผลแล้ว:</h4>
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider font-prompt">รายการแข่งขันที่มีการบันทึกผลแล้ว:</h4>
         <div id="resultsListContainer" class="space-y-2.5"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('summaryResultsModal')" class="px-5 py-2 bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('summaryResultsModal')" class="px-5 py-2 bg-royal-800 hover:bg-royal-700 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1025,42 +1022,42 @@
   </div>
 
   <!-- 4. Judge Registration Modal -->
-  <div id="judgeRegistrationModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border-2 border-purple-500/60 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+  <div id="judgeRegistrationModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+          <div class="w-10 h-10 rounded-xl bg-purple-700 text-white flex items-center justify-center text-lg font-black shadow-sm">
             <i class="fa-solid fa-user-tie"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-purple-300 text-base sm:text-lg">สมัครเป็นคณะกรรมการตัดสิน</h3>
-            <p class="text-xs text-slate-300">เสนอชื่อเพื่อร่วมเป็นกรรมการตัดสินระดับกลุ่มเครือข่าย</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-base sm:text-lg">สมัครเป็นคณะกรรมการตัดสิน</h3>
+            <p class="text-xs text-slate-500 font-medium">เสนอชื่อเพื่อร่วมเป็นกรรมการตัดสินระดับกลุ่มเครือข่าย</p>
           </div>
         </div>
-        <button type="button" onclick="closeModal('judgeRegistrationModal')" class="w-9 h-9 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-lg transition">
+        <button type="button" onclick="closeModal('judgeRegistrationModal')" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center text-lg transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <form onsubmit="handleJudgeSubmit(event)" class="space-y-3.5 text-xs sm:text-sm">
         <div>
-          <label class="block font-bold text-slate-200 mb-1 font-prompt">กลุ่มสาระการเรียนรู้ / กิจกรรม *</label>
-          <select id="judgeGroupSelect" onchange="onJudgeGroupChange()" class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-3 font-semibold focus:border-purple-400 focus:outline-none" required>
+          <label class="block font-bold text-slate-800 mb-1 font-prompt">กลุ่มสาระการเรียนรู้ / กิจกรรม *</label>
+          <select id="judgeGroupSelect" onchange="onJudgeGroupChange()" class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 font-semibold focus:border-purple-600 focus:outline-none shadow-2xs" required>
             <!-- Populated via JS -->
           </select>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-200 mb-1 font-prompt">รายการแข่งขันที่สมัครเป็นกรรมการตัดสิน *</label>
-          <select id="judgeCompetitionSelect" class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-3 font-semibold focus:border-purple-400 focus:outline-none" required>
+          <label class="block font-bold text-slate-800 mb-1 font-prompt">รายการแข่งขันที่สมัครเป็นกรรมการตัดสิน *</label>
+          <select id="judgeCompetitionSelect" class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 font-semibold focus:border-purple-600 focus:outline-none shadow-2xs" required>
             <!-- Populated via JS -->
           </select>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
           <div class="sm:col-span-4">
-            <label class="block font-semibold text-slate-300 mb-1">คำนำหน้า *</label>
-            <select id="judgePrefix" onchange="onJudgePrefixChange()" class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-2.5 font-semibold focus:border-purple-400 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">คำนำหน้า *</label>
+            <select id="judgePrefix" onchange="onJudgePrefixChange()" class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-2.5 font-semibold focus:border-purple-600 focus:outline-none shadow-2xs">
               <option value="นางสาว">นางสาว</option>
               <option value="นาย">นาย</option>
               <option value="นาง">นาง</option>
@@ -1068,34 +1065,34 @@
               <option value="ดร.">ดร.</option>
               <option value="OTHER">อื่นๆ (ระบุเอง)</option>
             </select>
-            <input type="text" id="judgeCustomPrefix" placeholder="ระบุคำนำหน้า" class="hidden mt-1.5 w-full min-h-[38px] rounded-lg bg-navy-950 border border-purple-500 text-white px-2.5 text-xs focus:outline-none">
+            <input type="text" id="judgeCustomPrefix" placeholder="ระบุคำนำหน้า" class="hidden mt-1.5 w-full min-h-[38px] rounded-lg bg-white border border-purple-500 text-slate-900 px-2.5 text-xs focus:outline-none">
           </div>
           <div class="sm:col-span-8">
-            <label class="block font-semibold text-slate-300 mb-1">ชื่อ - นามสกุล *</label>
-            <input type="text" id="judgeName" placeholder="เช่น ปิยะพร ใจดี" required class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-3 focus:border-purple-400 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อ - นามสกุล *</label>
+            <input type="text" id="judgeName" placeholder="เช่น ปิยะพร ใจดี" required class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 focus:border-purple-600 focus:outline-none shadow-2xs">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="block font-semibold text-slate-300 mb-1">ตำแหน่ง / วิทยฐานะ *</label>
-            <input type="text" id="judgePosition" placeholder="เช่น ครู ค.ศ.2 หรือ ครูผู้ช่วย" required class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-3 focus:border-purple-400 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">ตำแหน่ง / วิทยฐานะ *</label>
+            <input type="text" id="judgePosition" placeholder="เช่น ครู ค.ศ.2 หรือ ครูผู้ช่วย" required class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 focus:border-purple-600 focus:outline-none shadow-2xs">
           </div>
           <div>
-            <label class="block font-semibold text-slate-300 mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
-            <input type="tel" id="judgePhone" placeholder="เช่น 089-xxxxxxx" required class="w-full min-h-[44px] rounded-xl bg-navy-950 border border-slate-700 text-white px-3 focus:border-purple-400 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
+            <input type="tel" id="judgePhone" placeholder="เช่น 089-xxxxxxx" required class="w-full min-h-[44px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 focus:border-purple-600 focus:outline-none shadow-2xs">
           </div>
         </div>
 
-        <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-[11px] text-purple-200">
-          <i class="fa-solid fa-circle-info mr-1 text-purple-400"></i>
+        <div class="p-3 rounded-xl bg-purple-50 border border-purple-200 text-xs text-purple-900 font-medium">
+          <i class="fa-solid fa-circle-info mr-1 text-purple-600"></i>
           รายชื่อจะถูกส่งเข้า Google Sheets แท็บ "รายชื่อกรรมการตัดสิน" ทันทีค่ะ
         </div>
 
-        <div class="pt-2 border-t border-slate-800 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeModal('judgeRegistrationModal')" class="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white">ยกเลิก</button>
-          <button type="submit" id="submitJudgeBtn" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg transition flex items-center gap-1.5 font-prompt">
-            <i class="fa-solid fa-paper-plane"></i>
+        <div class="pt-2 border-t border-slate-200 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('judgeRegistrationModal')" class="px-4 py-2 rounded-xl text-xs text-slate-600 hover:text-slate-900 font-medium">ยกเลิก</button>
+          <button type="submit" id="submitJudgeBtn" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-700 hover:bg-purple-800 text-white shadow-sm transition flex items-center gap-1.5 font-prompt">
+            <i class="fa-solid fa-paper-plane text-amber-300"></i>
             <span id="submitJudgeText">บันทึกการสมัครกรรมการ</span>
           </button>
         </div>
@@ -1104,28 +1101,28 @@
   </div>
 
   <!-- 5. Judges List Modal -->
-  <div id="judgesListModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-purple-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-purple-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="judgesListModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
+          <div class="w-11 h-11 rounded-2xl bg-purple-700 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
             <i class="fa-solid fa-clipboard-user"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-purple-300 text-lg sm:text-xl">รายชื่อคณะกรรมการตัดสินที่สมัครแล้ว</h3>
-            <p class="text-xs text-slate-300">ข้อมูลคณะครูที่เสนอชื่อร่วมตัดสินการแข่งขันศิลปหัตถกรรมนักเรียน ครั้งที่ 74</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">รายชื่อคณะกรรมการตัดสินที่สมัครแล้ว</h3>
+            <p class="text-xs text-slate-600 font-medium">ข้อมูลคณะครูที่เสนอชื่อร่วมตัดสินการแข่งขันศิลปหัตถกรรมนักเรียน ครั้งที่ 74</p>
           </div>
         </div>
-        <button type="button" onclick="closeModal('judgesListModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button type="button" onclick="closeModal('judgesListModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-3.5 sm:p-4 bg-navy-950/60 border-b border-slate-800 flex items-center justify-between gap-3 text-xs sm:text-sm">
-        <div class="text-slate-300">
-          ผู้สมัครทั้งหมด: <strong id="modalJudgeTotalCount" class="text-purple-300 font-bold text-base">0</strong> ท่าน
+      <div class="p-3.5 sm:p-4 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between gap-3 text-xs sm:text-sm">
+        <div class="text-slate-700 font-medium">
+          ผู้สมัครทั้งหมด: <strong id="modalJudgeTotalCount" class="text-purple-800 font-bold text-base">0</strong> ท่าน
         </div>
-        <button type="button" onclick="closeModal('judgesListModal'); openJudgeRegistrationModal();" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition">
+        <button type="button" onclick="closeModal('judgesListModal'); openJudgeRegistrationModal();" class="px-3.5 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs transition">
           <i class="fa-solid fa-plus"></i> สมัครเพิ่ม
         </button>
       </div>
@@ -1134,8 +1131,8 @@
         <div id="judgesListContainer" class="space-y-2.5"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button type="button" onclick="closeModal('judgesListModal')" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button type="button" onclick="closeModal('judgesListModal')" class="px-5 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1143,24 +1140,24 @@
   </div>
 
   <!-- 6. Delete Judge Confirm Modal -->
-  <div id="deleteJudgeConfirmModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-rose-500/70 text-center space-y-4">
-      <div class="w-14 h-14 mx-auto rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/50 flex items-center justify-center text-2xl font-black">
+  <div id="deleteJudgeConfirmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-sm sm:max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center text-2xl font-black">
         <i class="fa-solid fa-trash-can"></i>
       </div>
       <div class="space-y-1">
-        <h3 class="font-prompt font-extrabold text-rose-300 text-lg sm:text-xl">ยืนยันการลบรายชื่อกรรมการ?</h3>
-        <p id="deleteJudgeTargetName" class="text-xs sm:text-sm text-gold-300 font-bold truncate">ชื่อกรรมการ</p>
-        <p id="deleteJudgeTargetComp" class="text-xs text-slate-300 truncate">รายการแข่งขัน</p>
+        <h3 class="font-prompt font-extrabold text-slate-900 text-lg sm:text-xl">ยืนยันการลบรายชื่อกรรมการ?</h3>
+        <p id="deleteJudgeTargetName" class="text-xs sm:text-sm text-royal-800 font-bold truncate">ชื่อกรรมการ</p>
+        <p id="deleteJudgeTargetComp" class="text-xs text-slate-600 truncate">รายการแข่งขัน</p>
       </div>
 
       <input type="hidden" id="pendingDeleteJudgeId" value="">
 
       <div class="grid grid-cols-2 gap-2.5 pt-2 font-prompt">
-        <button type="button" onclick="closeModal('deleteJudgeConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-navy-950 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">
+        <button type="button" onclick="closeModal('deleteJudgeConfirmModal')" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition">
           ยกเลิก
         </button>
-        <button type="button" onclick="confirmExecuteDeleteJudge()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition flex items-center justify-center gap-1.5">
+        <button type="button" onclick="confirmExecuteDeleteJudge()" class="min-h-[46px] rounded-xl text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md transition flex items-center justify-center gap-1.5">
           <i class="fa-solid fa-trash-can"></i> ยืนยันลบ
         </button>
       </div>
@@ -1168,28 +1165,28 @@
   </div>
 
   <!-- Documents Modal -->
-  <div id="documentsModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-5xl w-full max-h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="documentsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gold-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0 shadow-lg">
-            <i class="fa-solid fa-book-open-reader"></i>
+          <div class="w-11 h-11 rounded-2xl bg-royal-800 text-white flex items-center justify-center text-xl font-black shrink-0 shadow-sm">
+            <i class="fa-solid fa-book-open-reader text-amber-300"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-gold-300 text-lg sm:text-xl">เกณฑ์การแข่งขันและเอกสารทางการ</h3>
-            <p class="text-xs text-slate-300">สพป.อุบลราชธานี เขต 5 • โรงเรียนอนุบาลนาคสมุทรเดชอุดม</p>
+            <h3 class="font-prompt font-bold text-navy-900 text-lg sm:text-xl">เกณฑ์การแข่งขันและเอกสารทางการ</h3>
+            <p class="text-xs text-slate-600 font-medium">สพป.อุบลราชธานี เขต 5 • โรงเรียนอนุบาลนาคสมุทรเดชอุดม</p>
           </div>
         </div>
-        <button onclick="closeModal('documentsModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('documentsModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="p-3 sm:p-4 border-b border-slate-800 bg-navy-950/40 flex items-center gap-2">
-        <button id="tabBtnAcademic" onclick="switchCriteriaTab('academic')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-gold-400 text-gold-300 font-prompt flex items-center gap-1.5">
+      <div class="p-3 sm:p-4 border-b border-slate-200 bg-slate-50/50 flex items-center gap-2">
+        <button id="tabBtnAcademic" onclick="switchCriteriaTab('academic')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-royal-700 text-royal-900 font-prompt flex items-center gap-1.5">
           <i class="fa-solid fa-graduation-cap"></i> ประเภทวิชาการ
         </button>
-        <button id="tabBtnSoftpower" onclick="switchCriteriaTab('softpower')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-prompt flex items-center gap-1.5">
+        <button id="tabBtnSoftpower" onclick="switchCriteriaTab('softpower')" class="py-2.5 px-4 text-sm font-bold border-b-2 border-transparent text-slate-600 hover:text-slate-900 font-prompt flex items-center gap-1.5">
           <i class="fa-solid fa-masks-theater"></i> ประเภท Soft Power
         </button>
       </div>
@@ -1203,8 +1200,8 @@
         </div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('documentsModal')" class="px-5 py-2 bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('documentsModal')" class="px-5 py-2 bg-royal-800 hover:bg-royal-700 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1212,35 +1209,35 @@
   </div>
 
   <!-- PDF Preview Modal -->
-  <div id="pdfPreviewModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl w-full max-w-5xl h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
-      <div class="p-3 sm:p-4 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="pdfPreviewModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 no-print hidden">
+    <div class="bg-white rounded-3xl w-full max-w-5xl h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-3 sm:p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-2.5 min-w-0 pr-2">
-          <div class="w-9 h-9 rounded-xl bg-gold-500 text-navy-950 flex items-center justify-center text-lg font-black shrink-0">
+          <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center text-lg font-black shrink-0">
             <i class="fa-solid fa-file-pdf"></i>
           </div>
           <div class="min-w-0">
-            <h3 id="pdfPreviewTitle" class="font-prompt font-bold text-gold-300 text-sm sm:text-base truncate">เอกสารทางการ</h3>
-            <p id="pdfPreviewFilename" class="text-[11px] text-slate-400 font-mono truncate">document.pdf</p>
+            <h3 id="pdfPreviewTitle" class="font-prompt font-bold text-slate-900 text-sm sm:text-base truncate">เอกสารทางการ</h3>
+            <p id="pdfPreviewFilename" class="text-[11px] text-slate-500 font-mono truncate">document.pdf</p>
           </div>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <button id="pdfDownloadBtn" class="px-3 py-1.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs sm:text-sm flex items-center gap-1.5 transition shadow">
-            <i class="fa-solid fa-download"></i> ดาวน์โหลด
+          <button id="pdfDownloadBtn" class="px-3 py-1.5 rounded-xl bg-royal-800 hover:bg-royal-700 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition shadow-xs">
+            <i class="fa-solid fa-download text-amber-300"></i> ดาวน์โหลด
           </button>
-          <button onclick="closeModal('pdfPreviewModal')" class="w-9 h-9 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-lg transition">
+          <button onclick="closeModal('pdfPreviewModal')" class="w-9 h-9 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-lg transition">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
       </div>
-      <div class="flex-1 bg-navy-950 relative">
+      <div class="flex-1 bg-slate-100 relative">
         <iframe id="pdfPreviewIframe" class="w-full h-full border-0" src=""></iframe>
-        <div id="pdfFallbackNotice" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-300 space-y-3 hidden bg-navy-950">
-          <i class="fa-solid fa-file-circle-exclamation text-4xl text-amber-400"></i>
-          <p class="font-bold text-sm sm:text-base text-white">อุปกรณ์นี้ไม่รองรับการแสดงตัวอย่าง PDF ในหน้าต่างนี้</p>
-          <p class="text-xs text-slate-400 max-w-sm">สามารถกดดาวน์โหลดไฟล์ด้านล่างนี้เพื่อเปิดอ่านในแอปพลิเคชันของเครื่องได้ทันทีค่ะ</p>
-          <button id="pdfFallbackDownloadBtn" class="px-5 py-2.5 rounded-xl bg-gold-500 text-navy-950 font-bold text-sm shadow">
-            <i class="fa-solid fa-download mr-1.5"></i> ดาวน์โหลดไฟล์ PDF
+        <div id="pdfFallbackNotice" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-700 space-y-3 hidden bg-slate-50">
+          <i class="fa-solid fa-file-circle-exclamation text-4xl text-amber-500"></i>
+          <p class="font-bold text-sm sm:text-base text-slate-900">อุปกรณ์นี้ไม่รองรับการแสดงตัวอย่าง PDF ในหน้าต่างนี้</p>
+          <p class="text-xs text-slate-600 max-w-sm">สามารถกดดาวน์โหลดไฟล์ด้านล่างนี้เพื่อเปิดอ่านในแอปพลิเคชันของเครื่องได้ทันทีค่ะ</p>
+          <button id="pdfFallbackDownloadBtn" class="px-5 py-2.5 rounded-xl bg-royal-800 text-white font-bold text-sm shadow-sm">
+            <i class="fa-solid fa-download mr-1.5 text-amber-300"></i> ดาวน์โหลดไฟล์ PDF
           </button>
         </div>
       </div>
@@ -1248,21 +1245,21 @@
   </div>
 
   <!-- Unregistered Modal -->
-  <div id="unregisteredModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-rose-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-rose-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="unregisteredModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-rose-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
+          <div class="w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-xl font-black shrink-0">
             <i class="fa-solid fa-hourglass-start"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-rose-300 text-lg sm:text-xl">
-              รายการที่ยังไม่ลงทะเบียน (<span id="unregCountTitle">0</span> รายการ)
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">
+              รายการที่ยังไม่ลงทะเบียน (<span id="unregCountTitle" class="text-rose-600">0</span> รายการ)
             </h3>
-            <p class="text-xs text-slate-300">คลิกเพื่อเลือกลงทะเบียนในรายการที่ยังว่างได้ทันที</p>
+            <p class="text-xs text-slate-600 font-medium">คลิกเพื่อเลือกลงทะเบียนในรายการที่ยังว่างได้ทันที</p>
           </div>
         </div>
-        <button onclick="closeModal('unregisteredModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('unregisteredModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -1271,8 +1268,8 @@
         <div id="unregisteredListContainer" class="space-y-3"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('unregisteredModal')" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('unregisteredModal')" class="px-5 py-2 bg-royal-800 hover:bg-royal-700 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1280,19 +1277,19 @@
   </div>
 
   <!-- Duplicate Modal -->
-  <div id="duplicateModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
-    <div class="bg-navy-900 rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border-2 border-gold-500/60 overflow-hidden flex flex-col">
-      <div class="p-4 sm:p-5 border-b-2 border-gold-500/30 bg-navy-950 flex items-center justify-between">
+  <div id="duplicateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 no-print hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-gold-500 text-navy-950 flex items-center justify-center text-xl font-black shrink-0">
-            <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <div class="w-11 h-11 rounded-2xl bg-royal-800 text-white flex items-center justify-center text-xl font-black shrink-0">
+            <i class="fa-solid fa-magnifying-glass-chart text-amber-300"></i>
           </div>
           <div>
-            <h3 class="font-prompt font-bold text-gold-300 text-lg sm:text-xl">ตรวจสอบรายชื่อซ้ำซ้อน</h3>
-            <p class="text-xs text-slate-300">ตรวจสอบนักเรียนหรือครูที่มีชื่อลงทะเบียนมากกว่า 1 กิจกรรม</p>
+            <h3 class="font-prompt font-bold text-slate-900 text-lg sm:text-xl">ตรวจสอบรายชื่อซ้ำซ้อน</h3>
+            <p class="text-xs text-slate-600 font-medium">ตรวจสอบนักเรียนหรือครูที่มีชื่อลงทะเบียนมากกว่า 1 กิจกรรม</p>
           </div>
         </div>
-        <button onclick="closeModal('duplicateModal')" class="w-10 h-10 rounded-xl bg-navy-800 hover:bg-rose-900 text-slate-300 hover:text-white flex items-center justify-center text-xl transition">
+        <button onclick="closeModal('duplicateModal')" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xl transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -1301,8 +1298,8 @@
         <div id="duplicateContentArea" class="space-y-3"></div>
       </div>
 
-      <div class="p-3.5 bg-navy-950 border-t border-slate-800 flex items-center justify-end text-xs text-slate-400">
-        <button onclick="closeModal('duplicateModal')" class="px-5 py-2 bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold rounded-xl transition shadow">
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end text-xs text-slate-600">
+        <button onclick="closeModal('duplicateModal')" class="px-5 py-2 bg-royal-800 hover:bg-royal-700 text-white font-bold rounded-xl transition shadow-xs">
           ปิดหน้าต่าง
         </button>
       </div>
@@ -1786,7 +1783,7 @@
     }
 
     /* ========================================================
-       STUDENT & TEACHER BUILDERS
+       STUDENT & TEACHER BUILDERS (Light Theme)
        ======================================================== */
     function buildStudentFields(count, level) {
       const container = document.getElementById("studentFieldsContainer");
@@ -1806,18 +1803,18 @@
 
       for (let i = 0; i < count; i++) {
         const card = document.createElement("div");
-        card.className = "p-3.5 sm:p-4 rounded-2xl bg-navy-950 border-2 border-slate-800 space-y-3 shadow-inner";
+        card.className = "p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 shadow-2xs";
         card.innerHTML = `
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <span class="text-xs sm:text-sm font-bold text-gold-300 font-prompt flex items-center gap-1.5">
-              <span class="w-5 h-5 rounded-full bg-gold-500/20 text-gold-300 border border-gold-500/40 flex items-center justify-center text-xs">${i + 1}</span>
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <span class="text-xs sm:text-sm font-bold text-navy-900 font-prompt flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-royal-100 text-royal-800 flex items-center justify-center text-xs font-bold">${i + 1}</span>
               <span>นักเรียนคนที่ ${i + 1}</span>
             </span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 w-full">
             <div class="sm:col-span-3">
-              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">คำนำหน้า</label>
-              <select id="stPrefix_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm font-semibold focus:border-gold-500">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">คำนำหน้า</label>
+              <select id="stPrefix_${i}" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-2.5 text-xs sm:text-sm font-semibold focus:border-royal-700 shadow-2xs">
                 <option value="เด็กชาย">เด็กชาย</option>
                 <option value="เด็กหญิง">เด็กหญิง</option>
                 <option value="นาย">นาย</option>
@@ -1825,18 +1822,57 @@
               </select>
             </div>
             <div class="sm:col-span-5">
-              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ชื่อ - นามสกุล</label>
-              <input type="text" id="stName_${i}" oninput="autoCleanPrefix(this, 'stPrefix_${i}')" placeholder="เช่น สมชาย ใจดี" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-3 text-xs sm:text-sm focus:border-gold-500">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">ชื่อ - นามสกุล</label>
+              <input type="text" id="stName_${i}" oninput="autoCleanPrefix(this, 'stPrefix_${i}')" placeholder="เช่น สมชาย ใจดี" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 text-xs sm:text-sm focus:border-royal-700 shadow-2xs">
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ระดับชั้น</label>
-              <select id="stClass_${i}" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2 text-xs sm:text-sm font-semibold focus:border-gold-500">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">ระดับชั้น</label>
+              <select id="stClass_${i}" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-2 text-xs sm:text-sm font-semibold focus:border-royal-700 shadow-2xs">
                 ${classOptions}
               </select>
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-[11px] text-slate-400 mb-1 font-semibold">ห้อง</label>
-              <input type="text" id="stRoom_${i}" placeholder="เช่น 1 หรือ 2" class="w-full min-h-[46px] rounded-xl bg-navy-900 border border-slate-700 text-white px-2.5 text-xs sm:text-sm text-center focus:border-gold-500">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">ห้อง</label>
+              <input type="text" id="stRoom_${i}" placeholder="เช่น 1 หรือ 2" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-2.5 text-xs sm:text-sm text-center focus:border-royal-700 shadow-2xs">
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    function buildTeacherFields(count) {
+      currentTeacherCount = Math.max(1, count);
+      const container = document.getElementById("teacherFieldsContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      for (let i = 0; i < currentTeacherCount; i++) {
+        const card = document.createElement("div");
+        card.className = "p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 shadow-2xs";
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <span class="text-xs sm:text-sm font-bold text-emerald-800 font-prompt flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold">${i + 1}</span>
+              <span>ครูผู้ฝึกสอนคนที่ ${i + 1}</span>
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 w-full">
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">คำนำหน้า</label>
+              <select id="tcPrefix_${i}" onchange="onTeacherPrefixChange(${i})" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-2.5 text-xs sm:text-sm font-semibold focus:border-emerald-600 shadow-2xs">
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว" selected>นางสาว</option>
+                <option value="ว่าที่ ร.ต.">ว่าที่ ร.ต.</option>
+                <option value="ดร.">ดร.</option>
+                <option value="OTHER">อื่นๆ (ระบุเอง)</option>
+              </select>
+              <input type="text" id="tcCustomPrefix_${i}" placeholder="ระบุคำนำหน้า" class="hidden mt-1.5 w-full min-h-[38px] rounded-lg bg-white border border-emerald-500 text-slate-900 px-2.5 text-xs focus:outline-none">
+            </div>
+            <div class="sm:col-span-9">
+              <label class="block text-[11px] text-slate-600 mb-1 font-semibold">ชื่อ - นามสกุลครูผู้ฝึกสอน</label>
+              <input type="text" id="tcName_${i}" oninput="autoCleanTeacherPrefix(this, ${i})" placeholder="เช่น ปิยะพร รักเรียน" class="w-full min-h-[46px] rounded-xl bg-white border border-slate-300 text-slate-900 px-3 text-xs sm:text-sm focus:border-emerald-600 shadow-2xs">
             </div>
           </div>
         `;
@@ -2088,8 +2124,8 @@
       if (judges.length === 0) {
         container.innerHTML = `
           <div class="py-12 text-center text-slate-400">
-            <i class="fa-solid fa-clipboard-user text-4xl mb-2 text-purple-400/50"></i>
-            <p class="font-bold text-white text-base">ยังไม่มีคุณครูสมัครเป็นกรรมการตัดสิน</p>
+            <i class="fa-solid fa-clipboard-user text-4xl mb-2 text-purple-300"></i>
+            <p class="font-bold text-slate-800 text-base">ยังไม่มีคุณครูสมัครเป็นกรรมการตัดสิน</p>
           </div>
         `;
         return;
@@ -2097,24 +2133,24 @@
 
       judges.forEach((j, idx) => {
         const item = document.createElement("div");
-        item.className = "p-3.5 sm:p-4 rounded-2xl bg-navy-950 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow";
+        item.className = "p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-purple-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs";
         item.innerHTML = `
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-purple-600/30 text-purple-300 border border-purple-500/50 flex items-center justify-center text-xs font-bold font-mono">${idx + 1}</span>
-              <h4 class="font-bold font-prompt text-white text-sm sm:text-base">${j.fullName}</h4>
-              <span class="text-xs text-purple-300 font-semibold bg-purple-950 px-2 py-0.5 rounded-lg border border-purple-500/40">${j.position || 'คุณครู'}</span>
+              <span class="w-6 h-6 rounded-full bg-purple-100 text-purple-800 border border-purple-200 flex items-center justify-center text-xs font-bold font-mono">${idx + 1}</span>
+              <h4 class="font-bold font-prompt text-slate-900 text-sm sm:text-base">${j.fullName}</h4>
+              <span class="text-xs text-purple-800 font-semibold bg-purple-100/70 px-2 py-0.5 rounded-lg border border-purple-200">${j.position || 'คุณครู'}</span>
             </div>
-            <div class="text-xs text-slate-300 pl-8">
-              <strong class="text-gold-400">กิจกรรม:</strong> ${j.competitionName}
-              <span class="text-slate-400 ml-1">(${j.groupName})</span>
+            <div class="text-xs text-slate-700 pl-8">
+              <strong class="text-royal-800">กิจกรรม:</strong> ${j.competitionName}
+              <span class="text-slate-500 ml-1">(${j.groupName})</span>
             </div>
-            <div class="text-xs text-slate-400 pl-8 flex items-center gap-3">
-              <span><i class="fa-solid fa-phone text-emerald-400 mr-1"></i>${j.phone}</span>
-              <span class="text-[11px] font-mono text-slate-500">${j.registeredAt}</span>
+            <div class="text-xs text-slate-500 pl-8 flex items-center gap-3">
+              <span><i class="fa-solid fa-phone text-emerald-600 mr-1"></i>${j.phone}</span>
+              <span class="text-[11px] font-mono text-slate-400">${j.registeredAt}</span>
             </div>
           </div>
-          <button type="button" onclick="deleteJudgePrompt('${j.id}')" title="ลบรายชื่อนี้" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white border border-rose-500/40 flex items-center justify-center text-xs transition self-end sm:self-center shrink-0">
+          <button type="button" onclick="deleteJudgePrompt('${j.id}')" title="ลบรายชื่อนี้" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 flex items-center justify-center text-xs transition self-end sm:self-center shrink-0 shadow-2xs">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         `;
@@ -2599,31 +2635,31 @@
 
       listToRender.forEach((r, idx) => {
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-navy-950/70 border-b border-slate-800 transition";
+        tr.className = "hover:bg-slate-50 border-b border-slate-200 transition";
 
         const stHtml = (r.students && r.students.length > 0)
-          ? r.students.map((s, i) => `<div>${i + 1}. <strong class="text-white">${s.fullName}</strong> <span class="text-[11px] text-gold-400">(${s.classInfo || '-'})</span></div>`).join("")
-          : `<span class="text-rose-400 text-xs italic">ยังไม่มีรายชื่อ</span>`;
+          ? r.students.map((s, i) => `<div>${i + 1}. <strong class="text-slate-900">${s.fullName}</strong> <span class="text-[11px] text-royal-700 font-semibold">(${s.classInfo || '-'})</span></div>`).join("")
+          : `<span class="text-rose-600 text-xs italic">ยังไม่มีรายชื่อ</span>`;
 
         const tcHtml = (r.teachers && r.teachers.length > 0)
-          ? r.teachers.map((t, i) => `<div>${i + 1}. <span class="text-emerald-300 font-semibold">${t.fullName}</span></div>`).join("")
-          : `<span class="text-rose-400 text-xs italic">ยังไม่มีรายชื่อ</span>`;
+          ? r.teachers.map((t, i) => `<div>${i + 1}. <span class="text-emerald-800 font-semibold">${t.fullName}</span></div>`).join("")
+          : `<span class="text-rose-600 text-xs italic">ยังไม่มีรายชื่อ</span>`;
 
         tr.innerHTML = `
-          <td class="p-3.5 text-center font-bold text-gold-400 font-mono text-xs">${idx + 1}</td>
+          <td class="p-3.5 text-center font-bold text-slate-600 font-mono text-xs">${idx + 1}</td>
           <td class="p-3.5">
-            <div class="font-bold text-white text-sm font-prompt">${r.competitionName}</div>
-            <div class="text-xs text-slate-400 mt-0.5">${r.groupName} • ${r.competitionLevel}</div>
+            <div class="font-bold text-slate-900 text-sm font-prompt">${r.competitionName}</div>
+            <div class="text-xs text-slate-500 mt-0.5">${r.groupName} • ${r.competitionLevel}</div>
           </td>
           <td class="p-3.5 text-xs space-y-1">${stHtml}</td>
           <td class="p-3.5 text-xs space-y-1">${tcHtml}</td>
-          <td class="p-3.5 text-center text-xs">${r.award || '-'}</td>
+          <td class="p-3.5 text-center text-xs font-medium text-slate-700">${r.award || '-'}</td>
           <td class="p-3.5 text-center">
             <div class="flex items-center justify-center gap-1.5">
-              <button onclick="editEntry('${r.id}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-navy-950 border border-amber-500/40 flex items-center justify-center text-xs transition">
+              <button onclick="editEntry('${r.id}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-amber-50 hover:bg-amber-500 text-amber-700 hover:text-white border border-amber-300 flex items-center justify-center text-xs transition shadow-2xs">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              <button onclick="deleteEntryPrompt('${r.id}')" title="ลบรายการนี้" class="w-8 h-8 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white border border-rose-500/40 flex items-center justify-center text-xs transition">
+              <button onclick="deleteEntryPrompt('${r.id}')" title="ลบรายการนี้" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-300 flex items-center justify-center text-xs transition shadow-2xs">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -2765,30 +2801,30 @@
 
       if (unregList.length === 0) {
         container.innerHTML = `
-          <div class="py-12 text-center text-emerald-400 space-y-2">
-            <i class="fa-solid fa-circle-check text-4xl"></i>
-            <h4 class="font-bold text-lg font-prompt text-white">ยอดเยี่ยมมาก!</h4>
-            <p class="text-xs text-slate-300">โรงเรียนได้ลงทะเบียนครบทั้ง 78 รายการแข่งขันเรียบร้อยแล้วค่ะ</p>
+          <div class="py-12 text-center text-emerald-700 space-y-2">
+            <i class="fa-solid fa-circle-check text-4xl text-emerald-600"></i>
+            <h4 class="font-bold text-lg font-prompt text-slate-900">ยอดเยี่ยมมาก!</h4>
+            <p class="text-xs text-slate-600">โรงเรียนได้ลงทะเบียนครบทั้ง 78 รายการแข่งขันเรียบร้อยแล้วค่ะ</p>
           </div>
         `;
       } else {
         unregList.forEach((it, idx) => {
           const item = document.createElement("div");
-          item.className = "p-3.5 sm:p-4 rounded-2xl bg-navy-950 border border-slate-800 hover:border-gold-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow transition";
+          item.className = "p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200 hover:border-royal-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs transition";
           item.innerHTML = `
             <div class="space-y-1">
               <div class="flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-mono font-bold">${idx + 1}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-gold-500/20 text-gold-300 border border-gold-500/30 font-prompt">${it.categoryType}</span>
-                <h4 class="font-bold font-prompt text-white text-sm sm:text-base">[${it.level}] ${it.name}</h4>
+                <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center text-xs font-mono font-bold">${idx + 1}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-royal-50 text-royal-800 border border-royal-200 font-prompt">${it.categoryType}</span>
+                <h4 class="font-bold font-prompt text-slate-900 text-sm sm:text-base">[${it.level}] ${it.name}</h4>
               </div>
-              <div class="text-xs text-slate-400 pl-8 flex flex-wrap items-center gap-3">
-                <span><i class="fa-solid fa-layer-group text-slate-500 mr-1"></i>${it.groupName}</span>
-                <span><i class="fa-solid fa-users text-gold-400 mr-1"></i>เกณฑ์: นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน (${it.type})</span>
+              <div class="text-xs text-slate-600 pl-8 flex flex-wrap items-center gap-3">
+                <span><i class="fa-solid fa-layer-group text-slate-400 mr-1"></i>${it.groupName}</span>
+                <span><i class="fa-solid fa-users text-royal-700 mr-1"></i>เกณฑ์: นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน (${it.type})</span>
               </div>
             </div>
-            <button type="button" onclick="quickSelectUnregistered('${it.catKey}', '${it.groupKey}', '${it.id}')" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs font-prompt flex items-center justify-center gap-1.5 shadow transition shrink-0 self-end sm:self-center">
-              <i class="fa-solid fa-plus"></i> เลือกลงทะเบียน
+            <button type="button" onclick="quickSelectUnregistered('${it.catKey}', '${it.groupKey}', '${it.id}')" class="px-4 py-2 rounded-xl bg-royal-800 hover:bg-royal-700 text-white font-bold text-xs font-prompt flex items-center justify-center gap-1.5 shadow-xs transition shrink-0 self-end sm:self-center">
+              <i class="fa-solid fa-plus text-amber-300"></i> เลือกลงทะเบียน
             </button>
           `;
           container.appendChild(item);
@@ -2861,27 +2897,27 @@
 
       if (totalDupes === 0) {
         container.innerHTML = `
-          <div class="py-12 text-center text-emerald-400 space-y-2">
-            <i class="fa-solid fa-user-check text-4xl"></i>
-            <h4 class="font-bold text-lg font-prompt text-white">ไม่พบรายชื่อซ้ำซ้อน</h4>
-            <p class="text-xs text-slate-300">ทั้งนักเรียนและครูผู้ฝึกสอนไม่มีชื่อลงทะเบียนแข่งซ้ำซ้อนในกิจกรรมอื่นค่ะ</p>
+          <div class="py-12 text-center text-emerald-700 space-y-2">
+            <i class="fa-solid fa-user-check text-4xl text-emerald-600"></i>
+            <h4 class="font-bold text-lg font-prompt text-slate-900">ไม่พบรายชื่อซ้ำซ้อน</h4>
+            <p class="text-xs text-slate-600">ทั้งนักเรียนและครูผู้ฝึกสอนไม่มีชื่อลงทะเบียนแข่งซ้ำซ้อนในกิจกรรมอื่นค่ะ</p>
           </div>
         `;
       } else {
         if (duplicateStudents.length > 0) {
           const stHeader = document.createElement("div");
-          stHeader.className = "text-xs font-bold text-gold-400 uppercase tracking-wider font-prompt mb-2";
-          stHeader.innerHTML = `<i class="fa-solid fa-child mr-1.5"></i> นักเรียนที่มีชื่อซ้ำซ้อน (${duplicateStudents.length} คน)`;
+          stHeader.className = "text-xs font-bold text-slate-700 uppercase tracking-wider font-prompt mb-2";
+          stHeader.innerHTML = `<i class="fa-solid fa-child text-royal-700 mr-1.5"></i> นักเรียนที่มีชื่อซ้ำซ้อน (${duplicateStudents.length} คน)`;
           container.appendChild(stHeader);
 
           duplicateStudents.forEach(([name, list]) => {
             const card = document.createElement("div");
-            card.className = "p-3.5 rounded-2xl bg-navy-950 border border-amber-500/40 space-y-2 mb-3 shadow";
-            const comps = list.map(l => `<span class="inline-block bg-navy-900 border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 mr-1.5 mb-1"><i class="fa-solid fa-trophy text-gold-400 mr-1"></i>${l.compName}</span>`).join("");
+            card.className = "p-3.5 rounded-2xl bg-slate-50 border border-amber-300 space-y-2 mb-3 shadow-2xs";
+            const comps = list.map(l => `<span class="inline-block bg-white border border-slate-300 px-2 py-1 rounded-md text-xs text-slate-700 mr-1.5 mb-1 font-medium"><i class="fa-solid fa-trophy text-amber-500 mr-1"></i>${l.compName}</span>`).join("");
             card.innerHTML = `
-              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                <span class="font-bold font-prompt text-amber-300 text-sm">${list[0].fullName || name}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">ลงซ้ำ ${list.length} รายการ</span>
+              <div class="flex items-center justify-between border-b border-slate-200 pb-1.5">
+                <span class="font-bold font-prompt text-navy-900 text-sm">${list[0].fullName || name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-bold">ลงซ้ำ ${list.length} รายการ</span>
               </div>
               <div>${comps}</div>
             `;
@@ -2891,18 +2927,18 @@
 
         if (duplicateTeachers.length > 0) {
           const tcHeader = document.createElement("div");
-          tcHeader.className = "text-xs font-bold text-emerald-400 uppercase tracking-wider font-prompt mt-4 mb-2";
-          tcHeader.innerHTML = `<i class="fa-solid fa-chalkboard-user mr-1.5"></i> ครูผู้ฝึกสอนที่มีชื่อมากกว่า 1 กิจกรรม (${duplicateTeachers.length} ท่าน)`;
+          tcHeader.className = "text-xs font-bold text-slate-700 uppercase tracking-wider font-prompt mt-4 mb-2";
+          tcHeader.innerHTML = `<i class="fa-solid fa-chalkboard-user text-emerald-700 mr-1.5"></i> ครูผู้ฝึกสอนที่มีชื่อมากกว่า 1 กิจกรรม (${duplicateTeachers.length} ท่าน)`;
           container.appendChild(tcHeader);
 
           duplicateTeachers.forEach(([name, list]) => {
             const card = document.createElement("div");
-            card.className = "p-3.5 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2 mb-3 shadow";
-            const comps = list.map(l => `<span class="inline-block bg-navy-900 border border-slate-700 px-2 py-1 rounded text-xs text-slate-300 mr-1.5 mb-1"><i class="fa-solid fa-trophy text-emerald-400 mr-1"></i>${l.compName}</span>`).join("");
+            card.className = "p-3.5 rounded-2xl bg-slate-50 border border-emerald-300 space-y-2 mb-3 shadow-2xs";
+            const comps = list.map(l => `<span class="inline-block bg-white border border-slate-300 px-2 py-1 rounded-md text-xs text-slate-700 mr-1.5 mb-1 font-medium"><i class="fa-solid fa-chalkboard-user text-emerald-600 mr-1"></i>${l.compName}</span>`).join("");
             card.innerHTML = `
-              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                <span class="font-bold font-prompt text-emerald-300 text-sm">${list[0].fullName || name}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">ฝึกสอน ${list.length} รายการ</span>
+              <div class="flex items-center justify-between border-b border-slate-200 pb-1.5">
+                <span class="font-bold font-prompt text-navy-900 text-sm">${list[0].fullName || name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold">ฝึกสอน ${list.length} รายการ</span>
               </div>
               <div>${comps}</div>
             `;
@@ -2999,18 +3035,18 @@
       if (acList && acList.children.length === 0) {
         for (const [key, grp] of Object.entries(COMPETITIONS_DATA.academic)) {
           const card = document.createElement("div");
-          card.className = "p-4 rounded-2xl bg-navy-950 border border-slate-800 space-y-2";
+          card.className = "p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-2xs";
           const itemsHtml = grp.items.map((it, idx) => `
-            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-900 text-slate-300">
+            <div class="flex items-center justify-between text-xs py-1.5 border-b border-slate-200 text-slate-700 font-medium">
               <span>${idx + 1}. [${it.level}] ${it.name}</span>
-              <span class="text-gold-400 font-mono">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
+              <span class="text-royal-800 font-mono font-bold">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
             </div>
           `).join("");
 
           card.innerHTML = `
-            <div class="font-bold text-sm text-gold-300 font-prompt flex items-center justify-between">
+            <div class="font-bold text-sm text-navy-900 font-prompt flex items-center justify-between">
               <span>${grp.name}</span>
-              <span class="text-xs text-slate-400 font-normal">${grp.items.length} รายการ</span>
+              <span class="text-xs text-slate-500 font-normal">${grp.items.length} รายการ</span>
             </div>
             <div class="pt-1">${itemsHtml}</div>
           `;
@@ -3021,18 +3057,18 @@
       if (spList && spList.children.length === 0) {
         for (const [key, grp] of Object.entries(COMPETITIONS_DATA.softpower)) {
           const card = document.createElement("div");
-          card.className = "p-4 rounded-2xl bg-navy-950 border border-slate-800 space-y-2";
+          card.className = "p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-2xs";
           const itemsHtml = grp.items.map((it, idx) => `
-            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-900 text-slate-300">
+            <div class="flex items-center justify-between text-xs py-1.5 border-b border-slate-200 text-slate-700 font-medium">
               <span>${idx + 1}. [${it.level}] ${it.name}</span>
-              <span class="text-gold-400 font-mono">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
+              <span class="text-royal-800 font-mono font-bold">นร. ${it.students} คน / ครู ${it.teachers[0]}-${it.teachers[1]} คน</span>
             </div>
           `).join("");
 
           card.innerHTML = `
-            <div class="font-bold text-sm text-gold-300 font-prompt flex items-center justify-between">
+            <div class="font-bold text-sm text-navy-900 font-prompt flex items-center justify-between">
               <span>${grp.name}</span>
-              <span class="text-xs text-slate-400 font-normal">${grp.items.length} รายการ</span>
+              <span class="text-xs text-slate-500 font-normal">${grp.items.length} รายการ</span>
             </div>
             <div class="pt-1">${itemsHtml}</div>
           `;
@@ -3111,20 +3147,20 @@
       container.innerHTML = "";
 
       if (auditLogs.length === 0) {
-        container.innerHTML = `<div class="p-6 text-center text-slate-400">ยังไม่มีประวัติการบันทึกหรือแก้ไข</div>`;
+        container.innerHTML = `<div class="p-6 text-center text-slate-500 font-medium">ยังไม่มีประวัติการบันทึกหรือแก้ไข</div>`;
         return;
       }
 
       auditLogs.forEach(log => {
         const item = document.createElement("div");
-        item.className = "p-3 rounded-xl bg-navy-950 border border-slate-800 flex items-start justify-between gap-3 text-xs";
+        item.className = "p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start justify-between gap-3 text-xs shadow-2xs";
         item.innerHTML = `
           <div>
-            <div class="font-bold text-gold-300 font-prompt text-sm">${log.competitionName}</div>
-            <div class="text-slate-300 mt-0.5">${log.detail}</div>
-            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-navy-900 border border-slate-700 text-[10px] text-slate-400 font-mono">${log.timestamp}</span>
+            <div class="font-bold text-slate-900 font-prompt text-sm">${log.competitionName}</div>
+            <div class="text-slate-700 mt-0.5 font-medium">${log.detail}</div>
+            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-white border border-slate-300 text-[10px] text-slate-500 font-mono">${log.timestamp}</span>
           </div>
-          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">${log.action}</span>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-bold shrink-0">${log.action}</span>
         `;
         container.appendChild(item);
       });
@@ -3149,26 +3185,26 @@
 
       if (reps.length === 0) {
         container.innerHTML = `
-          <div class="py-12 text-center text-slate-400">
-            <i class="fa-solid fa-star text-3xl mb-2 text-slate-600"></i>
-            <p class="font-bold text-white">ยังไม่มีรายการที่ได้รับสถานะเป็นตัวแทนระดับเขต</p>
+          <div class="py-12 text-center text-slate-500">
+            <i class="fa-solid fa-star text-3xl mb-2 text-slate-400"></i>
+            <p class="font-bold text-slate-800">ยังไม่มีรายการที่ได้รับสถานะเป็นตัวแทนระดับเขต</p>
           </div>
         `;
       } else {
         reps.forEach((r, idx) => {
           const item = document.createElement("div");
-          item.className = "p-4 rounded-2xl bg-navy-950 border border-emerald-500/40 space-y-2";
+          item.className = "p-4 rounded-2xl bg-white border border-emerald-300 space-y-2 shadow-2xs";
           const stNames = (r.students || []).map((s, i) => `${i + 1}. ${s.fullName} (${s.classInfo || '-'})`).join(", ");
           const tcNames = (r.teachers || []).map((t, i) => `${i + 1}. ${t.fullName}`).join(", ");
 
           item.innerHTML = `
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="font-bold text-emerald-300 font-prompt text-sm">${idx + 1}. ${r.competitionName}</span>
-              <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-bold">ตัวแทนระดับเขต</span>
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+              <span class="font-bold text-emerald-800 font-prompt text-sm">${idx + 1}. ${r.competitionName}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-700 text-white text-xs font-bold">ตัวแทนระดับเขต</span>
             </div>
-            <div class="text-xs text-slate-300 space-y-1">
-              <div><strong class="text-gold-400">นักเรียน:</strong> ${stNames}</div>
-              <div><strong class="text-emerald-400">ครู:</strong> ${tcNames}</div>
+            <div class="text-xs text-slate-700 space-y-1 font-medium">
+              <div><strong class="text-royal-800">นักเรียน:</strong> ${stNames}</div>
+              <div><strong class="text-emerald-800">ครู:</strong> ${tcNames}</div>
             </div>
           `;
           container.appendChild(item);
@@ -3220,16 +3256,16 @@
 
       if (msgEl) msgEl.textContent = msg;
       if (content) {
-        content.className = "p-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm sm:text-base text-white font-bold border-2 ";
+        content.className = "p-4 rounded-2xl shadow-xl flex items-center gap-3 text-sm sm:text-base font-bold border bg-white ";
         if (type === "emerald") {
-          content.classList.add("bg-emerald-950", "border-emerald-400", "text-emerald-200");
-          if (icon) icon.className = "fa-solid fa-circle-check text-2xl text-emerald-400";
+          content.classList.add("border-emerald-300", "text-emerald-900");
+          if (icon) icon.className = "fa-solid fa-circle-check text-2xl text-emerald-600";
         } else if (type === "amber") {
-          content.classList.add("bg-amber-950", "border-gold-400", "text-gold-200");
-          if (icon) icon.className = "fa-solid fa-triangle-exclamation text-2xl text-gold-400";
+          content.classList.add("border-amber-300", "text-amber-900");
+          if (icon) icon.className = "fa-solid fa-triangle-exclamation text-2xl text-amber-600";
         } else if (type === "rose") {
-          content.classList.add("bg-rose-950", "border-rose-400", "text-rose-200");
-          if (icon) icon.className = "fa-solid fa-circle-xmark text-2xl text-rose-400";
+          content.classList.add("border-rose-300", "text-rose-900");
+          if (icon) icon.className = "fa-solid fa-circle-xmark text-2xl text-rose-600";
         }
       }
 
