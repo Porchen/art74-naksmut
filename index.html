@@ -77,13 +77,42 @@
 <body class="font-sans min-h-screen flex flex-col lg:flex-row antialiased selection:bg-gold-500 selection:text-navy-950">
 
   <!-- ==========================================
+       MOBILE TOP HEADER (เฉพาะจอมือถือ/แท็บเล็ต < lg)
+       ========================================== -->
+  <header class="lg:hidden w-full bg-navy-950/95 border-b-2 border-gold-500/40 p-3 shadow-xl sticky top-0 z-40 backdrop-blur-md no-print flex items-center justify-between gap-2">
+    <!-- School Identity & Brand -->
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="relative group shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-royal-700 via-royal-900 to-navy-950 p-1 border border-gold-400 shadow-[0_0_10px_rgba(234,179,8,0.3)] flex items-center justify-center text-gold-300">
+          <i class="fa-solid fa-school-flag text-base text-gold-400"></i>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-xs font-bold font-prompt text-amber-300 tracking-tight leading-tight truncate">
+          โรงเรียนอนุบาลนาคสมุทรเดชอุดม
+        </h1>
+        <p class="text-[10px] text-slate-300 truncate">
+          ศิลปหัตถกรรมนักเรียน ครั้งที่ 74 • สพป.อบ.5
+        </p>
+      </div>
+    </div>
+
+    <!-- Accessibility Font Resizer -->
+    <div class="flex items-center gap-0.5 bg-navy-900 border border-gold-500/40 rounded-xl px-1.5 py-0.5 shadow-inner shrink-0">
+      <button onclick="setFontSize('md')" class="px-1.5 py-0.5 rounded text-[11px] text-slate-300 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก-</button>
+      <button onclick="setFontSize('lg')" class="px-1.5 py-0.5 rounded text-[11px] text-gold-300 bg-gold-600/30 hover:bg-gold-500 hover:text-navy-950 font-bold transition">ก</button>
+      <button onclick="setFontSize('xl')" class="px-1.5 py-0.5 rounded text-xs text-gold-400 hover:bg-gold-500 hover:text-navy-950 font-extrabold transition">ก+</button>
+    </div>
+  </header>
+
+  <!-- ==========================================
        LEFT DEDICATED CONTROL SIDEBAR
        ========================================== -->
-  <aside class="w-full lg:w-72 lg:min-w-[18rem] lg:h-screen lg:sticky lg:top-0 bg-navy-950/95 border-b-2 lg:border-b-0 lg:border-r-2 border-gold-500/40 shadow-2xl z-40 backdrop-blur-md flex flex-col justify-between overflow-y-auto no-print">
+  <aside class="w-full lg:w-72 lg:min-w-[18rem] lg:h-screen lg:sticky lg:top-0 bg-navy-950/95 border-t-2 lg:border-t-0 lg:border-r-2 border-gold-500/40 shadow-2xl z-30 backdrop-blur-md flex flex-col justify-between overflow-y-auto no-print order-2 lg:order-1 mt-6 lg:mt-0">
     
     <div class="p-3.5 sm:p-4 space-y-3.5">
-      <!-- School Identity & Brand -->
-      <div class="flex items-center gap-2.5 pb-3 border-b border-gold-500/30">
+      <!-- School Identity & Brand (แสดงเฉพาะจอคอมพิวเตอร์ hidden lg:flex) -->
+      <div class="hidden lg:flex items-center gap-2.5 pb-3 border-b border-gold-500/30">
         <div class="relative group shrink-0">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-royal-700 via-royal-900 to-navy-950 p-1 border-2 border-gold-400 shadow-[0_0_12px_rgba(234,179,8,0.3)] flex items-center justify-center text-gold-300">
             <i class="fa-solid fa-school-flag text-xl text-gold-400"></i>
@@ -106,8 +135,8 @@
         </div>
       </div>
 
-      <!-- Accessibility Font Resizer -->
-      <div class="flex items-center justify-between bg-navy-900 border border-gold-500/40 rounded-xl px-2.5 py-1 shadow-inner">
+      <!-- Accessibility Font Resizer (แสดงเฉพาะจอคอมพิวเตอร์ hidden lg:flex) -->
+      <div class="hidden lg:flex items-center justify-between bg-navy-900 border border-gold-500/40 rounded-xl px-2.5 py-1 shadow-inner">
         <span class="text-[11px] text-gold-400 font-bold flex items-center gap-1">
           <i class="fa-solid fa-eye"></i> ขนาดอักษร:
         </span>
@@ -379,7 +408,7 @@
   <!-- ==========================================
        MAIN WORKSPACE
        ========================================== -->
-  <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6">
+  <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 order-1 lg:order-2">
     
     <!-- Visual Step Wizard พร้อมปุ่มทางลัดสมัครกรรมการ -->
     <div class="bg-navy-900/90 rounded-2xl p-3 border border-gold-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs sm:text-sm font-prompt no-print shadow-md">
