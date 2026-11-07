@@ -634,6 +634,8 @@
       <input type="hidden" id="editingRecordId" value="">
       <input type="hidden" id="editingCompIdSnapshot" value="">
       <input type="hidden" id="editingOriginalCompName" value="">
+      <input type="hidden" id="editingOriginalGroupName" value="">
+      <input type="hidden" id="editingOriginalCategoryType" value="">
 
       <div class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-6">
         
@@ -2240,6 +2242,7 @@
       const targetCompId = (entry.competitionId || "").trim();
       const normEntryName = (entry.competitionName || "").replace(/\s+/g, '').toLowerCase();
 
+      // ค้นหากลุ่มสาระและหมวดหมู่ที่แท้จริงของกิจกรรมนี้จากฐานข้อมูลระบบ
       for (const cat of ['academic', 'softpower']) {
         for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
           const found = grp.items.find(i => {
@@ -2257,6 +2260,12 @@
         if (compDef) break;
       }
 
+      const officialGroupName = (COMPETITIONS_DATA[matchedCat] && COMPETITIONS_DATA[matchedCat][matchedGroupKey])
+        ? COMPETITIONS_DATA[matchedCat][matchedGroupKey].name
+        : (entry.groupName || "ทั่วไป");
+
+      const officialCategoryType = (matchedCat === 'academic') ? 'วิชาการ' : 'Soft Power';
+
       if (!compDef) {
         compDef = {
           id: entry.competitionId || ('comp-' + Date.now()),
@@ -2270,12 +2279,16 @@
 
       currentComp = compDef;
 
-      // บันทึก ID และชื่อเดิมของรายการนี้ไว้ใช้อ้างอิงแถวใน Google Sheets
+      // บันทึก ID, ชื่อเดิม, กลุ่มสาระที่ถูกต้อง และหมวดหมู่ที่ถูกต้องไว้เสมอ ป้องกันการหลุดข้ามกลุ่ม 100%
       document.getElementById("editingRecordId").value = entry.id;
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = compDef.id;
       const origCompInput = document.getElementById("editingOriginalCompName");
       if (origCompInput) origCompInput.value = entry.competitionName || "";
+      const origGrpInput = document.getElementById("editingOriginalGroupName");
+      if (origGrpInput) origGrpInput.value = officialGroupName;
+      const origCatInput = document.getElementById("editingOriginalCategoryType");
+      if (origCatInput) origCatInput.value = officialCategoryType;
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
@@ -2411,6 +2424,10 @@
       if (snapInput) snapInput.value = "";
       const origCompInput = document.getElementById("editingOriginalCompName");
       if (origCompInput) origCompInput.value = "";
+      const origGrpInput = document.getElementById("editingOriginalGroupName");
+      if (origGrpInput) origGrpInput.value = "";
+      const origCatInput = document.getElementById("editingOriginalCategoryType");
+      if (origCatInput) origCatInput.value = "";
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.add("hidden");
@@ -2452,13 +2469,25 @@
 
       const editingId = document.getElementById("editingRecordId").value;
       const oldCompName = document.getElementById("editingOriginalCompName").value;
+      const oldGrpName = document.getElementById("editingOriginalGroupName").value;
+      const oldCatType = document.getElementById("editingOriginalCategoryType").value;
       const targetCompSnapshot = { ...currentComp };
 
-      const catRadio = document.querySelector('input[name="formCatType"]:checked');
-      const mainCatType = catRadio ? catRadio.value : 'academic';
-      const grpKey = document.getElementById("groupSelect").value;
-      const grpName = (COMPETITIONS_DATA[mainCatType] && COMPETITIONS_DATA[mainCatType][grpKey]) 
-                      ? COMPETITIONS_DATA[mainCatType][grpKey].name : "ทั่วไป";
+      // กำหนด Category และ Group ให้ถูกต้อง:
+      // ถ้าอยู่ในโหมดแก้ไข ให้ใช้ค่าเดิมของกิจกรรมนั้น ไม่ใช้ค่าจาก Dropdown หน้าแรกที่ค้างอยู่
+      let mainCatType = 'academic';
+      let grpName = 'ทั่วไป';
+
+      if (editingId && oldGrpName) {
+        grpName = oldGrpName;
+        mainCatType = (oldCatType === 'Soft Power') ? 'softpower' : 'academic';
+      } else {
+        const catRadio = document.querySelector('input[name="formCatType"]:checked');
+        mainCatType = catRadio ? catRadio.value : 'academic';
+        const grpKey = document.getElementById("groupSelect").value;
+        grpName = (COMPETITIONS_DATA[mainCatType] && COMPETITIONS_DATA[mainCatType][grpKey]) 
+                  ? COMPETITIONS_DATA[mainCatType][grpKey].name : "ทั่วไป";
+      }
 
       const filledStudents = [];
       const quotaRequired = targetCompSnapshot.students;
@@ -2534,7 +2563,8 @@
           addAuditLog(targetCompSnapshot.name, "แก้ไขข้อมูล", `แก้ไขรายชื่อนักเรียน/ครูผู้ฝึกสอนในกิจกรรม ${targetCompSnapshot.name}`);
           syncToGoogleSheet({
             ...registrations[index],
-            oldCompetitionName: oldCompName
+            oldCompetitionName: oldCompName,
+            oldGroupName: oldGrpName
           }, "save");
         }
       } else {
