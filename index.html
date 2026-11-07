@@ -642,8 +642,11 @@
         <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <button type="button" onclick="goToStep(1)" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 border border-slate-300 hover:bg-slate-200 transition flex items-center gap-1.5 shadow-2xs">
+              <button type="button" id="btnBackToStep1" onclick="goToStep(1)" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 border border-slate-300 hover:bg-slate-200 transition flex items-center gap-1.5 shadow-2xs">
                 <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปเปลี่ยนรายการ
+              </button>
+              <button type="button" id="btnCancelEditMode" onclick="cancelEditing()" class="hidden px-3 py-1 rounded-lg text-xs font-bold text-rose-700 bg-rose-50 border border-rose-300 hover:bg-rose-100 transition flex items-center gap-1.5 shadow-2xs">
+                <i class="fa-solid fa-xmark"></i> ยกเลิกการแก้ไข
               </button>
               <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-prompt">
                 <i class="fa-solid fa-user-pen"></i> ขั้นตอนที่ 2 จาก 2
@@ -674,9 +677,9 @@
           <div class="flex items-start gap-2.5 font-bold font-prompt text-amber-900">
             <i class="fa-solid fa-circle-info text-base mt-0.5 text-amber-600 shrink-0"></i>
             <div>
-              <span>คำแนะนำในการแก้ไขข้อมูล:</span>
+              <span>โหมดแก้ไขข้อมูล:</span>
               <p class="font-normal text-slate-700 text-xs mt-0.5 leading-relaxed">
-                หน้านี้สำหรับ<strong>แก้ไขตัวสะกด เปลี่ยนตัว หรือเพิ่มเติมรายชื่อนักเรียนและครูผู้ฝึกสอนในกิจกรรมนี้</strong>เท่านั้น หากต้องการเปลี่ยนไปลงกิจกรรมอื่น ให้ไปลบรายการเดิมในตารางก่อนนะคะ
+                ท่านกำลัง<strong>แก้ไขรายชื่อนักเรียนและครูผู้ฝึกสอนในกิจกรรมเดิม</strong> (หากต้องการเปลี่ยนไปส่งกิจกรรมอื่น กรุณากดยกเลิกแล้วลบรายการเดิมออกก่อนนะคะ)
               </p>
             </div>
           </div>
@@ -726,7 +729,7 @@
 
         <!-- FORM ACTION BUTTONS -->
         <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center gap-3 justify-between pb-12 sm:pb-4">
-          <button type="button" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center justify-center gap-1.5 shadow-2xs">
+          <button type="button" id="btnBottomBackStep1" onclick="handleGoBackToStep1Safe()" class="w-full sm:w-auto min-h-[50px] px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition flex items-center justify-center gap-1.5 shadow-2xs">
             <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปขั้นตอนที่ 1
           </button>
 
@@ -2227,46 +2230,48 @@
     }
 
     /* ========================================================
-       EDIT & SUBMISSION LOGIC
+       EDIT & SUBMISSION LOGIC (แนวทาง A: ล็อกกลุ่มสาระแม่นยำ 100%)
        ======================================================== */
+    function findMasterActivityInfo(compName, compId) {
+      const targetId = (compId || "").trim();
+      const normName = (compName || "").replace(/\s+/g, '').toLowerCase();
+
+      for (const cat of ['academic', 'softpower']) {
+        for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
+          const found = grp.items.find(i => {
+            if (targetId && i.id === targetId) return true;
+            return (i.name || "").replace(/\s+/g, '').toLowerCase() === normName;
+          });
+          if (found) {
+            return {
+              compDef: found,
+              groupName: grp.name,
+              categoryType: (cat === 'academic') ? 'วิชาการ' : 'Soft Power'
+            };
+          }
+        }
+      }
+      return null;
+    }
+
     function editEntry(id) {
       const entry = registrations.find(r => r.id === id);
       if (!entry) return;
 
       closeModal('entriesModal');
 
-      let matchedCat = 'academic';
-      let matchedGroupKey = '';
+      // ค้นหาข้อมูลมาสเตอร์ที่ถูกต้องแท้จริงของกิจกรรมนี้เสมอ
+      const masterInfo = findMasterActivityInfo(entry.competitionName, entry.competitionId);
+
       let compDef = null;
+      let officialGroupName = "ทั่วไป";
+      let officialCategoryType = "วิชาการ";
 
-      const targetCompId = (entry.competitionId || "").trim();
-      const normEntryName = (entry.competitionName || "").replace(/\s+/g, '').toLowerCase();
-
-      // ค้นหากลุ่มสาระและหมวดหมู่ที่แท้จริงของกิจกรรมนี้จากฐานข้อมูลระบบ
-      for (const cat of ['academic', 'softpower']) {
-        for (const [gKey, grp] of Object.entries(COMPETITIONS_DATA[cat])) {
-          const found = grp.items.find(i => {
-            if (targetCompId && i.id === targetCompId) return true;
-            const normItemName = (i.name || "").replace(/\s+/g, '').toLowerCase();
-            return normItemName === normEntryName;
-          });
-          if (found) {
-            matchedCat = cat;
-            matchedGroupKey = gKey;
-            compDef = found;
-            break;
-          }
-        }
-        if (compDef) break;
-      }
-
-      const officialGroupName = (COMPETITIONS_DATA[matchedCat] && COMPETITIONS_DATA[matchedCat][matchedGroupKey])
-        ? COMPETITIONS_DATA[matchedCat][matchedGroupKey].name
-        : (entry.groupName || "ทั่วไป");
-
-      const officialCategoryType = (matchedCat === 'academic') ? 'วิชาการ' : 'Soft Power';
-
-      if (!compDef) {
+      if (masterInfo) {
+        compDef = masterInfo.compDef;
+        officialGroupName = masterInfo.groupName;
+        officialCategoryType = masterInfo.categoryType;
+      } else {
         compDef = {
           id: entry.competitionId || ('comp-' + Date.now()),
           name: entry.competitionName,
@@ -2275,11 +2280,13 @@
           type: entry.competitionType || "ทีม",
           level: entry.competitionLevel || "ป.4-6"
         };
+        officialGroupName = entry.groupName || "ทั่วไป";
+        officialCategoryType = entry.categoryType || "วิชาการ";
       }
 
       currentComp = compDef;
 
-      // บันทึก ID, ชื่อเดิม, กลุ่มสาระที่ถูกต้อง และหมวดหมู่ที่ถูกต้องไว้เสมอ ป้องกันการหลุดข้ามกลุ่ม 100%
+      // บันทึกค่าลง hidden fields
       document.getElementById("editingRecordId").value = entry.id;
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = compDef.id;
@@ -2289,6 +2296,17 @@
       if (origGrpInput) origGrpInput.value = officialGroupName;
       const origCatInput = document.getElementById("editingOriginalCategoryType");
       if (origCatInput) origCatInput.value = officialCategoryType;
+
+      // จัดการปุ่มในโหมดแก้ไขตามแนวทาง A: ซ่อนปุ่มย้อนกลับไปหน้า 1 แต่แสดงปุ่ม "ยกเลิกการแก้ไข"
+      const btnBack1 = document.getElementById("btnBackToStep1");
+      const btnCancel = document.getElementById("btnCancelEditMode");
+      const btnBottomBack = document.getElementById("btnBottomBackStep1");
+      if (btnBack1) btnBack1.classList.add("hidden");
+      if (btnCancel) btnCancel.classList.remove("hidden");
+      if (btnBottomBack) {
+        btnBottomBack.innerHTML = `<i class="fa-solid fa-xmark"></i> ยกเลิกการแก้ไข`;
+        btnBottomBack.onclick = cancelEditing;
+      }
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
@@ -2301,7 +2319,7 @@
 
       const compBadge = document.getElementById("selectedCompBadge");
       const quotaBadge = document.getElementById("selectedQuotaBadge");
-      if (compBadge) compBadge.textContent = entry.competitionName;
+      if (compBadge) compBadge.textContent = `${officialGroupName} • ${entry.competitionName}`;
 
       const quotaRequired = compDef.students || (entry.students ? entry.students.length : 1);
       if (quotaBadge) {
@@ -2428,6 +2446,17 @@
       if (origGrpInput) origGrpInput.value = "";
       const origCatInput = document.getElementById("editingOriginalCategoryType");
       if (origCatInput) origCatInput.value = "";
+
+      // คืนค่าปุ่มนำทางกลับเป็นปกติ
+      const btnBack1 = document.getElementById("btnBackToStep1");
+      const btnCancel = document.getElementById("btnCancelEditMode");
+      const btnBottomBack = document.getElementById("btnBottomBackStep1");
+      if (btnBack1) btnBack1.classList.remove("hidden");
+      if (btnCancel) btnCancel.classList.add("hidden");
+      if (btnBottomBack) {
+        btnBottomBack.innerHTML = `<i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปขั้นตอนที่ 1`;
+        btnBottomBack.onclick = handleGoBackToStep1Safe;
+      }
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.add("hidden");
