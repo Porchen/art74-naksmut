@@ -3295,6 +3295,23 @@
           return (i + 1) + ". " + t.fullName; 
         }).join("\r\n");
 
+        // ตรวจสอบสถานะตัวแทนระดับเขตอย่างเข้มงวด:
+        // 1. ต้องมีการบันทึกผลรางวัลจริง (ไม่ว่าง และไม่ใช่ '-')
+        // 2. ผลรางวัลต้องเป็นชนะเลิศ หรือมีเครื่องหมายตัวแทนระดับเขตชัดเจน
+        var awardText = (r.award || "").toString().trim();
+        var hasValidAward = awardText !== "" && awardText !== "-";
+        
+        var isRealRep = false;
+        if (hasValidAward) {
+          if (r.isRepresentative === true || r.isRepresentative === "ใช่") {
+            isRealRep = true;
+          } else if (awardText.indexOf("ชนะเลิศ") !== -1 && awardText.indexOf("รอง") === -1) {
+            isRealRep = true;
+          }
+        }
+
+        var repText = isRealRep ? "ใช่" : "ไม่ใช่";
+
         return {
           "ลำดับ": idx + 1,
           "กลุ่มสาระการเรียนรู้ / กิจกรรม": r.groupName || "-",
@@ -3304,8 +3321,8 @@
           "สถานะ": r.isComplete ? "คนครบตามเกณฑ์" : ("ขาดอีก " + (r.missingCount || 1) + " คน"),
           "รายชื่อนักเรียนผู้เข้าแข่งขัน": stNames || "-",
           "ครูผู้ฝึกสอน": tcNames || "-",
-          "ผลรางวัล": r.award || "-",
-          "ตัวแทนระดับเขต": r.isRepresentative ? "ใช่" : "ไม่ใช่",
+          "ผลรางวัล": awardText || "-",
+          "ตัวแทนระดับเขต": repText,
           "แก้ไขล่าสุด": r.lastModifiedAt || "-"
         };
       }
@@ -3450,6 +3467,16 @@
       } catch (e) {}
 
       loadStorageData();
+
+      // ล้างสถานะตัวแทนเท็จในหน่วยความจำ สำหรับรายการที่ยังไม่มีผลการแข่งขันจริง
+      if (Array.isArray(registrations)) {
+        registrations.forEach(r => {
+          var awardText = (r.award || "").toString().trim();
+          if (!awardText || awardText === "-" || awardText.indexOf("ชนะเลิศ") === -1) {
+            r.isRepresentative = false;
+          }
+        });
+      }
 
       try {
         googleSheetUrl = localStorage.getItem(SHEET_URL_KEY) || DEFAULT_SHEET_URL;
