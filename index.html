@@ -16,6 +16,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700;800;900&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- SheetJS CDN สำหรับสร้างไฟล์ Excel หลาย Sheet แท้ (.xlsx) รองรับภาษาไทยสมบูรณ์ -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
   <script>
     tailwind.config = {
       theme: {
@@ -308,9 +311,9 @@
               </div>
 
               <div class="flex items-center justify-between p-1.5 pt-2 rounded-lg hover:bg-white transition text-slate-700 group">
-                <button onclick="exportToCSV()" class="flex items-center gap-2 hover:text-emerald-700 text-left truncate flex-1 pr-1 font-semibold text-emerald-800">
+                <button onclick="exportToExcelMultiSheets()" class="flex items-center gap-2 hover:text-emerald-700 text-left truncate flex-1 pr-1 font-semibold text-emerald-800">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
-                  <span class="truncate">ส่งออกไฟล์ Excel / CSV</span>
+                  <span class="truncate">ส่งออกไฟล์ Excel แยกชีต</span>
                 </button>
                 <i class="fa-solid fa-file-excel text-xs text-emerald-600"></i>
               </div>
@@ -630,6 +633,7 @@
     <form id="mainRegistrationForm" onsubmit="handleRegistrationSubmit(event)" class="hidden no-print">
       <input type="hidden" id="editingRecordId" value="">
       <input type="hidden" id="editingCompIdSnapshot" value="">
+      <input type="hidden" id="editingOriginalCompName" value="">
 
       <div class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-6">
         
@@ -2266,9 +2270,12 @@
 
       currentComp = compDef;
 
+      // บันทึก ID และชื่อเดิมของรายการนี้ไว้ใช้อ้างอิงแถวใน Google Sheets
       document.getElementById("editingRecordId").value = entry.id;
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = compDef.id;
+      const origCompInput = document.getElementById("editingOriginalCompName");
+      if (origCompInput) origCompInput.value = entry.competitionName || "";
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.remove("hidden");
@@ -2402,6 +2409,8 @@
       document.getElementById("editingRecordId").value = "";
       const snapInput = document.getElementById("editingCompIdSnapshot");
       if (snapInput) snapInput.value = "";
+      const origCompInput = document.getElementById("editingOriginalCompName");
+      if (origCompInput) origCompInput.value = "";
 
       const banner = document.getElementById("editingBanner");
       if (banner) banner.classList.add("hidden");
@@ -2442,6 +2451,7 @@
       if (!currentComp) return;
 
       const editingId = document.getElementById("editingRecordId").value;
+      const oldCompName = document.getElementById("editingOriginalCompName").value;
       const targetCompSnapshot = { ...currentComp };
 
       const catRadio = document.querySelector('input[name="formCatType"]:checked');
@@ -2522,7 +2532,10 @@
             lastModifiedAt: nowStr
           };
           addAuditLog(targetCompSnapshot.name, "แก้ไขข้อมูล", `แก้ไขรายชื่อนักเรียน/ครูผู้ฝึกสอนในกิจกรรม ${targetCompSnapshot.name}`);
-          syncToGoogleSheet(registrations[index], "save");
+          syncToGoogleSheet({
+            ...registrations[index],
+            oldCompetitionName: oldCompName
+          }, "save");
         }
       } else {
         const newEntry = {
@@ -3199,21 +3212,137 @@
       navigator.clipboard.writeText(txt).then(() => showToast("คัดลอกข้อมูลเรียบร้อยแล้ว", "emerald"));
     }
 
-    function exportToCSV() {
-      if (registrations.length === 0) {
+    // ฟังก์ชันส่งออกไฟล์ Excel แยกชีตกิจกรรม และชีตกรรมการตัดสิน (.xlsx)
+    function exportToExcelMultiSheets() {
+      if (typeof XLSX === 'undefined') {
+        showToast("กำลังโหลดระบบส่งออก Excel กรุณาลองใหม่อีกครั้ง", "amber");
+        return;
+      }
+
+      if (registrations.length === 0 && judges.length === 0) {
         showToast("ยังไม่มีข้อมูลให้ส่งออก", "amber");
         return;
       }
-      let csv = "\uFEFFลำดับ,รายการ,กลุ่มสาระ,สถานะ\n";
-      registrations.forEach((r, i) => {
-        csv += `${i + 1},"${r.competitionName}","${r.groupName}","${r.isComplete ? 'คนครบ' : 'ไม่ครบ'}"\n`;
+
+      var wb = XLSX.utils.book_new();
+
+      // ฟังก์ชันช่วยจัดรูปแบบแถวข้อมูลสำหรับตารางแข่งขัน
+      function createRowData(r, idx) {
+        var stNames = (r.students || []).map(function(s, i) { 
+          return (i + 1) + ". " + s.fullName + (s.classInfo ? " (" + s.classInfo + ")" : ""); 
+        }).join("\r\n");
+
+        var tcNames = (r.teachers || []).map(function(t, i) { 
+          return (i + 1) + ". " + t.fullName; 
+        }).join("\r\n");
+
+        return {
+          "ลำดับ": idx + 1,
+          "กลุ่มสาระการเรียนรู้ / กิจกรรม": r.groupName || "-",
+          "รายการแข่งขัน": r.competitionName || "-",
+          "ระดับชั้น": r.competitionLevel || "-",
+          "ประเภท": r.competitionType || "-",
+          "สถานะ": r.isComplete ? "คนครบตามเกณฑ์" : ("ขาดอีก " + (r.missingCount || 1) + " คน"),
+          "รายชื่อนักเรียนผู้เข้าแข่งขัน": stNames || "-",
+          "ครูผู้ฝึกสอน": tcNames || "-",
+          "ผลรางวัล": r.award || "-",
+          "ตัวแทนระดับเขต": r.isRepresentative ? "ใช่" : "ไม่ใช่",
+          "แก้ไขล่าสุด": r.lastModifiedAt || "-"
+        };
+      }
+
+      // 1. ชีต "ภาพรวมทั้งหมด"
+      var overviewData = registrations.map(function(r, idx) {
+        return createRowData(r, idx);
       });
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "registrations.csv";
-      link.click();
-      showToast("ส่งออกไฟล์เรียบร้อยแล้ว", "emerald");
+
+      if (overviewData.length > 0) {
+        var wsOverview = XLSX.utils.json_to_sheet(overviewData);
+        wsOverview['!cols'] = [
+          { wch: 6 },  // ลำดับ
+          { wch: 28 }, // กลุ่มสาระ
+          { wch: 42 }, // รายการแข่งขัน
+          { wch: 12 }, // ระดับชั้น
+          { wch: 14 }, // ประเภท
+          { wch: 16 }, // สถานะ
+          { wch: 35 }, // นักเรียน
+          { wch: 30 }, // ครู
+          { wch: 14 }, // ผลรางวัล
+          { wch: 14 }, // ตัวแทนเขต
+          { wch: 20 }  // วันที่
+        ];
+        XLSX.utils.book_append_sheet(wb, wsOverview, "ภาพรวมทั้งหมด");
+      }
+
+      // 2. แยกชีตตาม "กลุ่มสาระการเรียนรู้ / กิจกรรม"
+      var grouped = {};
+      registrations.forEach(function(r) {
+        var gName = (r.groupName || "ทั่วไป").trim();
+        // ตัดอักขระพิเศษที่ Excel ไม่อนุญาตให้ใช้เป็นชื่อ Sheet
+        var safeSheetName = gName.replace(/[\\\/:\?\*\[\]]/g, "").trim().substring(0, 30);
+        if (!grouped[safeSheetName]) grouped[safeSheetName] = [];
+        grouped[safeSheetName].push(r);
+      });
+
+      for (var groupName in grouped) {
+        var groupList = grouped[groupName];
+        var groupRows = groupList.map(function(r, idx) {
+          return createRowData(r, idx);
+        });
+
+        var wsGroup = XLSX.utils.json_to_sheet(groupRows);
+        wsGroup['!cols'] = [
+          { wch: 6 },  // ลำดับ
+          { wch: 25 }, // กลุ่มสาระ
+          { wch: 40 }, // รายการแข่งขัน
+          { wch: 12 }, // ระดับชั้น
+          { wch: 14 }, // ประเภท
+          { wch: 16 }, // สถานะ
+          { wch: 35 }, // นักเรียน
+          { wch: 30 }, // ครู
+          { wch: 14 }, // ผลรางวัล
+          { wch: 14 }, // ตัวแทนเขต
+          { wch: 20 }  // วันที่
+        ];
+        XLSX.utils.book_append_sheet(wb, wsGroup, groupName);
+      }
+
+      // 3. ชีต "รายชื่อกรรมการตัดสิน"
+      var judgesData = judges.map(function(j, idx) {
+        return {
+          "ลำดับ": idx + 1,
+          "วันเวลาที่สมัคร": j.registeredAt || "-",
+          "กลุ่มสาระ / กิจกรรม": j.groupName || "-",
+          "รายการแข่งขันที่ตัดสิน": j.competitionName || "-",
+          "ชื่อ - นามสกุลกรรมการ": j.fullName || "-",
+          "ตำแหน่ง / วิทยฐานะ": j.position || "คุณครู",
+          "เบอร์โทรศัพท์ติดต่อ": j.phone || "-"
+        };
+      });
+
+      var wsJudges = XLSX.utils.json_to_sheet(judgesData.length > 0 ? judgesData : [{ "สถานะ": "ยังไม่มีรายชื่อกรรมการตัดสิน" }]);
+      wsJudges['!cols'] = [
+        { wch: 6 },  // ลำดับ
+        { wch: 20 }, // วันเวลา
+        { wch: 28 }, // กลุ่มสาระ
+        { wch: 40 }, // รายการที่ตัดสิน
+        { wch: 25 }, // ชื่อกรรมการ
+        { wch: 18 }, // ตำแหน่ง
+        { wch: 16 }  // เบอร์โทร
+      ];
+      XLSX.utils.book_append_sheet(wb, wsJudges, "รายชื่อกรรมการตัดสิน");
+
+      // บันทึกและดาวน์โหลดเป็นไฟล์ .xlsx
+      var dateStr = new Date().toISOString().slice(0, 10);
+      var filename = "สรุปข้อมูลศิลปหัตถกรรม74_อนุบาลนาคสมุทรเดชอุดม_" + dateStr + ".xlsx";
+      XLSX.writeFile(wb, filename);
+
+      showToast("ส่งออกไฟล์ Excel แยกชีตกิจกรรมและกรรมการเรียบร้อยแล้วค่ะ", "emerald");
+    }
+
+    // ฟังก์ชันเดิมสำรองไว้
+    function exportToCSV() {
+      exportToExcelMultiSheets();
     }
 
     function saveSheetConfig() {
